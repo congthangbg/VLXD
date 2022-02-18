@@ -17,9 +17,11 @@ import com.vn.VLXD.dto.LoginRequest;
 import com.vn.VLXD.dto.MessageResponse;
 import com.vn.VLXD.dto.SignupRequest;
 import com.vn.VLXD.entities.Role;
-import com.vn.VLXD.entities.User;
+import com.vn.VLXD.entities.Account;
+import com.vn.VLXD.entities.Authorities;
+import com.vn.VLXD.repositories.AuthoritiesRepository;
 import com.vn.VLXD.repositories.RoleRepository;
-import com.vn.VLXD.repositories.UserRepository;
+import com.vn.VLXD.repositories.AccountRepository;
 import com.vn.VLXD.services.UserDetailsImpl;
 
 import java.util.HashSet;
@@ -34,13 +36,15 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private UserRepository userRepository;
+    private AccountRepository accountRepository;
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
     private PasswordEncoder encoder;
     @Autowired
     private JwtUtils jwtUtils;
+    @Autowired
+    private AuthoritiesRepository authoritiesRepository;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Validated @RequestBody LoginRequest loginRequest){
@@ -54,21 +58,16 @@ public class AuthController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
-        return  ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles));
+        return  ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getAccountName(), roles));
     }
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Validated @RequestBody SignupRequest signUpRequest){
-        if (userRepository.existsByUsername(signUpRequest.getUsername())){
+        if (accountRepository.existsByAccountName(signUpRequest.getAccountName())){
             return ResponseEntity.badRequest()
                     .body(new MessageResponse("Error: Username is already taken!"));
         }
-        if (userRepository.existsByEmail(signUpRequest.getEmail())){
-            return ResponseEntity.badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
-        }
-        User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()));
+   
+        Account account = new Account(signUpRequest.getAccountName(),encoder.encode(signUpRequest.getPassword()));
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
@@ -84,8 +83,8 @@ public class AuthController {
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminRole);
                         break;
-                    case "mod":
-                        Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
+                    case "staff":
+                        Role modRole = roleRepository.findByName(ERole.ROLE_STAFF)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(modRole);
                         break;
@@ -96,8 +95,15 @@ public class AuthController {
                 }
             });
         }
-        user.setRoles(roles);
-        userRepository.save(user);
+        account.setRoles(roles);
+        accountRepository.save(account);
+    	for (Role role2 : roles) {
+			Authorities authorities = new Authorities();
+			authorities.setAccountId(account.getId());
+			authorities.setRoleId(role2.getId());
+			
+			authoritiesRepository.save(authorities);
+		}
         return ResponseEntity.ok(new MessageResponse("User registered Successfully! "));
     }
 }

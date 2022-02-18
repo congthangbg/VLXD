@@ -8,16 +8,16 @@ import javax.persistence.*;
 import com.vn.VLXD.common.ERole;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "ROLES")
 @Getter
 @Setter
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20)
+    @Column(length = 20,name = "ROLE")
     private ERole name;
 
     public Role() {

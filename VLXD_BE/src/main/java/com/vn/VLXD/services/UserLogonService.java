@@ -2,7 +2,7 @@ package com.vn.VLXD.services;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.vn.VLXD.entities.User;
+import com.vn.VLXD.entities.Account;
 
 import springfox.documentation.spi.service.contexts.SecurityContext;
 

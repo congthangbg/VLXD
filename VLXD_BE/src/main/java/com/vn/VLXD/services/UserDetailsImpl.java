@@ -1,7 +1,7 @@
 package com.vn.VLXD.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.vn.VLXD.entities.User;
+import com.vn.VLXD.entities.Account;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +20,7 @@ public class UserDetailsImpl implements UserDetails {
 
     private static final long serialVersionUID = 1L;
     private Long id;
-    private String username;
+    private String accountName;
     private String email;
     @JsonIgnore
     private String password;
@@ -28,23 +28,21 @@ public class UserDetailsImpl implements UserDetails {
 //    private User user;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String username, String email, String password,
+    public UserDetailsImpl(Long id, String accountName,String password,
                            Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
-        this.username = username;
-        this.email = email;
+        this.accountName = accountName;
         this.password = password;
 //    	this.user = new User(id,username, email, password);
         this.authorities = authorities;
     }
 
-    public static UserDetailsImpl build(User user){
-        List<GrantedAuthority> authorities = user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
+    public static UserDetailsImpl build(Account account){
+        List<GrantedAuthority> authorities = account.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
         return new UserDetailsImpl(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getPassword(),
+                account.getId(),
+                account.getAccountName(),
+                account.getPassword(),
                 authorities
         );
     }
@@ -59,11 +57,12 @@ public class UserDetailsImpl implements UserDetails {
         return password;
     }
 
-    @Override
-    public String getUsername() {
-        return username;
-    }
 
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return accountName;
+	}
 //    @Override
 //    public String getPassword() {
 //        return user.getPassword();
@@ -102,6 +101,8 @@ public class UserDetailsImpl implements UserDetails {
         UserDetailsImpl user = (UserDetailsImpl) o;
         return Objects.equals(id, user.id);
     }
+
+
 //    public User getUserLogin() {
 //    	return user;
 //    }
