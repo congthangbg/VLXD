@@ -1,0 +1,8 @@
+{
+    "localhost": "http://localhost:8080",
+    "roles": {
+        "admin": "ROLE_ADMIN",
+        "staff": "ROLE_STAFF",
+        "user": "ROLE_USER"
+    }
+}
