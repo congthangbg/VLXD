@@ -23,7 +23,7 @@ const Login = () => {
     toast.dark("Hey 👋, see how easy!");
   }
   const router = useRouter();
-  const [data,setDate] = useState("")
+  const [data, setDate] = useState("")
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -45,19 +45,26 @@ const Login = () => {
     }),
 
     onSubmit: (value) => {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+      if (token && token !== null) {
+        localStorage.clear();
+      }
       const url = `auth/signin`;
-        axiosInstance.post(url, value).then(response => {
-          console.log(response);
-          localStorage.setItem("access_token",response.accessToken);
-          localStorage.setItem("accountName",response.accountName);
-          localStorage.setItem("roles",response.roles);
-          localStorage.setItem("id",response.id);
-          // notify();
-          toastifyAlert.success("Đăng nhập thành công!")
-          // router.push('/');
-        })
+      axiosInstance.post(url, value).then(response => {
+        console.log(response);
+        localStorage.setItem("access_token", response.accessToken);
+        localStorage.setItem("accountName", response.accountName);
+        localStorage.setItem("roles", response.roles);
+        localStorage.setItem("id", response.id);
+        // notify();
+        toastifyAlert.success("Đăng nhập thành công!")
+        setTimeout(() => {
+          router.push('/');
+        }, 2000);
+
+      })
         .catch(err => {
-          console.log(err);
+          // console.log(err);
           toastifyAlert.error("Đăng nhập thất bại, sai tài khoản hoặc mật khẩu!")
         })
 
@@ -66,7 +73,7 @@ const Login = () => {
 
   return (
     <>
-     <ToastContainer />
+      <ToastContainer />
       <Head>
         <title>Login | Material Kit</title>
       </Head>

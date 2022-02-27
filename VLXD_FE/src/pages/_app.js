@@ -7,14 +7,14 @@ import { ThemeProvider } from '@mui/material/styles';
 import { createEmotionCache } from '../utils/create-emotion-cache';
 import { theme } from '../theme';
 import { ToastContainer } from 'react-toastify';
+import { useEffect } from 'react';
 
 const clientSideEmotionCache = createEmotionCache();
 
+
 const App = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-
   const getLayout = Component.getLayout ?? ((page) => page);
-
   return (
     <CacheProvider value={emotionCache}>
       <Head>

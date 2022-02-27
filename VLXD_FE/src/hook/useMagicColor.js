@@ -1,13 +1,12 @@
 import { React, useState, useEffect, useRef } from 'react';
 
 const randomColor = (currentColor) => {
-   const randomColor = ['red','green','blue','yellow','orange']
+   const randomColor = ['red','green','blue','yellow','orange',"while"]
    const currentIdx = randomColor.indexOf(currentColor)
    let newIdx = currentIdx ;
    while (newIdx == currentIdx){
       newIdx = Math.trunc(Math.random()*3);
    }
-   console.log("randomColor",randomColor[newIdx]);
 
    return randomColor[newIdx];
 }

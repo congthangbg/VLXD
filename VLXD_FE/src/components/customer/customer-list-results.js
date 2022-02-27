@@ -63,16 +63,12 @@ export const CustomerListResults = ({ customers, ...rest }) => {
     setPage(newPage);
   };
 
-  const color = useMagicColor();
+  
 
 
   return (
     <Card {...rest}>
       <PerfectScrollbar>
-      <b style={{color: color}}>
-        Công Thắng
-      </b>
-
         <Box sx={{ minWidth: 1050 }}>
           <Table>
             <TableHead>

@@ -15,6 +15,7 @@ import { Users as UsersIcon } from '../icons/users';
 import { XCircle as XCircleIcon } from '../icons/x-circle';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
+import useMagicColor from './../hook/useMagicColor';
 
 const items = [
   {
@@ -66,7 +67,6 @@ export const DashboardSidebar = (props) => {
     defaultMatches: true,
     noSsr: false
   });
-
   useEffect(
     () => {
       if (!router.isReady) {
@@ -80,7 +80,7 @@ export const DashboardSidebar = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [router.asPath]
   );
-
+  const color = useMagicColor();
   const content = (
     <>
       <Box
@@ -121,10 +121,12 @@ export const DashboardSidebar = (props) => {
             >
               <div>
                 <Typography
-                  color="inherit"
+                  color={color}
                   variant="subtitle1"
+                  fontSize="large"
+                  fontFamily="Times New Roman"
                 >
-                  Acme Inc
+                  VLXD HUYỀN TOÀN
                 </Typography>
                 <Typography
                   color="neutral.400"
