@@ -26,32 +26,32 @@ const items = [
   {
     href: '/customers',
     icon: (<UsersIcon fontSize="small" />),
-    title: 'Customers'
+    title: 'Khách hàng'
   },
   {
     href: '/products',
     icon: (<ShoppingBagIcon fontSize="small" />),
-    title: 'Products'
+    title: 'Sản phẩm'
   },
   {
     href: '/account',
     icon: (<UserIcon fontSize="small" />),
-    title: 'Account'
+    title: 'Tài khoản'
   },
   {
     href: '/settings',
     icon: (<CogIcon fontSize="small" />),
-    title: 'Settings'
+    title: 'Cài đặt'
   },
   {
     href: '/login',
     icon: (<LockIcon fontSize="small" />),
-    title: 'Login'
+    title: 'Đăng nhập'
   },
   {
     href: '/register',
     icon: (<UserAddIcon fontSize="small" />),
-    title: 'Register'
+    title: 'Đăng kí'
   },
   {
     href: '/404',
@@ -125,6 +125,7 @@ export const DashboardSidebar = (props) => {
                   variant="subtitle1"
                   fontSize="large"
                   fontFamily="Times New Roman"
+                  boxShadow="0 0 10"
                 >
                   VLXD HUYỀN TOÀN
                 </Typography>

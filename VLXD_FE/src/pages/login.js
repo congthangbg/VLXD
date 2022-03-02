@@ -12,15 +12,13 @@ import { useState } from 'react';
 import toastifyAlert from './../components/component/toastify-message/toastify';
 import { injectStyle } from "react-toastify/dist/inject-style";
 import { toast, ToastContainer } from 'react-toastify';
+import { logOut,logIn,errorLogIn } from './../components/component/MessageContants';
 
 
 const Login = () => {
 
   if (typeof window !== "undefined") {
     injectStyle();
-  }
-  function notify() {
-    toast.dark("Hey 👋, see how easy!");
   }
   const router = useRouter();
   const [data, setDate] = useState("")
@@ -51,13 +49,12 @@ const Login = () => {
       }
       const url = `auth/signin`;
       axiosInstance.post(url, value).then(response => {
-        console.log(response);
         localStorage.setItem("access_token", response.accessToken);
         localStorage.setItem("accountName", response.accountName);
         localStorage.setItem("roles", response.roles);
         localStorage.setItem("id", response.id);
         // notify();
-        toastifyAlert.success("Đăng nhập thành công!")
+        toastifyAlert.success(logIn)
         setTimeout(() => {
           router.push('/');
         }, 2000);
@@ -65,7 +62,7 @@ const Login = () => {
       })
         .catch(err => {
           // console.log(err);
-          toastifyAlert.error("Đăng nhập thất bại, sai tài khoản hoặc mật khẩu!")
+          toastifyAlert.error(errorLogIn)
         })
 
     }
@@ -73,7 +70,7 @@ const Login = () => {
 
   return (
     <>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <Head>
         <title>Login | Material Kit</title>
       </Head>
@@ -169,7 +166,7 @@ const Login = () => {
               error={Boolean(formik.touched.username && formik.errors.username)}
               fullWidth
               helperText={formik.touched.username && formik.errors.username}
-              label="Email Address"
+              label="Tên tài khoản"
               margin="normal"
               name="username"
               onBlur={formik.handleBlur}
@@ -182,7 +179,7 @@ const Login = () => {
               error={Boolean(formik.touched.password && formik.errors.password)}
               fullWidth
               helperText={formik.touched.password && formik.errors.password}
-              label="Password"
+              label="Mật khẩu"
               margin="normal"
               name="password"
               onBlur={formik.handleBlur}

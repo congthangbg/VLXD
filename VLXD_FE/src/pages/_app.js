@@ -17,6 +17,7 @@ const App = (props) => {
   const getLayout = Component.getLayout ?? ((page) => page);
   return (
     <CacheProvider value={emotionCache}>
+        <ToastContainer />
       <Head>
         <title>
           Material Kit Pro

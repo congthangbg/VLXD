@@ -2,6 +2,7 @@ import Head from 'next/head';
 import NextLink from 'next/link';
 import { Box, Button, Container, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useRouter } from 'next/router';
 
 const NotFound = () => (
   <>
@@ -72,5 +73,7 @@ const NotFound = () => (
     </Box>
   </>
 );
+
+
 
 export default NotFound;

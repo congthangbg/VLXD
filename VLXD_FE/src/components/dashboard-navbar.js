@@ -1,12 +1,15 @@
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import { AppBar, Avatar, Badge, Box, IconButton, Toolbar, Tooltip } from '@mui/material';
+import { AppBar, Avatar, Badge, Box, IconButton, Toolbar, Tooltip,Button  } from '@mui/material';
+import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import { Bell as BellIcon } from '../icons/bell';
 import { UserCircle as UserCircleIcon } from '../icons/user-circle';
 import { Users as UsersIcon } from '../icons/users';
-
+import { useRouter } from 'next/router';
+import toastifyAlert from './component/toastify-message/toastify';
+import { logOut,logIn,errorLogIn } from './../components/component/MessageContants';
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   boxShadow: theme.shadows[3]
@@ -14,7 +17,14 @@ const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
 
 export const DashboardNavbar = (props) => {
   const { onSidebarOpen, ...other } = props;
-
+  const router = useRouter();
+const onLogOut = () => {
+  toastifyAlert.success(logOut);
+  localStorage.clear();
+  setTimeout(() => {
+    router.push("/login");
+  }, 3000);
+}
   return (
     <>
       <DashboardNavbarRoot
@@ -52,6 +62,7 @@ export const DashboardNavbar = (props) => {
             </IconButton>
           </Tooltip>
           <Box sx={{ flexGrow: 1 }} />
+         
           <Tooltip title="Contacts">
             <IconButton sx={{ ml: 1 }}>
               <UsersIcon fontSize="small" />
@@ -78,6 +89,12 @@ export const DashboardNavbar = (props) => {
           >
             <UserCircleIcon fontSize="small" />
           </Avatar>
+          <Tooltip title="Logout" onClick={onLogOut}>
+            <IconButton  sx={{ ml: 1 }}>
+              <LogoutIcon fontSize="small" />
+              <Button >Đăng xuất</Button>
+            </IconButton>
+          </Tooltip>
         </Toolbar>
       </DashboardNavbarRoot>
     </>
