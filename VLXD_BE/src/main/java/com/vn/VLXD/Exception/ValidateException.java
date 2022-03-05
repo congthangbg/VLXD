@@ -1,11 +1,11 @@
 package com.vn.VLXD.Exception;
 
-import javax.xml.bind.ValidationException;
+import org.springframework.aop.AopInvocationException;
 
-public class ValidateException extends ValidationException{
+public class ValidateException extends AopInvocationException{
 
 	public ValidateException(String msg,String errCode) {
-		super(msg,errCode);
+		super(msg);
 	}
 	
 }

@@ -2,7 +2,6 @@ package com.vn.VLXD.services.Impl;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.xml.bind.ValidationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailAuthenticationException;

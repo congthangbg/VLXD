@@ -1,7 +1,6 @@
 package com.vn.VLXD.controller;
 
 import javax.mail.MessagingException;
-import javax.xml.bind.ValidationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.vn.VLXD.Exception.ValidateException;
 import com.vn.VLXD.common.ResponseBodyDto;
 import com.vn.VLXD.services.MailService;
 
@@ -30,7 +28,7 @@ public class MailController {
 	@ApiOperation(value = "Gửi mail")
 	@PostMapping(value = "/send",consumes = {"multipart/form-data"})
 	public ResponseBodyDto<Object> sendSimpleEMail
-	(@RequestParam String jsonMailReq,@RequestParam(required = false) MultipartFile[] multipartFiles) throws MessagingException, ValidationException{
+	(@RequestParam String jsonMailReq,@RequestParam(required = false) MultipartFile[] multipartFiles) throws MessagingException{
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
 		dto.setData(mailService.sendMailHepper(jsonMailReq, multipartFiles));
 		
