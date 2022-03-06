@@ -11,39 +11,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.persistence.Version;
 
-@Entity(name="STATUS")
+@Entity
+@Table(name="STATUS")
 public class Status implements Serializable {
-
-    /** Primary key. */
-    protected static final String PK = "id";
-
-    /**
-     * The optimistic lock. Available via standard bean get/set operations.
-     */
-    @Version
-    @Column(name="LOCK_FLAG")
-    private Integer lockFlag;
-
-    /**
-     * Access method for the lockFlag property.
-     *
-     * @return the current value of the lockFlag property
-     */
-    public Integer getLockFlag() {
-        return lockFlag;
-    }
-
-    /**
-     * Sets the value of the lockFlag property.
-     *
-     * @param aLockFlag the new value of the lockFlag property
-     */
-    public void setLockFlag(Integer aLockFlag) {
-        lockFlag = aLockFlag;
-    }
-
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="ID", unique=true, nullable=false, precision=19)
@@ -151,15 +124,5 @@ public class Status implements Serializable {
         return sb.toString();
     }
 
-    /**
-     * Return all elements of the primary key.
-     *
-     * @return Map of key names to values
-     */
-    public Map<String, Object> getPrimaryKey() {
-        Map<String, Object> ret = new LinkedHashMap<String, Object>(6);
-        ret.put("id", Long.valueOf(getId()));
-        return ret;
-    }
 
 }

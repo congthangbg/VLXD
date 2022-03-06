@@ -22,16 +22,16 @@ public class UserLogonService {
 		}
 	}
 
-//	public static User currentUser() {
-//		try {
-//			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//			if(principal instanceof UserDetailsImpl) {
-//				return ((UserDetailsImpl) principal).getUser();
-//			}else {
-//				return null;
-//			}
-//		} catch (NullPointerException e) {
-//			return null;
-//		}
-//	}
+	public static Account currentUser() {
+		try {
+			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			if(principal instanceof UserDetailsImpl) {
+				return ((UserDetailsImpl) principal).getAccount();
+			}else {
+				return null;
+			}
+		} catch (NullPointerException e) {
+			return null;
+		}
+	}
 }

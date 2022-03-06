@@ -1,5 +1,7 @@
 package com.vn.VLXD;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -8,7 +10,10 @@ import java.util.List;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-public class sa {
+import com.vn.VLXD.entities.Account;
+import com.vn.VLXD.services.UserLogonService;
+
+public class test {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -24,6 +29,11 @@ public class sa {
 //		 String d = StringUtils.capitalize("nam");
 		 String[] d = StringUtils.commaDelimitedListToStringArray(g);
 		 System.out.println(d[1]);
+		 
+		 LocalDateTime date = LocalDateTime.now();
+		 Timestamp time = new Timestamp(System.currentTimeMillis());
+		 System.out.println(time);
+		 
 	}
 
 }
