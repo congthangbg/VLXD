@@ -94,6 +94,13 @@ public class HdnServiceImpl implements HdnService{
 					hdnCt.setModifyDate(LocalDateTime.now());
 					hdnCt.setStatus(1);
 					hdnCtRepository.save(hdnCt);
+					//Cập nhật số lượng vào product
+					Optional<Product> product = productRepository.findById(e.getProductId());
+					if(product.isPresent()) {
+						product.get().setQuantity(e.getQuantity());
+						productRepository.save(product.get());
+					}
+					
 				}
 			}
 			dto.setData(u2);
@@ -156,7 +163,6 @@ public class HdnServiceImpl implements HdnService{
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
 		Optional<Hdn> optional = hdnRepository.findById(id);
 		if(optional.isPresent()) {
-//			ProductResponse res = MapperUtils.map(optional.get(), ProductResponse.class);
 			dto.setData(optional.get());
 			dto.setMessage(MessageConstant.MSG_OK);
 			dto.setMessageCode(MessageConstant.MSG_OK_CODE);
