@@ -3,8 +3,10 @@
 package com.vn.VLXD.dto.request;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,14 +26,18 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class HdxRequest implements Serializable {
-    private long id;
-    private LocalDateTime releaseDate;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4692466542874550849L;
+	private long id;
+    private Timestamp releaseDate;
     private double owe;
     private long status;
-    private Set<HdxCtRequest> hdxCtRequest;
-    private Set<HdxCtTonRequest> hdxCtTonRequest;
+    private List<HdxCtRequest> hdxCtRequest;
+    private List<HdxCtTonRequest> hdxCtTonRequest;
     private long customerId;
-    private Set<PayRequest> payRequest;
+    private List<PayRequest> payRequest;
 
     /** Default constructor. */
     public HdxRequest() {
