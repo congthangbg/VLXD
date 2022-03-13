@@ -2,6 +2,7 @@ import { useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
+import { spacing } from '@mui/system';
 import {
   Avatar,
   Box,
@@ -13,12 +14,20 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography
+  Typography,
+  Button,
 } from '@mui/material';
 import { getInitials } from '../../utils/get-initials';
 import useMagicColor from './../../hook/useMagicColor';
+import { AccessAlarm, ThreeDRotation,Edit,Delete } from '@mui/icons-material';
 
-export const CustomerListResults = ({ customers, ...rest }) => {
+
+export const CustomerListResults = ({
+   customers,
+   setOpenModal,
+   handleDelete,
+   handleEdit,
+   setOpen, ...rest }) => {
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
@@ -63,7 +72,14 @@ export const CustomerListResults = ({ customers, ...rest }) => {
     setPage(newPage);
   };
 
-  
+const handleDelete1 = (e) => {
+  setOpenModal(true)
+  handleDelete(e)
+}
+const handleUpdate = (e) => {
+  setOpen(true)
+  handleEdit(e)
+}
 
 
   return (
@@ -73,31 +89,23 @@ export const CustomerListResults = ({ customers, ...rest }) => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedCustomerIds.length === customers.length}
-                    color="primary"
-                    indeterminate={
-                      selectedCustomerIds.length > 0
-                      && selectedCustomerIds.length < customers.length
-                    }
-                    onChange={handleSelectAll}
-                  />
+                <TableCell>
+                  STT
                 </TableCell>
                 <TableCell>
-                  Name
+                  Họ tên
                 </TableCell>
                 <TableCell>
-                  Email
+                  Số điện thoại
                 </TableCell>
                 <TableCell>
-                  Location
+                  Địa chỉ
                 </TableCell>
                 <TableCell>
-                  Phone
+                  Chú thích
                 </TableCell>
                 <TableCell>
-                  Registration date
+                  Hành động
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -106,14 +114,9 @@ export const CustomerListResults = ({ customers, ...rest }) => {
                 <TableRow
                   hover
                   key={customer.id}
-                  selected={selectedCustomerIds.indexOf(customer.id) !== -1}
                 >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedCustomerIds.indexOf(customer.id) !== -1}
-                      onChange={(event) => handleSelectOne(event, customer.id)}
-                      value="true"
-                    />
+                  <TableCell >
+                    {customer.order}
                   </TableCell>
                   <TableCell>
                     <Box
@@ -122,12 +125,12 @@ export const CustomerListResults = ({ customers, ...rest }) => {
                         display: 'flex'
                       }}
                     >
-                      <Avatar
+                      {/* <Avatar
                         src={customer.avatarUrl}
                         sx={{ mr: 2 }}
                       >
                         {getInitials(customer.name)}
-                      </Avatar>
+                      </Avatar> */}
                       <Typography
                         color="textPrimary"
                         variant="body1"
@@ -137,17 +140,42 @@ export const CustomerListResults = ({ customers, ...rest }) => {
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {customer.email}
-                  </TableCell>
-                  <TableCell>
-                    {`${customer.address.city}, ${customer.address.state}, ${customer.address.country}`}
-                  </TableCell>
-                  <TableCell>
                     {customer.phone}
                   </TableCell>
                   <TableCell>
-                    {format(customer.createdAt, 'dd/MM/yyyy')}
+                    {customer.village.villageName}
                   </TableCell>
+                  <TableCell>
+                    {customer.address}
+                    {/* {`${customer.address.city}, ${customer.address.state}, ${customer.address.country}`} */}
+                  </TableCell>
+                  <TableCell>
+                    <Box
+                      sx={{
+                        alignItems: 'center',
+                        display: 'flex'
+                      }}
+                    >
+
+                      <Typography
+                        color="textPrimary"
+                        variant="body1"
+                      >
+                        <Button  onClick={()=>handleUpdate(customer) }  style={{marginRight:4}} color="warning" variant="contained">
+                          Sửa
+                          <Edit/>
+                        </Button>
+                        <Button onClick={()=>handleDelete1(customer) } color="error" variant="contained">
+                          Xóa
+                          <Delete/>
+                        </Button>
+                      
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                  {/* <TableCell>
+                    {format(customer.createdAt, 'dd/MM/yyyy')}
+                  </TableCell> */}
                 </TableRow>
               ))}
             </TableBody>

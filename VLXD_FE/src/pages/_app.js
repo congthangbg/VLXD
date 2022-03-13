@@ -8,11 +8,15 @@ import { createEmotionCache } from '../utils/create-emotion-cache';
 import { theme } from '../theme';
 import { ToastContainer } from 'react-toastify';
 import { useEffect } from 'react';
+import { injectStyle } from "react-toastify/dist/inject-style";
 
 const clientSideEmotionCache = createEmotionCache();
 
 
 const App = (props) => {
+  if (typeof window !== "undefined") {
+    injectStyle();
+  }
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const getLayout = Component.getLayout ?? ((page) => page);
   return (

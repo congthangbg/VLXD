@@ -146,7 +146,10 @@ public class HdxServiceImpl implements HdxService{
 			if(optional.isPresent()) {
 				Hdx u2 = optional.get();
 				
-				
+				Optional<Customer> cOptional = customerRepository.findById(request.getCustomerId());
+				if(cOptional.isPresent()) {
+					u2.setCustomer(cOptional.get());
+				}
 				if(!request.getHdxCtRequest().isEmpty()) {
 					List<HdxCt> hdnCts = hdxCtRepository.findByHdx(u2);
 					if(!hdnCts.isEmpty()) {

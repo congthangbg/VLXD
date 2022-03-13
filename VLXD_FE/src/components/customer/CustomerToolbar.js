@@ -1,3 +1,4 @@
+import {React,useState} from 'react'
 import {
   Box,
   Button,
@@ -8,14 +9,13 @@ import {
   SvgIcon, Typography
 } from '@mui/material';
 import { Search as SearchIcon } from '../../icons/search';
-import { Upload as UploadIcon } from '../../icons/upload';
-import { Download as DownloadIcon } from '../../icons/download';
-import useMagicColor from './../../hook/useMagicColor';
-
-
-export const CustomerListToolbar = (props) => (
-  <Box {...props}>
-    <Box
+import CustomizedDialogs from './CustomizedDialogs';
+import { ToastContainer } from 'react-toastify';
+function CustomerToolbar(props) {
+const {setOpen} = props;
+  return (
+    <div>
+       <Box
       sx={{
         alignItems: 'center',
         display: 'flex',
@@ -28,27 +28,16 @@ export const CustomerListToolbar = (props) => (
         sx={{ m: 1 }}
         variant="h4"
       >
-        Customers
+        Khách hàng
       </Typography>
 
       <Box sx={{ m: 1 }}>
         <Button
-          startIcon={(<UploadIcon fontSize="small" />)}
-          sx={{ mr: 1 }}
-        >
-          Import
-        </Button>
-        <Button
-          startIcon={(<DownloadIcon fontSize="small" />)}
-          sx={{ mr: 1 }}
-        >
-          Export
-        </Button>
-        <Button
           color="primary"
           variant="contained"
+          onClick={e=>setOpen(true)}
         >
-          Add Customers
+          Thêm mới khách hàng
         </Button>
       </Box>
     </Box>
@@ -77,5 +66,11 @@ export const CustomerListToolbar = (props) => (
         </CardContent>
       </Card>
     </Box>
-  </Box>
-);
+
+    </div>
+   
+  )
+
+}
+
+export default CustomerToolbar

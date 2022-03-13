@@ -56,6 +56,7 @@ const Register = () => {
         )
     }),
     onSubmit: () => {
+      console.log(formik);
       router.push('/');
     }
   });
