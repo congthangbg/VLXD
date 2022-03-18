@@ -9,6 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 export default function AlertDialog(props) {
   const {open,setOpen,text,onDelete} = props;
 
+
   const handleOk = () => {
    onDelete();
   };
@@ -20,6 +21,8 @@ export default function AlertDialog(props) {
   return (
     <div>
       <Dialog
+       fullWidth={true}
+       maxWidth='sm'
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"

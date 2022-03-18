@@ -27,7 +27,9 @@ export const CustomerListResults = ({
    setOpenModal,
    handleDelete,
    handleEdit,
-   setOpen, ...rest }) => {
+   setOpen,
+   setQuery,
+   query, ...rest }) => {
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
@@ -66,12 +68,19 @@ export const CustomerListResults = ({
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
+    setQuery({
+      ...query,
+      limit: event.target.value
+    })
   };
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
+    setQuery({
+      ...query,
+      page: newPage
+    })
   };
-
 const handleDelete1 = (e) => {
   setOpenModal(true)
   handleDelete(e)

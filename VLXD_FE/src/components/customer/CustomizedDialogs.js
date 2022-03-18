@@ -20,6 +20,7 @@ import { ToastContainer } from 'react-toastify';
 import { useRouter } from 'next/router';
 import login401 from 'src/hook/login401';
 import useCallVillage from 'src/hook/useCallVillage';
+import useCallCustomerSave from 'src/hook/useCallCustomerSave';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -61,32 +62,25 @@ BootstrapDialogTitle.propTypes = {
 
 export default function CustomizedDialogs(props) {
   const router = useRouter();
-  const { open, setOpen,setCheck,dataEdit,setDataEdit } = props;
-  const data =useCallVillage();
+  const { open, setOpen, setCheck, dataEdit, setDataEdit } = props;
+  const data = useCallVillage();
   const handleClose = () => {
     setOpen(false);
     formik.resetForm();
     setDataEdit({})
+    setCheck(false)
   };
-  console.log("dataEdit",dataEdit);
-//   React.useEffect(()=>{
-// if(dataEdit && dataEdit !== undefined && dataEdit !== null){
-//   console.log("Sss");
-//   formik.initialValues={
-//     name: dataEdit.name
-//   }
-// }
-//   },[dataEdit])
+
 
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      id: dataEdit ? dataEdit.id :'',
-      name: dataEdit ? dataEdit.name :'',
-      phone: dataEdit ? dataEdit.phone :'',
-      villageId: dataEdit &&dataEdit.village ? dataEdit.village :'',
-      address: dataEdit ? dataEdit.address :'',
+      id: dataEdit ? dataEdit.id : '',
+      name: dataEdit ? dataEdit.name : '',
+      phone: dataEdit ? dataEdit.phone : '',
+      villageId: dataEdit && dataEdit.village ? dataEdit.village : '',
+      address: dataEdit ? dataEdit.address : '',
     },
     validationSchema: Yup.object({
       name: Yup
@@ -99,31 +93,33 @@ export default function CustomizedDialogs(props) {
       // .required(
       //   'Bạn chưa nhập số điện thoại'),
       villageId: Yup
-        .number()
+        .object()
         .required(
           'Bạn chưa chọn thôn !'),
       address: Yup
         .string()
         .max(255)
     }),
-    onSubmit: (values,{ resetForm }) => {
-     
-      axiosInstance.post(SAVE_UPDATE_CUSTOMER,values)
-      .then(response=>{
-        toastifyAlert.success(TB_SAVE_UPDATE_CUSTOMER)
-        setCheck(true)
-      })
-      .catch(err => {
-        console.log("ee",err);
-        toastifyAlert.error(TB_SAVE_UPDATE_CUSTOMER_ERR)
-        setCheck(false)
-      })
+    onSubmit: (values, { resetForm }) => {
+      const newData = {
+        ...values,
+        villageId: values.villageId.id
+      }
+      axiosInstance.post(SAVE_UPDATE_CUSTOMER, newData)
+        .then(response => {
+          setCheck(true)
+          toastifyAlert.success(TB_SAVE_UPDATE_CUSTOMER)
+        })
+        .catch(err => {
+          console.log("ee", err);
+          toastifyAlert.error(TB_SAVE_UPDATE_CUSTOMER_ERR)
+          setCheck(false)
+        })
       handleClose();
       resetForm();
-     
+
     }
   });
-  console.log("formik",formik);
   return (
     <div>
       <BootstrapDialog
@@ -169,9 +165,9 @@ export default function CustomizedDialogs(props) {
               options={data}
               // groupBy={ option => option.state }
               getOptionLabel={option => option.villageName}
-              onChange={(event, value) => formik.setFieldValue("villageId", value.id)}
+              onChange={(event, value) => formik.setFieldValue("villageId", value)}
               // onSelect={(event, value) => console.log(event.target.value)}
-              value={formik.values && formik.values.villageId ? formik.values.villageId :console.log("ssss")}
+              value={formik.values && formik.values.villageId ? formik.values.villageId : undefined}
               style={{ width: 300 }}
               renderInput={params => (
                 <TextField
@@ -180,9 +176,8 @@ export default function CustomizedDialogs(props) {
                   margin="normal"
                   label="Thôn"
                   fullWidth
-                  value={formik.values && formik.values.villageId ? formik.values.villageId :console.log("ssss")}
                   error={Boolean(formik.touched.villageId && formik.errors.villageId)}
-                 helperText={formik.touched.villageId && formik.errors.villageId}
+                  helperText={formik.touched.villageId && formik.errors.villageId}
                 />
               )}
             />
@@ -204,10 +199,10 @@ export default function CustomizedDialogs(props) {
 
           </DialogContent>
           <DialogActions  >
-          <Button type = "reset" onClick={() =>handleClose()} style={{fontSize:20,marginRight:10,fontFamily:"Times New Roman",color: "black"}} color="error" size="large" variant="contained" autoFocus  >
+            <Button type="reset" onClick={() => handleClose()} style={{ fontSize: 20, marginRight: 10, fontFamily: "Times New Roman", color: "black" }} color="error" size="large" variant="contained" autoFocus  >
               Hủy
             </Button>
-            <Button type="submit" style={{fontSize:20,marginRight:30,fontFamily:"Times New Roman",color: "black"}} color="secondary" size="large" variant="contained" autoFocus  >
+            <Button type="submit" style={{ fontSize: 20, marginRight: 30, fontFamily: "Times New Roman", color: "black" }} color="secondary" size="large" variant="contained" autoFocus  >
               Lưu lại
             </Button>
           </DialogActions>
