@@ -10,14 +10,16 @@ function useCallCustomer(check,setCheck,query) {
    useEffect(() => {
       axiosInstance.get(GETALL_AND_SREACH_CUSTOMER+`?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}`)
     .then(response => {
-      const result = {
-        data: null,
+      const result ={
+        data:null,
+        totalRecords :null
       }
-      result.data = response.data.map((item, index) => ({
+      result.data= response && response.data.map((item, index) => ({
         ...item,
-        order: index + 1,
+        order: query.skip + index + 1,
       }))
-      setData(result.data)
+      result.totalRecords = response.totalRecords;
+      setData(result)
       setCheck(false)
     })
     .catch(err => {

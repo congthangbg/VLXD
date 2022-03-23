@@ -31,8 +31,31 @@ const Customers = () => {
   const [openModal, setOpenModal] = useState(false)
   const [dataDelete, setDataDelete] = useState({})
   const [dataEdit, setDataEdit] = useState({})
-  const [query, setQuery] = useState({ keySearch: '', limit: 10, page: 0 })
+  const [query, setQuery] = useState({ keySearch: '', limit: 5, page: 0,skip:0 })
  const {data,setData}= useCallCustomer(check, setCheck, query)
+
+ useEffect(()=>{
+  axiosInstance.get(GETALL_AND_SREACH_CUSTOMER + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}`)
+  .then(response => {
+    const result ={
+      data:null,
+      totalRecords :null
+    }
+    result.data= response && response.data.map((item, index) => ({
+      ...item,
+      order: query.skip + index + 1,
+    }))
+    result.totalRecords = response.totalRecords;
+    setData(result)
+    setCheck(false)
+    setQuery({...query,skip:0})
+  })
+  .catch(err => {
+    console.log(err);
+    login401(err && err.response && err.response.status)
+  })
+ },[query.page,query.limit])
+
 
   const handleTextSearch = (e) => {
     setQuery({
@@ -45,12 +68,14 @@ const Customers = () => {
       .then(response => {
         const result = {
           data: null,
+          totalRecords:null
         }
         result.data = response.data.map((item, index) => ({
           ...item,
           order: index + 1,
         }))
-        setData(result.data)
+        result.totalRecords = response.totalRecords;
+        setData(result)
         setCheck(false)
       })
       .catch(err => {
@@ -77,7 +102,6 @@ const Customers = () => {
         setCheck(false)
       })
   }
-
   return <>
     <Head>
       <title>

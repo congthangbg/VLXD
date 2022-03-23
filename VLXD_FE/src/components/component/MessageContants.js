@@ -20,3 +20,8 @@ export const SAVE_ERROR = "Thêm mới thất bại!"
 
 export const DELETE_SUCCESS = "Xóa thành công!"
 export const DELETE_ERROR = "Xóa thất bại!"
+
+export const NOTIFY ={
+   NOT_NAME : 'Bạn chưa nhập họ tên !',
+   VILLAGE : 'Bạn chưa chọn thôn !'
+}

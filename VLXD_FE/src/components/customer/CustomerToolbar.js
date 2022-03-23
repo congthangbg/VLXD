@@ -1,4 +1,4 @@
-import { React, useState } from 'react'
+import { React, useEffect, useState } from 'react'
 import {
   Box,
   Button,
@@ -11,6 +11,7 @@ import {
 import { Search as SearchIcon } from '../../icons/search';
 import CustomizedDialogs from './CustomizedDialogs';
 import { ToastContainer } from 'react-toastify';
+import ClearIcon from '@mui/icons-material/Clear';
 
 import { styled } from '@mui/material/styles';
 function CustomerToolbar(props) {
@@ -30,7 +31,6 @@ function CustomerToolbar(props) {
         keySearch:data
       }
       setQuery(newData)
-      console.log("newData",newData);
       onSearch(newData)
     }
   }
@@ -38,6 +38,19 @@ function CustomerToolbar(props) {
     setData(e.target.value)
     handleSearch(e.target.value)
   }
+  const onClear = ()=>{
+    const newData = {
+      ...query,
+      keySearch:''
+    }
+    setQuery(newData)
+    setData('')
+  }
+  useEffect(()=>{
+    if(data==''){
+      onSearch(query)
+    }
+  },[data])
   return (
     <div>
       <Box
@@ -75,9 +88,13 @@ function CustomerToolbar(props) {
                   fullWidth
                   onChange={onTextSearch}
                   onKeyPress={handleKeyPress}
+                  value={data && data || ''}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="start">
+                         <IconButton onClick={onClear}  type="reset" sx={{ p: '10px' }} aria-label="search">
+                            <ClearIcon />
+                          </IconButton>
                           <IconButton onClick={onSearch}  type="submit" sx={{ p: '10px' }} aria-label="search">
                             <SearchIcon />
                           </IconButton>

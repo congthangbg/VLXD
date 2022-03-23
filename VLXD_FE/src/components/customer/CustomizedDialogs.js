@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import { Autocomplete, TextField } from '@mui/material';
 import { Field, useFormik } from 'formik';
 import * as Yup from 'yup';
-import { GETALL_AND_SEARCH_VILLAGE, LOGIN, LOGIN_FAILED, SAVE_UPDATE_CUSTOMER, STATUS_401, STAUTS_401, TB_SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER_ERR } from '../component/MessageContants';
+import { GETALL_AND_SEARCH_VILLAGE, LOGIN, LOGIN_FAILED, NOTIFY, SAVE_UPDATE_CUSTOMER, STATUS_401, STAUTS_401, TB_SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER_ERR } from '../component/MessageContants';
 import axiosInstance from '../config/axiosConfig';
 import FormikAutocomplete from './FormikAutocomplete';
 import toastifyAlert from '../component/toastify-message/toastify';
@@ -79,23 +79,21 @@ export default function CustomizedDialogs(props) {
       id: dataEdit ? dataEdit.id : '',
       name: dataEdit ? dataEdit.name : '',
       phone: dataEdit ? dataEdit.phone : '',
-      villageId: dataEdit && dataEdit.village ? dataEdit.village : '',
+      villageId: dataEdit && dataEdit.village ? dataEdit.village : undefined,
       address: dataEdit ? dataEdit.address : '',
     },
     validationSchema: Yup.object({
       name: Yup
         .string()
         .max(255)
-        .required(
-          'Bạn chưa nhập họ tên !'),
+        .required(NOTIFY.NOT_NAME),
       phone: Yup
         .number(),
       // .required(
       //   'Bạn chưa nhập số điện thoại'),
       villageId: Yup
-        .object()
-        .required(
-          'Bạn chưa chọn thôn !'),
+        .object().nullable()
+        .required(NOTIFY.VILLAGE),
       address: Yup
         .string()
         .max(255)
@@ -120,6 +118,8 @@ export default function CustomizedDialogs(props) {
 
     }
   });
+
+  console.log("formik0",formik);
   return (
     <div>
       <BootstrapDialog

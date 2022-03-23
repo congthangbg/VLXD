@@ -14,7 +14,7 @@ function useCallVillage() {
     })
     .catch(err => {
       console.log(err);
-      login401(err.response.status)
+      login401(err &&err.response && err.response.status)
    
     })
     

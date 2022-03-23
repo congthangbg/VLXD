@@ -34,6 +34,11 @@ const items = [
     title: 'Sản phẩm'
   },
   {
+    href: '/productType',
+    icon: (<ShoppingBagIcon fontSize="small" />),
+    title: 'Loại sản phẩm'
+  },
+  {
     href: '/account',
     icon: (<UserIcon fontSize="small" />),
     title: 'Tài khoản'
