@@ -10,9 +10,15 @@ export const LOGIN = "/login"
 //Thôn list
 export const GETALL_AND_SEARCH_VILLAGE = "/village"
 //Khách hàng
-export const GETALL_AND_SREACH_CUSTOMER = "/customer"
+export const GETALL_AND_SREACH_CUSTOMER = "/customer/callCustomer"
 export const DELETE_CUSTOMER = "/customer/delete"
 export const SAVE_UPDATE_CUSTOMER = "/customer/saveOrUpdate"
+//Loại sản phẩm
+export const PRODUCT_TYPE={
+   GET_ALL : '/productType',
+   SAVE_UPDATE:"/productType/saveOrUpdate",
+   DELETE:"/productType/delete",
+}
 
 export const STATUS_401 = 401
 export const SAVE_SUCCESS = "Thêm mới thành công!"
@@ -23,5 +29,6 @@ export const DELETE_ERROR = "Xóa thất bại!"
 
 export const NOTIFY ={
    NOT_NAME : 'Bạn chưa nhập họ tên !',
-   VILLAGE : 'Bạn chưa chọn thôn !'
+   VILLAGE : 'Bạn chưa chọn thôn !',
+   NOT_BLANK : 'Không được để trống !',
 }

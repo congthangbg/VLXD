@@ -3,6 +3,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import { spacing } from '@mui/system';
+import moment from 'moment'
 import {
   Avatar,
   Box,
@@ -18,11 +19,11 @@ import {
   Button,
 } from '@mui/material';
 import { getInitials } from '../../utils/get-initials';
-import useMagicColor from './../../hook/useMagicColor';
+import useMagicColor from '../../hook/useMagicColor';
 import { AccessAlarm, ThreeDRotation,Edit,Delete } from '@mui/icons-material';
 
 
-export const CustomerListResults = ({
+export const ProductTypeListResults = ({
    customers,
    setOpenModal,
    handleDelete,
@@ -71,16 +72,13 @@ const handleUpdate = (e) => {
                   STT
                 </TableCell>
                 <TableCell>
-                  Họ tên
+                  Tên loại sản phẩm
                 </TableCell>
                 <TableCell>
-                  Số điện thoại
+                  Ngày tạo
                 </TableCell>
                 <TableCell>
-                  Địa chỉ
-                </TableCell>
-                <TableCell>
-                  Chú thích
+                  Ngày cập nhật
                 </TableCell>
                 <TableCell>
                   Hành động
@@ -103,29 +101,21 @@ const handleUpdate = (e) => {
                         display: 'flex'
                       }}
                     >
-                      {/* <Avatar
-                        src={customer.avatarUrl}
-                        sx={{ mr: 2 }}
-                      >
-                        {getInitials(customer.name)}
-                      </Avatar> */}
                       <Typography
                         color="textPrimary"
                         variant="body1"
                       >
-                        {customer.name}
+                        {customer.typeName}
                       </Typography>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {customer.phone}
+                    {/* {customer.createDate} */}
+                    {format(new Date(customer.createDate), 'dd/MM/yyyy')}
                   </TableCell>
                   <TableCell>
-                    {customer.village.villageName}
-                  </TableCell>
-                  <TableCell>
-                    {customer.address}
-                    {/* {`${customer.address.city}, ${customer.address.state}, ${customer.address.country}`} */}
+                    {/* {customer.modifyDate} */}
+                    {format(new Date(customer.modifyDate), 'dd/MM/yyyy')}
                   </TableCell>
                   <TableCell>
                     <Box
@@ -139,6 +129,7 @@ const handleUpdate = (e) => {
                         color="textPrimary"
                         variant="body1"
                       >
+                        
                         <Button  onClick={()=>handleUpdate(customer) }  style={{marginRight:4}} color="warning" variant="contained">
                           Sửa
                           <Edit/>
@@ -173,6 +164,6 @@ const handleUpdate = (e) => {
   );
 };
 
-// CustomerListResults.propTypes = {
+// ProductTypeListResults.propTypes = {
 //   customers: PropTypes.array.isRequired
 // };

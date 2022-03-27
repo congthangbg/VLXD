@@ -1,5 +1,6 @@
 package com.vn.VLXD.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import com.vn.VLXD.common.ResponseBodyDto;
 import com.vn.VLXD.dto.request.CustomerRequest;
 import com.vn.VLXD.dto.request.SupplierRequest;
 import com.vn.VLXD.dto.request.VillageRequest;
+import com.vn.VLXD.entities.Customer;
 import com.vn.VLXD.entities.Supplier;
 import com.vn.VLXD.services.CustomerService;
 import com.vn.VLXD.services.SupplierService;
@@ -42,15 +44,28 @@ public class CustomerController {
     @GetMapping("")
     @ApiOperation(value = "Danh sách All")
     public ResponseBodyDto<Object> findAllSearch(
-    		@RequestParam(value = "keySearch",required = false) String keyString,
+    		@RequestParam(value = "keySearch",required = false) String keySearch,
     		@RequestParam(value = "page",required = false) Optional<Integer> page,
     		@RequestParam(value = "size",required = false) Optional<Integer> size ) {
     	int currentPage = page.orElse(0);
     	int limit = size.orElse(100);
     	Pageable pageable = PageRequest.of(currentPage, limit, Sort.by("id").descending());
-    	ResponseBodyDto<Object> dto = service.findAllSearch(keyString, pageable);
+    	ResponseBodyDto<Object> dto = service.findAllSearch(keySearch, pageable);
     	
         return dto;
+    }
+    @GetMapping("/callCustomer")
+    @ApiOperation(value = "Danh sách All")
+    public ResponseBodyDto<Object> callCustomer(
+    		@RequestParam(value = "keySearch",required = false) String keySearch,
+    		@RequestParam(value = "page",required = false) Optional<Integer> page,
+    		@RequestParam(value = "size",required = false) Optional<Integer> size,
+    		@RequestParam(value = "order",required = false,defaultValue = "id") Optional<String> order ) throws Exception {
+    	int currentPage = page.orElse(0);
+    	int limit = size.orElse(100);
+    	ResponseBodyDto<Object> lst = service.findAllTest(keySearch == null ? "" : keySearch ,currentPage,size.get(),order.get());
+    	
+        return lst;
     }
     @PostMapping("/saveOrUpdate")
     @ApiOperation(value = "Thêm or Sửa")

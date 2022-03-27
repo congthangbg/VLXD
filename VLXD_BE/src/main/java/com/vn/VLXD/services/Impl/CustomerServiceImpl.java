@@ -1,6 +1,7 @@
 package com.vn.VLXD.services.Impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,6 +124,23 @@ public class CustomerServiceImpl implements CustomerService{
 			dto.setMessageCode(MessageConstant.MSG_10_CODE);
 		}
 		return dto;
+	}
+
+	@Override
+	public ResponseBodyDto<Object> findAllTest(String Text, Integer page, Integer size, String orderBy) {
+		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
+		try {
+			List<Customer> list = repository.findAllTest(Text, page, size, orderBy);
+			Integer count = repository.CustomerCount(Text, page, size, orderBy);
+			dto.setData(list);
+			dto.setTotalRecords(count);
+			dto.setMessage(MessageConstant.MSG_OK);
+			dto.setMessageCode(MessageConstant.MSG_OK_CODE);
+			return dto;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	

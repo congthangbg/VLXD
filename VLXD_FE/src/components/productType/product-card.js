@@ -4,6 +4,7 @@ import { Clock as ClockIcon } from '../../icons/clock';
 import { Download as DownloadIcon } from '../../icons/download';
 
 export const ProductCard = ({ product, ...rest }) => (
+  
   <Card
     sx={{
       display: 'flex',
@@ -12,6 +13,7 @@ export const ProductCard = ({ product, ...rest }) => (
     }}
     {...rest}
   >
+    {console.log(product)}
     <CardContent>
       <Box
         sx={{

@@ -12,9 +12,8 @@ import Typography from '@mui/material/Typography';
 import { Autocomplete, TextField } from '@mui/material';
 import { Field, useFormik } from 'formik';
 import * as Yup from 'yup';
-import { GETALL_AND_SEARCH_VILLAGE, LOGIN, LOGIN_FAILED, NOTIFY, SAVE_UPDATE_CUSTOMER, STATUS_401, STAUTS_401, TB_SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER_ERR } from '../component/MessageContants';
+import { GETALL_AND_SEARCH_VILLAGE, LOGIN, LOGIN_FAILED, NOTIFY, PRODUCT_TYPE, SAVE_ERROR, SAVE_SUCCESS, SAVE_UPDATE_CUSTOMER, STATUS_401, STAUTS_401, TB_SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER_ERR } from '../component/MessageContants';
 import axiosInstance from '../config/axiosConfig';
-import FormikAutocomplete from './FormikAutocomplete';
 import toastifyAlert from '../component/toastify-message/toastify';
 import { ToastContainer } from 'react-toastify';
 import { useRouter } from 'next/router';
@@ -63,7 +62,6 @@ BootstrapDialogTitle.propTypes = {
 export default function CustomizedDialogs(props) {
   const router = useRouter();
   const { open, setOpen, setCheck, dataEdit, setDataEdit } = props;
-  const data = useCallVillage();
   const handleClose = () => {
     setOpen(false);
     formik.resetForm();
@@ -77,40 +75,23 @@ export default function CustomizedDialogs(props) {
     enableReinitialize: true,
     initialValues: {
       id: dataEdit ? dataEdit.id : '',
-      name: dataEdit ? dataEdit.name : '',
-      phone: dataEdit ? dataEdit.phone : '',
-      villageId: dataEdit && dataEdit.village ? dataEdit.village : undefined,
-      address: dataEdit ? dataEdit.address : '',
+      typeName: dataEdit ? dataEdit.typeName : '',
     },
     validationSchema: Yup.object({
-      name: Yup
+      typeName: Yup
         .string()
         .max(255)
-        .required(NOTIFY.NOT_NAME),
-      phone: Yup
-        .number(),
-      // .required(
-      //   'Bạn chưa nhập số điện thoại'),
-      villageId: Yup
-        .object().nullable()
-        .required(NOTIFY.VILLAGE),
-      address: Yup
-        .string()
-        .max(255)
+        .required(NOTIFY.NOT_BLANK),
     }),
     onSubmit: (values, { resetForm }) => {
-      const newData = {
-        ...values,
-        villageId: values.villageId.id
-      }
-      axiosInstance.post(SAVE_UPDATE_CUSTOMER, newData)
+      axiosInstance.post(PRODUCT_TYPE.SAVE_UPDATE, values)
         .then(response => {
           setCheck(true)
-          toastifyAlert.success(TB_SAVE_UPDATE_CUSTOMER)
+          toastifyAlert.success(SAVE_SUCCESS)
         })
         .catch(err => {
           console.log("ee", err);
-          toastifyAlert.error(TB_SAVE_UPDATE_CUSTOMER_ERR)
+          toastifyAlert.error(SAVE_ERROR)
           setCheck(false)
         })
       handleClose();
@@ -118,7 +99,7 @@ export default function CustomizedDialogs(props) {
 
     }
   });
-
+console.log('formi',formik);
   return (
     <div>
       <BootstrapDialog
@@ -130,7 +111,7 @@ export default function CustomizedDialogs(props) {
       >
         <form onSubmit={formik.handleSubmit}>
           <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-            Thêm khách hàng
+            Thêm loại sản phẩm
           </BootstrapDialogTitle>
           <DialogContent dividers>
 
@@ -138,64 +119,15 @@ export default function CustomizedDialogs(props) {
               error={Boolean(formik.touched.name && formik.errors.name)}
               fullWidth
               helperText={formik.touched.name && formik.errors.name}
-              label="Họ tên"
+              label="Tên loại sản phẩm"
               margin="normal"
-              name="name"
+              name="typeName"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
-              value={formik.values.name}
+              value={formik.values.typeName}
               variant="outlined"
             />
-            <TextField
-              error={Boolean(formik.touched.phone && formik.errors.phone)}
-              fullWidth
-              helperText={formik.touched.phone && formik.errors.phone}
-              label="Số điện thoại"
-              margin="normal"
-              name="phone"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              value={formik.values.phone}
-              variant="outlined"
-            />
-            <Autocomplete
-              id="villageId"
-              name="villageId"
-              options={data}
-              // groupBy={ option => option.state }
-              getOptionLabel={option => option.villageName}
-              onChange={(event, value) => formik.setFieldValue("villageId", value)}
-              // onSelect={(event, value) => console.log(event.target.value)}
-              value={formik.values && formik.values.villageId ? formik.values.villageId : undefined}
-              style={{ width: 300 }}
-              renderInput={params => (
-                <TextField
-                  {...params}
-                  onChange={formik.handleChange}
-                  margin="normal"
-                  label="Thôn"
-                  fullWidth
-                  error={Boolean(formik.touched.villageId && formik.errors.villageId)}
-                  helperText={formik.touched.villageId && formik.errors.villageId}
-                />
-              )}
-            />
-            <TextField
-              error={Boolean(formik.touched.address && formik.errors.address)}
-              fullWidth
-              helperText={formik.touched.address && formik.errors.address}
-              label="Địa chỉ chi tiết"
-              margin="normal"
-              name="address"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              value={formik.values.address}
-              variant="outlined"
-            />
-
-
-
-
+            
           </DialogContent>
           <DialogActions  >
             <Button type="reset" onClick={() => handleClose()} style={{ fontSize: 20, marginRight: 10, fontFamily: "Times New Roman", color: "black" }} color="error" size="large" variant="contained" autoFocus  >

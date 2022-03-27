@@ -31,7 +31,7 @@ const Customers = () => {
   const [openModal, setOpenModal] = useState(false)
   const [dataDelete, setDataDelete] = useState({})
   const [dataEdit, setDataEdit] = useState({})
-  const [query, setQuery] = useState({ keySearch: '', limit: 5, page: 0,skip:0 })
+  const [query, setQuery] = useState({ keySearch: '', limit: 10, page: 0,skip:0 })
  const {data,setData}= useCallCustomer(check, setCheck, query)
 
  useEffect(()=>{

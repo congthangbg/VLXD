@@ -3,6 +3,7 @@
 package com.vn.VLXD.entities;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,11 +28,11 @@ public class ProductType implements Serializable {
     @Column(name="TYPE_NAME", length=100)
     private String typeName;
     @Column(name="CREATE_DATE")
-    private LocalDateTime createDate;
+    private Timestamp createDate;
     @Column(name="CREATE_BY", length=100)
     private String createBy;
     @Column(name="MODIFY_DATE")
-    private LocalDateTime modifyDate;
+    private Timestamp modifyDate;
     @Column(name="UPDATE_BY", length=100)
     private String updateBy;
     @Column(name="STATUS", precision=19)
@@ -83,7 +84,7 @@ public class ProductType implements Serializable {
      *
      * @return the current value of createDate
      */
-    public LocalDateTime getCreateDate() {
+    public Timestamp getCreateDate() {
         return createDate;
     }
 
@@ -92,7 +93,7 @@ public class ProductType implements Serializable {
      *
      * @param aCreateDate the new value for createDate
      */
-    public void setCreateDate(LocalDateTime aCreateDate) {
+    public void setCreateDate(Timestamp aCreateDate) {
         createDate = aCreateDate;
     }
 
@@ -119,7 +120,7 @@ public class ProductType implements Serializable {
      *
      * @return the current value of modifyDate
      */
-    public LocalDateTime getModifyDate() {
+    public Timestamp getModifyDate() {
         return modifyDate;
     }
 
@@ -128,7 +129,7 @@ public class ProductType implements Serializable {
      *
      * @param aModifyDate the new value for modifyDate
      */
-    public void setModifyDate(LocalDateTime aModifyDate) {
+    public void setModifyDate(Timestamp aModifyDate) {
         modifyDate = aModifyDate;
     }
 

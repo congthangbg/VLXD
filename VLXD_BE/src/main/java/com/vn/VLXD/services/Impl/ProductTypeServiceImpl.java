@@ -1,5 +1,6 @@
 package com.vn.VLXD.services.Impl;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -31,9 +32,9 @@ public class ProductTypeServiceImpl implements ProductTypeService{
 		if(request.getId() == 0 ) {
 			ProductType u = MapperUtils.map(request, ProductType.class);
 			u.setCreateBy(UserLogonService.getUsername());
-			u.setCreateDate(LocalDateTime.now());
+			u.setCreateDate(new Timestamp(System.currentTimeMillis()));
 			u.setUpdateBy(UserLogonService.getUsername());
-			u.setModifyDate(LocalDateTime.now());
+			u.setModifyDate(new Timestamp(System.currentTimeMillis()));
 			ProductType u2=  repository.save(u);
 			dto.setData(u2);
 			dto.setMessage(MessageConstant.MSG_OK);
@@ -46,7 +47,7 @@ public class ProductTypeServiceImpl implements ProductTypeService{
 					u.setTypeName(request.getTypeName());	
 					}
 				u.setUpdateBy(UserLogonService.getUsername());
-				u.setModifyDate(LocalDateTime.now());
+				u.setModifyDate(new Timestamp(System.currentTimeMillis()));
 				
 				ProductType u1 = repository.save(u);
 				dto.setData(u1);
