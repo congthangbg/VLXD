@@ -19,6 +19,13 @@ export const PRODUCT_TYPE={
    SAVE_UPDATE:"/productType/saveOrUpdate",
    DELETE:"/productType/delete",
 }
+//list thôn
+export const VILLAGE_API={
+   GET_ALL : '/village',
+   SAVE_UPDATE:"/village/saveOrUpdate",
+   DELETE:"/village/delete",
+}
+
 
 export const STATUS_401 = 401
 export const SAVE_SUCCESS = "Thêm mới thành công!"

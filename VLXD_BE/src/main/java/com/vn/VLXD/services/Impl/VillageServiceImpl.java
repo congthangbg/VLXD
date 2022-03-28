@@ -37,7 +37,11 @@ public class VillageServiceImpl implements VillageService{
 	public ResponseBodyDto<Object> save(VillageRequest request) {
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
 		if(request.getId() == 0 ) {
-			Village village = MapperUtils.map(request, Village.class);
+			Village village = MapperUtils.map(request, Village.class);	
+			village.setCreateBy(UserLogonService.getUsername());
+			village.setCreateDate(new Timestamp(System.currentTimeMillis()));
+			village.setUpdateBy(UserLogonService.getUsername());
+			village.setModifyDate(new Timestamp(System.currentTimeMillis()));
 			Village village2=  villageRepository.save(village);
 			dto.setData(village2);
 			dto.setMessage(MessageConstant.MSG_OK);
@@ -49,6 +53,8 @@ public class VillageServiceImpl implements VillageService{
 				if(request.getVillageName() != null) {
 					village.setVillageName(request.getVillageName());
 				}
+				village.setUpdateBy(UserLogonService.getUsername());
+				village.setModifyDate(new Timestamp(System.currentTimeMillis()));
 				Village village2 = villageRepository.save(village);
 				dto.setData(village2);
 				dto.setMessage(MessageConstant.MSG_OK);

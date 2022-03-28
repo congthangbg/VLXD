@@ -3,6 +3,8 @@
 package com.vn.VLXD.entities;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -16,6 +18,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.sun.istack.Nullable;
+
 @Entity
 @Table(name="VILLAGE")
 public class Village implements Serializable {
@@ -25,8 +29,61 @@ public class Village implements Serializable {
     private long id;
     @Column(name="VILLAGE_NAME", length=200)
     private String villageName;
+    @Column(name="CREATE_DATE")
+    private Timestamp createDate;
+    @Column(name="CREATE_BY", length=100)
+    private String createBy;
+    @Column(name="MODIFY_DATE")
+    private Timestamp modifyDate;
+    @Column(name="UPDATE_BY", length=100)
+    private String updateBy;
+    @Column(name="STATUS", precision=19)
+    @Nullable
+    private Integer status = 1;
+    
+    
 
-    /** Default constructor. */
+    public Timestamp getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Timestamp createDate) {
+		this.createDate = createDate;
+	}
+
+	public String getCreateBy() {
+		return createBy;
+	}
+
+	public void setCreateBy(String createBy) {
+		this.createBy = createBy;
+	}
+
+	public Timestamp getModifyDate() {
+		return modifyDate;
+	}
+
+	public void setModifyDate(Timestamp modifyDate) {
+		this.modifyDate = modifyDate;
+	}
+
+	public String getUpdateBy() {
+		return updateBy;
+	}
+
+	public void setUpdateBy(String updateBy) {
+		this.updateBy = updateBy;
+	}
+
+	public long getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	/** Default constructor. */
     public Village() {
         super();
     }

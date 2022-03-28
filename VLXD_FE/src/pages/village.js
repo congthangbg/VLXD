@@ -1,41 +1,29 @@
 import Head from 'next/head';
-import { CustomerListResults } from '../components/customer/customer-list-results';
-import { DashboardLayout } from '../components/dashboard-layout';
-// import { customers } from '../__mocks__/customers';
+import { Box, Container, Grid, Pagination } from '@mui/material';
+import { products } from '../__mocks__/products';
 import { useEffect, useState } from 'react';
-import axiosInstance from './../components/config/axiosConfig';
-import { DELETE_CUSTOMER, DELETE_ERROR, DELETE_SUCCESS, GETALL_AND_SREACH_CUSTOMER, SAVE_ERROR, SAVE_SUCCESS } from './../components/component/MessageContants';
+import axiosInstance from '../components/config/axiosConfig';
+import { DELETE_CUSTOMER, DELETE_ERROR, DELETE_SUCCESS, GETALL_AND_SREACH_CUSTOMER, PRODUCT_TYPE, SAVE_ERROR, SAVE_SUCCESS, VILLAGE_API } from '../components/component/MessageContants';
 import { Search as SearchIcon } from '../icons/search';
-import {
-  Container,
-  Box,
-  Card,
-  Typography,
-  Button,
-  CardContent,
-  TextField,
-  InputAdornment,
-  SvgIcon,
-} from '@mui/material';
-import CustomerToolbar from './../components/customer/CustomerToolbar';
-import { ToastContainer } from 'react-toastify';
-import CustomizedDialogs from 'src/components/customer/CustomizedDialogs';
+
+import { DashboardLayout } from '../components/dashboard-layout';
 import AlertDialog from 'src/components/component/AlertDialog';
 import toastifyAlert from 'src/components/component/toastify-message/toastify';
-import useCallCustomer from 'src/hook/useCallCustomer';
 import login401 from 'src/hook/login401';
-const Customers = () => {
-
-  const [check, setCheck] = useState(false)
+import CustomerTextField from 'src/components/component/CustomerTextField';
+import { VillageListResults } from 'src/components/village/VillageListResults';
+import useCallVillage from 'src/hook/useCallVillage';
+import CustomizedDialogs from 'src/components/village/CustomizedDialogs';
+const ProductType = () => {
   const [open, setOpen] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [dataDelete, setDataDelete] = useState({})
   const [dataEdit, setDataEdit] = useState({})
   const [query, setQuery] = useState({ keySearch: '', limit: 10, page: 0,skip:0 })
- const {data,setData}= useCallCustomer(check, setCheck, query)
+ const {data,setData}= useCallVillage(query)
 
  useEffect(()=>{
-  axiosInstance.get(GETALL_AND_SREACH_CUSTOMER + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}`)
+  axiosInstance.get(VILLAGE_API.GET_ALL + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}`)
   .then(response => {
     const result ={
       data:null,
@@ -47,7 +35,6 @@ const Customers = () => {
     }))
     result.totalRecords = response.totalRecords;
     setData(result)
-    setCheck(false)
     setQuery({...query,skip:0})
   })
   .catch(err => {
@@ -64,7 +51,7 @@ const Customers = () => {
     })
   }
   const handleSearch = () => {
-    axiosInstance.get(GETALL_AND_SREACH_CUSTOMER + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}`)
+    axiosInstance.get(VILLAGE_API.GET_ALL  + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}`)
       .then(response => {
         const result = {
           data: null,
@@ -76,7 +63,6 @@ const Customers = () => {
         }))
         result.totalRecords = response.totalRecords;
         setData(result)
-        setCheck(false)
       })
       .catch(err => {
         console.log(err);
@@ -91,21 +77,20 @@ const Customers = () => {
   }
   const onDetele = () => {
     setOpenModal(false)
-    axiosInstance.post(DELETE_CUSTOMER + "?id=" + dataDelete.id)
+    axiosInstance.post(VILLAGE_API.DELETE + "?id=" + dataDelete.id)
       .then(response => {
-        setCheck(true)
         toastifyAlert.success(DELETE_SUCCESS)
+        handleSearch();
       })
       .catch(err => {
         console.log(err);
         toastifyAlert.error(DELETE_ERROR)
-        setCheck(false)
       })
   }
   return <>
     <Head>
       <title>
-        Customers 
+        Thôn
       </title>
     </Head>
     <Box
@@ -116,15 +101,21 @@ const Customers = () => {
       }}
     >
       <Container maxWidth={false}>
-        <CustomerToolbar
+        <CustomerTextField
           setOpen={setOpen}
           handleSearch={handleTextSearch}
           onSearch={handleSearch}
           query={query}
           setQuery={setQuery}
+          title = "Thôn"
         />
+        
         <Box sx={{ mt: 3 }}>
-          <CustomerListResults
+          <Grid
+            container
+            spacing={3}
+          >
+            <VillageListResults
             setOpenModal={setOpenModal}
             handleDelete={handleDelete}
             customers={data}
@@ -133,6 +124,15 @@ const Customers = () => {
             setQuery={setQuery}
             query={query}
           />
+          </Grid>
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            pt: 3
+          }}
+        >
         </Box>
       </Container>
     </Box>
@@ -141,7 +141,7 @@ const Customers = () => {
       setDataEdit={setDataEdit}
       open={open}
       setOpen={setOpen}
-      setCheck={setCheck}
+      handleSearch={handleSearch}
     />
     <AlertDialog open={openModal}
       setOpen={setOpenModal}
@@ -149,11 +149,11 @@ const Customers = () => {
     />
   </>
 }
-Customers.getLayout = (page) => (
+
+ProductType.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>
 );
 
-
-export default Customers;
+export default ProductType;

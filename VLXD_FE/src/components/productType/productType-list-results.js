@@ -62,9 +62,9 @@ const handleUpdate = (e) => {
   handleEdit(e)
 }
   return (
-    <Card {...rest}>
+    <Card {...rest} sx={{ mt: 3 ,ml:3,minWidth: 1050}}>
       <PerfectScrollbar>
-        <Box sx={{ minWidth: 1050 }}>
+        <Box >
           <Table>
             <TableHead>
               <TableRow>

@@ -39,6 +39,11 @@ const items = [
     title: 'Loại sản phẩm'
   },
   {
+    href: '/village',
+    icon: (<ShoppingBagIcon fontSize="small" />),
+    title: 'Danh sách thôn'
+  },
+  {
     href: '/account',
     icon: (<UserIcon fontSize="small" />),
     title: 'Tài khoản'

@@ -6,9 +6,7 @@ import axiosInstance from './../components/config/axiosConfig';
 import { DELETE_CUSTOMER, DELETE_ERROR, DELETE_SUCCESS, GETALL_AND_SREACH_CUSTOMER, PRODUCT_TYPE, SAVE_ERROR, SAVE_SUCCESS } from './../components/component/MessageContants';
 import { Search as SearchIcon } from '../icons/search';
 
-import { ProductCard } from 'src/components/productType/product-card';
 import { DashboardLayout } from '../components/dashboard-layout';
-import { ProductListToolbar } from 'src/components/productType/product-list-toolbar';
 import AlertDialog from 'src/components/component/AlertDialog';
 import toastifyAlert from 'src/components/component/toastify-message/toastify';
 import useCallCustomer from 'src/hook/useCallCustomer';
@@ -94,7 +92,6 @@ const ProductType = () => {
         setCheck(false)
       })
   }
-  console.log("Dataa",data);
   return <>
     <Head>
       <title>
@@ -118,7 +115,7 @@ const ProductType = () => {
           title = "Loại sản phẩm"
         />
         
-        <Box sx={{ pt: 3 }}>
+        <Box sx={{ mt: 3 }}>
           <Grid
             container
             spacing={3}
