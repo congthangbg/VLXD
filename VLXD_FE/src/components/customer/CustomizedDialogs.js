@@ -86,6 +86,7 @@ export default function CustomizedDialogs(props) {
       name: Yup
         .string()
         .max(255)
+        .trim()
         .required(NOTIFY.NOT_NAME),
       phone: Yup
         .number(),

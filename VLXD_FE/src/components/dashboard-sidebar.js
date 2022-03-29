@@ -42,6 +42,16 @@ const items = [
     href: '/village',
     icon: (<ShoppingBagIcon fontSize="small" />),
     title: 'Danh sách thôn'
+  }, 
+  {
+    href: '/units',
+    icon: (<ShoppingBagIcon fontSize="small" />),
+    title: 'Danh mục đơn vị tính'
+  },
+  {
+    href: '/supplier',
+    icon: (<ShoppingBagIcon fontSize="small" />),
+    title: 'Nhà cung cấp'
   },
   {
     href: '/account',

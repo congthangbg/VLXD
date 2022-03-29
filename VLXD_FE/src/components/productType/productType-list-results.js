@@ -153,7 +153,7 @@ const handleUpdate = (e) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={customers.totalRecords}
+        count={customers && customers.totalRecords || 0}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}

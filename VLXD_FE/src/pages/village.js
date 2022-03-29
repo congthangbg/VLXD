@@ -14,7 +14,7 @@ import CustomerTextField from 'src/components/component/CustomerTextField';
 import { VillageListResults } from 'src/components/village/VillageListResults';
 import useCallVillage from 'src/hook/useCallVillage';
 import CustomizedDialogs from 'src/components/village/CustomizedDialogs';
-const ProductType = () => {
+const Village = () => {
   const [open, setOpen] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [dataDelete, setDataDelete] = useState({})
@@ -111,10 +111,6 @@ const ProductType = () => {
         />
         
         <Box sx={{ mt: 3 }}>
-          <Grid
-            container
-            spacing={3}
-          >
             <VillageListResults
             setOpenModal={setOpenModal}
             handleDelete={handleDelete}
@@ -124,7 +120,6 @@ const ProductType = () => {
             setQuery={setQuery}
             query={query}
           />
-          </Grid>
         </Box>
         <Box
           sx={{
@@ -150,10 +145,10 @@ const ProductType = () => {
   </>
 }
 
-ProductType.getLayout = (page) => (
+Village.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>
 );
 
-export default ProductType;
+export default Village;

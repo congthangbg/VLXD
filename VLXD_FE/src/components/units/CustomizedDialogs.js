@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import { Autocomplete, TextField } from '@mui/material';
 import { Field, useFormik } from 'formik';
 import * as Yup from 'yup';
-import { GETALL_AND_SEARCH_VILLAGE, LOGIN, LOGIN_FAILED, NOTIFY, PRODUCT_TYPE, SAVE_ERROR, SAVE_SUCCESS, SAVE_UPDATE_CUSTOMER, STATUS_401, STAUTS_401, TB_SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER_ERR, VILLAGE_API } from '../component/MessageContants';
+import { GETALL_AND_SEARCH_VILLAGE, LOGIN, LOGIN_FAILED, NOTIFY, PRODUCT_TYPE, SAVE_ERROR, SAVE_SUCCESS, SAVE_UPDATE_CUSTOMER, STATUS_401, STAUTS_401, TB_SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER_ERR, UNIT_API, VILLAGE_API } from '../component/MessageContants';
 import axiosInstance from '../config/axiosConfig';
 import toastifyAlert from '../component/toastify-message/toastify';
 import { ToastContainer } from 'react-toastify';
@@ -74,17 +74,17 @@ export default function CustomizedDialogs(props) {
     enableReinitialize: true,
     initialValues: {
       id: dataEdit ? dataEdit.id : '',
-      villageName: dataEdit ? dataEdit.villageName : '',
+      unitName: dataEdit ? dataEdit.unitName : '',
     },
     validationSchema: Yup.object({
-      villageName: Yup
+      unitName: Yup
         .string()
-        .max(255)
         .trim()
+        .max(255)
         .required(NOTIFY.NOT_BLANK),
     }),
     onSubmit: (values, { resetForm }) => {
-      axiosInstance.post(VILLAGE_API.SAVE_UPDATE, values)
+      axiosInstance.post(UNIT_API.SAVE_UPDATE, values)
         .then(response => {
           handleSearch();
           toastifyAlert.success(SAVE_SUCCESS)
@@ -109,20 +109,20 @@ export default function CustomizedDialogs(props) {
       >
         <form onSubmit={formik.handleSubmit}>
           <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-            Thêm mới thôn
+            Thêm mới đơn vị tính
           </BootstrapDialogTitle>
           <DialogContent dividers>
 
             <TextField
-              error={Boolean(formik.touched.villageName && formik.errors.villageName)}
+              error={Boolean(formik.touched.unitName && formik.errors.unitName)}
               fullWidth
-              helperText={formik.touched.villageName && formik.errors.villageName}
-              label="Tên thôn"
+              helperText={formik.touched.unitName && formik.errors.unitName}
+              label="Đơn vị tính"
               margin="normal"
-              name="villageName"
+              name="unitName"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
-              value={formik.values.villageName}
+              value={formik.values.unitName}
               variant="outlined"
             />
             

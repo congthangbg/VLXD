@@ -25,7 +25,18 @@ export const VILLAGE_API={
    SAVE_UPDATE:"/village/saveOrUpdate",
    DELETE:"/village/delete",
 }
-
+//danh mục đơn vị tính
+export const UNIT_API={
+   GET_ALL : '/unit',
+   SAVE_UPDATE:"/unit/saveOrUpdate",
+   DELETE:"/unit/delete",
+}
+//nahf cung ccaps
+export const SUPPLIER_API={
+   GET_ALL : '/supplier',
+   SAVE_UPDATE:"/supplier/saveOrUpdate",
+   DELETE:"/supplier/delete",
+}
 
 export const STATUS_401 = 401
 export const SAVE_SUCCESS = "Thêm mới thành công!"
@@ -38,4 +49,5 @@ export const NOTIFY ={
    NOT_NAME : 'Bạn chưa nhập họ tên !',
    VILLAGE : 'Bạn chưa chọn thôn !',
    NOT_BLANK : 'Không được để trống !',
+   VALID_PHONE:'Số điện thoại không đúng định dạng !'
 }

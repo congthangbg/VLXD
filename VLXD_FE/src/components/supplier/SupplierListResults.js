@@ -24,7 +24,7 @@ import useMagicColor from '../../hook/useMagicColor';
 import { AccessAlarm, ThreeDRotation, Edit, Delete } from '@mui/icons-material';
 
 
-export const VillageListResults = ({
+export const SupplierListResults = ({
   customers,
   setOpenModal,
   handleDelete,
@@ -73,7 +73,13 @@ export const VillageListResults = ({
                       STT
                     </TableCell>
                     <TableCell>
-                      Tên thôn
+                      Tên nhà cung cấp
+                    </TableCell>
+                    <TableCell>
+                     Số điện thoại
+                    </TableCell>
+                    <TableCell>
+                     Địa chỉ
                     </TableCell>
                     <TableCell>
                       Ngày tạo
@@ -106,9 +112,15 @@ export const VillageListResults = ({
                             color="textPrimary"
                             variant="body1"
                           >
-                            {customer.villageName}
+                            {customer.name}
                           </Typography>
                         </Box>
+                      </TableCell>
+                      <TableCell >
+                        {customer.phone}
+                      </TableCell>
+                      <TableCell >
+                        {customer.address}
                       </TableCell>
                       <TableCell>
                         {/* {customer.createDate} */}
@@ -166,6 +178,6 @@ export const VillageListResults = ({
   );
 };
 
-// VillageListResults.propTypes = {
+// SupplierListResults.propTypes = {
 //   customers: PropTypes.array.isRequired
 // };

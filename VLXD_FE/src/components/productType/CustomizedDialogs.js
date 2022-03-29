@@ -81,6 +81,7 @@ export default function CustomizedDialogs(props) {
       typeName: Yup
         .string()
         .max(255)
+        .trim()
         .required(NOTIFY.NOT_BLANK),
     }),
     onSubmit: (values, { resetForm }) => {
@@ -99,7 +100,6 @@ export default function CustomizedDialogs(props) {
 
     }
   });
-console.log('formi',formik);
   return (
     <div>
       <BootstrapDialog
