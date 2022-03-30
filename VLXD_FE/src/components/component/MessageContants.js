@@ -19,6 +19,12 @@ export const PRODUCT_TYPE={
    SAVE_UPDATE:"/productType/saveOrUpdate",
    DELETE:"/productType/delete",
 }
+//Sản phẩm
+export const PRODUCT={
+   GET_ALL : '/product',
+   SAVE_UPDATE:"/product/saveOrUpdate",
+   DELETE:"/product/delete",
+}
 //list thôn
 export const VILLAGE_API={
    GET_ALL : '/village',
@@ -49,5 +55,7 @@ export const NOTIFY ={
    NOT_NAME : 'Bạn chưa nhập họ tên !',
    VILLAGE : 'Bạn chưa chọn thôn !',
    NOT_BLANK : 'Không được để trống !',
-   VALID_PHONE:'Số điện thoại không đúng định dạng !'
+   VALID_PHONE:'Số điện thoại không đúng định dạng !',
+   P_TYPE : 'Bạn chưa chọn loại sản phẩm !',
+   UNIT : 'Bạn chưa chọn đơn vị tính !',
 }

@@ -22,30 +22,15 @@ const ProductType = () => {
   const [dataDelete, setDataDelete] = useState({})
   const [dataEdit, setDataEdit] = useState({})
   const [query, setQuery] = useState({ keySearch: '', limit: 10, page: 0,skip:0 })
- const {data,setData}= useCallProductType(check, setCheck, query)
+ const [data,setData] = useState([])
 
  useEffect(()=>{
-  axiosInstance.get(PRODUCT_TYPE.GET_ALL + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}`)
-  .then(response => {
-    const result ={
-      data:null,
-      totalRecords :null
-    }
-    result.data= response && response.data.map((item, index) => ({
-      ...item,
-      order: query.skip + index + 1,
-    }))
-    result.totalRecords = response.totalRecords;
-    setData(result)
-    setCheck(false)
-    setQuery({...query,skip:0})
-  })
-  .catch(err => {
-    console.log(err);
-    login401(err && err.response && err.response.status)
-  })
+ handleSearch();
  },[query.page,query.limit])
-
+ useEffect(()=>{
+  handleSearch();
+  },[])
+ 
 
   const handleTextSearch = (e) => {
     setQuery({
@@ -66,7 +51,6 @@ const ProductType = () => {
         }))
         result.totalRecords = response.totalRecords;
         setData(result)
-        setCheck(false)
       })
       .catch(err => {
         console.log(err);
@@ -83,13 +67,12 @@ const ProductType = () => {
     setOpenModal(false)
     axiosInstance.post(PRODUCT_TYPE.DELETE + "?id=" + dataDelete.id)
       .then(response => {
-        setCheck(true)
         toastifyAlert.success(DELETE_SUCCESS)
+        handleSearch();
       })
       .catch(err => {
         console.log(err);
         toastifyAlert.error(DELETE_ERROR)
-        setCheck(false)
       })
   }
   return <>

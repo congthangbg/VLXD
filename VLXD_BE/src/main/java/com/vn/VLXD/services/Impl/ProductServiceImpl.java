@@ -1,5 +1,6 @@
 package com.vn.VLXD.services.Impl;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -45,6 +46,7 @@ public class ProductServiceImpl implements ProductService{
 	ProductRepository productRepository;
 
 	@Override
+	@Transactional(rollbackFor = {SQLException.class})
 	public ResponseBodyDto<Object> save(ProductRequest request) {
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
 		if(request.getId() == 0 ) {

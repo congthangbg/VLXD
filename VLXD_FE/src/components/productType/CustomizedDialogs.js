@@ -116,9 +116,9 @@ export default function CustomizedDialogs(props) {
           <DialogContent dividers>
 
             <TextField
-              error={Boolean(formik.touched.name && formik.errors.name)}
+              error={Boolean(formik.touched.typeName && formik.errors.typeName)}
               fullWidth
-              helperText={formik.touched.name && formik.errors.name}
+              helperText={formik.touched.typeName && formik.errors.typeName}
               label="Tên loại sản phẩm"
               margin="normal"
               name="typeName"
