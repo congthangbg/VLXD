@@ -24,6 +24,11 @@ const items = [
     title: 'Dashboard'
   },
   {
+    href: '/hdx',
+    icon: (<UsersIcon fontSize="small" />),
+    title: 'Hóa đơn xuất'
+  },
+  {
     href: '/customers',
     icon: (<UsersIcon fontSize="small" />),
     title: 'Khách hàng'
@@ -112,7 +117,7 @@ export const DashboardSidebar = (props) => {
       >
         <div>
           <Box sx={{ p: 3 }}>
-            <NextLink
+            {/* <NextLink
               href="/"
               passHref
             >
@@ -124,7 +129,7 @@ export const DashboardSidebar = (props) => {
                   }}
                 />
               </a>
-            </NextLink>
+            </NextLink> */}
           </Box>
           <Box sx={{ px: 2 }}>
             <Box
@@ -143,20 +148,13 @@ export const DashboardSidebar = (props) => {
                 <Typography
                   color={color}
                   variant="subtitle1"
-                  fontSize="large"
+                  fontSize="medium"
                   fontFamily="Times New Roman"
                   boxShadow="0 0 10"
                 >
                   VLXD THẮNG OANH
                 </Typography>
-                <Typography
-                  color="neutral.400"
-                  variant="body2"
-                >
-                  Your tier
-                  {' '}
-                  : Premium
-                </Typography>
+               
               </div>
               <SelectorIcon
                 sx={{
@@ -191,49 +189,7 @@ export const DashboardSidebar = (props) => {
             py: 3
           }}
         >
-          <Typography
-            color="neutral.100"
-            variant="subtitle2"
-          >
-            Need more features?
-          </Typography>
-          <Typography
-            color="neutral.500"
-            variant="body2"
-          >
-            Check out our Pro solution template.
-          </Typography>
-          <Box
-            sx={{
-              display: 'flex',
-              mt: 2,
-              mx: 'auto',
-              width: '160px',
-              '& img': {
-                width: '100%'
-              }
-            }}
-          >
-            <img
-              alt="Go to pro"
-              src="/static/images/sidebar_pro.png"
-            />
-          </Box>
-          <NextLink
-            href="https://material-kit-pro-react.devias.io/"
-            passHref
-          >
-            <Button
-              color="secondary"
-              component="a"
-              endIcon={(<OpenInNewIcon />)}
-              fullWidth
-              sx={{ mt: 2 }}
-              variant="contained"
-            >
-              Pro Live Preview
-            </Button>
-          </NextLink>
+       
         </Box>
       </Box>
     </>

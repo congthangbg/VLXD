@@ -50,8 +50,8 @@ public class ProductController {
     		@RequestParam(value = "page",required = false) Optional<Integer> page,
     		@RequestParam(value = "size",required = false) Optional<Integer> size ) {
     	int currentPage = page.orElse(0);
-    	int limit = size.orElse(100);
-    	Pageable pageable = PageRequest.of(currentPage, limit, Sort.by("id").ascending());
+    	int limit = size.orElse(1000);
+    	Pageable pageable = PageRequest.of(currentPage, limit, Sort.by("id").descending());
     	ResponseBodyDto<Object> dto = service.findAllSearch(keyString, pageable);
     	
         return dto;

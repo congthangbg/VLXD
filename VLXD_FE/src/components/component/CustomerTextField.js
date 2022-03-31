@@ -57,7 +57,7 @@ function CustomerTextField(props) {
           display: 'flex',
           justifyContent: 'space-between',
           flexWrap: 'wrap',
-          m: -1
+          mt: -7
         }}
       >
         <Typography
@@ -77,9 +77,9 @@ function CustomerTextField(props) {
           </Button>
         </Box>
       </Box>
-      <Box sx={{ mt: 3 }}>
-        <Card>
-          <CardContent>
+      <Box sx={{ mt: 1 }}>
+        {/* <Card>
+          <CardContent> */}
             <Grid container spacing={2}>
               <Grid item xs={3} md={5}>
                 <TextField
@@ -116,8 +116,8 @@ function CustomerTextField(props) {
               </Grid>
             </Grid>
 
-          </CardContent>
-        </Card>
+          {/* </CardContent>
+        </Card> */}
       </Box>
 
     </div>

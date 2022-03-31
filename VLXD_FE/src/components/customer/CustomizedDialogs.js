@@ -20,7 +20,6 @@ import { ToastContainer } from 'react-toastify';
 import { useRouter } from 'next/router';
 import login401 from 'src/hook/login401';
 import useCallVillage from 'src/hook/useCallVillage';
-import useCallCustomerSave from 'src/hook/useCallCustomerSave';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -62,16 +61,13 @@ BootstrapDialogTitle.propTypes = {
 
 export default function CustomizedDialogs(props) {
   const router = useRouter();
-  const { open, setOpen, setCheck, dataEdit, setDataEdit } = props;
-  const data = useCallVillage();
+  const { open, setOpen, dataEdit, setDataEdit } = props;
+  const {data,setData}= useCallVillage()
   const handleClose = () => {
     setOpen(false);
     formik.resetForm();
     setDataEdit({})
-    setCheck(false)
   };
-
-
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -106,13 +102,11 @@ export default function CustomizedDialogs(props) {
       }
       axiosInstance.post(SAVE_UPDATE_CUSTOMER, newData)
         .then(response => {
-          setCheck(true)
           toastifyAlert.success(TB_SAVE_UPDATE_CUSTOMER)
         })
         .catch(err => {
           console.log("ee", err);
           toastifyAlert.error(TB_SAVE_UPDATE_CUSTOMER_ERR)
-          setCheck(false)
         })
       handleClose();
       resetForm();
@@ -162,7 +156,7 @@ export default function CustomizedDialogs(props) {
             <Autocomplete
               id="villageId"
               name="villageId"
-              options={data}
+              options={data ? data.data : []}
               // groupBy={ option => option.state }
               getOptionLabel={option => option.villageName}
               onChange={(event, value) => formik.setFieldValue("villageId", value)}

@@ -20,7 +20,7 @@ const Village = () => {
   const [dataDelete, setDataDelete] = useState({})
   const [dataEdit, setDataEdit] = useState({})
   const [query, setQuery] = useState({ keySearch: '', limit: 10, page: 0,skip:0 })
- const {data,setData}= useCallVillage(query)
+ const {data,setData}= useCallVillage()
 
  useEffect(()=>{
   axiosInstance.get(VILLAGE_API.GET_ALL + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}`)

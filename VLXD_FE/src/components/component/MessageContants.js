@@ -37,6 +37,12 @@ export const UNIT_API={
    SAVE_UPDATE:"/unit/saveOrUpdate",
    DELETE:"/unit/delete",
 }
+//Hóa đơn xuất
+export const HDX_API={
+   GET_ALL : '/hdx',
+   SAVE_UPDATE:"/hdx/saveOrUpdate",
+   DELETE:"/hdx/delete",
+}
 //nahf cung ccaps
 export const SUPPLIER_API={
    GET_ALL : '/supplier',
@@ -57,5 +63,6 @@ export const NOTIFY ={
    NOT_BLANK : 'Không được để trống !',
    VALID_PHONE:'Số điện thoại không đúng định dạng !',
    P_TYPE : 'Bạn chưa chọn loại sản phẩm !',
+   PRODUCT : 'Bạn chưa chọn sản phẩm !',
    UNIT : 'Bạn chưa chọn đơn vị tính !',
 }

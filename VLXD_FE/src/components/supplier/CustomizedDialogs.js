@@ -18,8 +18,6 @@ import toastifyAlert from '../component/toastify-message/toastify';
 import { ToastContainer } from 'react-toastify';
 import { useRouter } from 'next/router';
 import login401 from 'src/hook/login401';
-import useCallVillage from 'src/hook/useCallVillage';
-import useCallCustomerSave from 'src/hook/useCallCustomerSave';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {

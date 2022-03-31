@@ -5,10 +5,10 @@ import login401 from './login401';
 
 
 
-function useCallCustomer(check,setCheck,query) {
-   const [data, setData] = useState([]);
+function useCallCustomer() {
+   const [dataCustomer, setDataCustomer] = useState([]);
    useEffect(() => {
-      axiosInstance.get(GETALL_AND_SREACH_CUSTOMER+`?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}`)
+      axiosInstance.get(GETALL_AND_SREACH_CUSTOMER)
     .then(response => {
       const result ={
         data:null,
@@ -16,19 +16,18 @@ function useCallCustomer(check,setCheck,query) {
       }
       result.data= response && response.data.map((item, index) => ({
         ...item,
-        order: query.skip + index + 1,
+        order: index + 1,
       }))
       result.totalRecords = response.totalRecords;
-      setData(result)
-      setCheck(false)
+      setDataCustomer(result)
     })
     .catch(err => {
       console.log(err);
       login401(err && err.response&&err.response.status)
     })
     
-  },[check])
-   return {data,setData};
+  },[])
+   return {dataCustomer,setDataCustomer};
 }
 
 export default useCallCustomer;

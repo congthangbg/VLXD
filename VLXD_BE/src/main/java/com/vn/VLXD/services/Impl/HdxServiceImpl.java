@@ -1,5 +1,6 @@
 package com.vn.VLXD.services.Impl;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -75,7 +76,7 @@ public class HdxServiceImpl implements HdxService{
 	CustomerRepository customerRepository;
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = {SQLException.class})
 	public ResponseBodyDto<Object> save(HdxRequest request) {
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
 		if(request.getId() == 0 ) {

@@ -62,8 +62,8 @@ public class CustomerController {
     		@RequestParam(value = "size",required = false) Optional<Integer> size,
     		@RequestParam(value = "order",required = false,defaultValue = "id") Optional<String> order ) throws Exception {
     	int currentPage = page.orElse(0);
-    	int limit = size.orElse(100);
-    	ResponseBodyDto<Object> lst = service.findAllTest(keySearch == null ? "" : keySearch ,currentPage,size.get(),order.get());
+    	int limit = size.orElse(1000);
+    	ResponseBodyDto<Object> lst = service.findAllTest(keySearch == null ? "" : keySearch ,currentPage,limit,order.get());
     	
         return lst;
     }

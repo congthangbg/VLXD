@@ -22,38 +22,21 @@ import { ToastContainer } from 'react-toastify';
 import CustomizedDialogs from 'src/components/customer/CustomizedDialogs';
 import AlertDialog from 'src/components/component/AlertDialog';
 import toastifyAlert from 'src/components/component/toastify-message/toastify';
-import useCallCustomer from 'src/hook/useCallCustomer';
 import login401 from 'src/hook/login401';
 const Customers = () => {
 
-  const [check, setCheck] = useState(false)
   const [open, setOpen] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [dataDelete, setDataDelete] = useState({})
   const [dataEdit, setDataEdit] = useState({})
+  const [data, setData] = useState([])
   const [query, setQuery] = useState({ keySearch: '', limit: 10, page: 0,skip:0 })
- const {data,setData}= useCallCustomer(check, setCheck, query)
 
+  useEffect(()=>{
+    handleSearch();
+   },[])
  useEffect(()=>{
-  axiosInstance.get(GETALL_AND_SREACH_CUSTOMER + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}`)
-  .then(response => {
-    const result ={
-      data:null,
-      totalRecords :null
-    }
-    result.data= response && response.data.map((item, index) => ({
-      ...item,
-      order: query.skip + index + 1,
-    }))
-    result.totalRecords = response.totalRecords;
-    setData(result)
-    setCheck(false)
-    setQuery({...query,skip:0})
-  })
-  .catch(err => {
-    console.log(err);
-    login401(err && err.response && err.response.status)
-  })
+  handleSearch();
  },[query.page,query.limit])
 
 
@@ -76,7 +59,6 @@ const Customers = () => {
         }))
         result.totalRecords = response.totalRecords;
         setData(result)
-        setCheck(false)
       })
       .catch(err => {
         console.log(err);
@@ -93,13 +75,11 @@ const Customers = () => {
     setOpenModal(false)
     axiosInstance.post(DELETE_CUSTOMER + "?id=" + dataDelete.id)
       .then(response => {
-        setCheck(true)
         toastifyAlert.success(DELETE_SUCCESS)
       })
       .catch(err => {
         console.log(err);
         toastifyAlert.error(DELETE_ERROR)
-        setCheck(false)
       })
   }
   return <>
@@ -141,7 +121,6 @@ const Customers = () => {
       setDataEdit={setDataEdit}
       open={open}
       setOpen={setOpen}
-      setCheck={setCheck}
     />
     <AlertDialog open={openModal}
       setOpen={setOpenModal}

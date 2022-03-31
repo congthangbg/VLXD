@@ -5,7 +5,7 @@ import login401 from './login401';
 
 
 
-function useCallVillage(query) {
+function useCallVillage() {
    const [data, setData] = useState([]);
    useEffect(() => {
     axiosInstance.get(VILLAGE_API.GET_ALL)
@@ -16,7 +16,7 @@ function useCallVillage(query) {
       }
       result.data= response && response.data.map((item, index) => ({
         ...item,
-        order: query.skip + index + 1,
+        order: index + 1,
       }))
       result.totalRecords = response.totalRecords;
       setData(result)
