@@ -18,4 +18,6 @@ public interface ProductService {
 
 	ResponseBodyDto<Object> save(ProductRequest request);
 
+	ResponseBodyDto<Object> findByProductType(Long typeId);
+
 }

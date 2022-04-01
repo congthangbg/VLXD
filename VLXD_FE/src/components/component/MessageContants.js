@@ -7,6 +7,15 @@ export const TB_SAVE_UPDATE_CUSTOMER_ERR = "Lưu khách hàng thất bại!"
 
 export const LOGIN = "/login"
 
+//phone
+export const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+export const PHONE={
+   MIN : 'Số điện thoại không được < 8 kí tự !',
+   MAX : 'Số điện thoại không được > 10 kí tự !',
+   VALID_PHONE : 'Số điện thoại không đúng định dạng !',
+   
+}
+
 //Thôn list
 export const GETALL_AND_SEARCH_VILLAGE = "/village"
 //Khách hàng
@@ -24,6 +33,7 @@ export const PRODUCT={
    GET_ALL : '/product',
    SAVE_UPDATE:"/product/saveOrUpdate",
    DELETE:"/product/delete",
+   GET_PRODUCT_BY_TYPE_ID:"/product/findByProductType",
 }
 //list thôn
 export const VILLAGE_API={
@@ -65,4 +75,6 @@ export const NOTIFY ={
    P_TYPE : 'Bạn chưa chọn loại sản phẩm !',
    PRODUCT : 'Bạn chưa chọn sản phẩm !',
    UNIT : 'Bạn chưa chọn đơn vị tính !',
+   NUMBER: "Chỉ được nhập ký tự số !"
+
 }

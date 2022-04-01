@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import { Autocomplete, TextField } from '@mui/material';
 import { Field, useFormik } from 'formik';
 import * as Yup from 'yup';
-import { GETALL_AND_SEARCH_VILLAGE, LOGIN, LOGIN_FAILED, NOTIFY, SAVE_UPDATE_CUSTOMER, STATUS_401, STAUTS_401, TB_SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER_ERR } from '../component/MessageContants';
+import { GETALL_AND_SEARCH_VILLAGE, LOGIN, LOGIN_FAILED, NOTIFY, PHONE, phoneRegExp, SAVE_UPDATE_CUSTOMER, STATUS_401, STAUTS_401, TB_SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER_ERR } from '../component/MessageContants';
 import axiosInstance from '../config/axiosConfig';
 import FormikAutocomplete from './FormikAutocomplete';
 import toastifyAlert from '../component/toastify-message/toastify';
@@ -61,14 +61,14 @@ BootstrapDialogTitle.propTypes = {
 
 export default function CustomizedDialogs(props) {
   const router = useRouter();
-  const { open, setOpen, dataEdit, setDataEdit } = props;
+  const { open, setOpen, dataEdit, setDataEdit ,onSave} = props;
   const {data,setData}= useCallVillage()
   const handleClose = () => {
     setOpen(false);
     formik.resetForm();
     setDataEdit({})
   };
-
+ 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -85,29 +85,20 @@ export default function CustomizedDialogs(props) {
         .trim()
         .required(NOTIFY.NOT_NAME),
       phone: Yup
-        .number(),
-      // .required(
-      //   'Bạn chưa nhập số điện thoại'),
+      .string().min(8,PHONE.MIN).max(10,PHONE.MAX)
+      .matches(phoneRegExp, PHONE.VALID_PHONE),
       villageId: Yup
         .object().nullable()
         .required(NOTIFY.VILLAGE),
       address: Yup
-        .string()
-        .max(255)
+        .string().nullable()
     }),
     onSubmit: (values, { resetForm }) => {
       const newData = {
         ...values,
         villageId: values.villageId.id
       }
-      axiosInstance.post(SAVE_UPDATE_CUSTOMER, newData)
-        .then(response => {
-          toastifyAlert.success(TB_SAVE_UPDATE_CUSTOMER)
-        })
-        .catch(err => {
-          console.log("ee", err);
-          toastifyAlert.error(TB_SAVE_UPDATE_CUSTOMER_ERR)
-        })
+      onSave(newData)
       handleClose();
       resetForm();
 

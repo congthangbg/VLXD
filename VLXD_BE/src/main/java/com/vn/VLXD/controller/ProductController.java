@@ -69,6 +69,12 @@ public class ProductController {
     	ResponseBodyDto<Object> dto = service.findById(id);
         return dto;
     }
+    @GetMapping("/findByProductType")
+    public ResponseBodyDto<Object> findByProductType(
+    		@RequestParam(value = "typeId",required =  true)Long typeId )throws Exception {
+    	ResponseBodyDto<Object> dto = service.findByProductType(typeId);
+        return dto;
+    }
     @PostMapping("/delete")
     public ResponseBodyDto<Object> delete(
     		@RequestParam(value = "id",required =  true)Long id )throws Exception {

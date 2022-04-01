@@ -4,7 +4,7 @@ import { DashboardLayout } from '../components/dashboard-layout';
 // import { customers } from '../__mocks__/customers';
 import { useEffect, useState } from 'react';
 import axiosInstance from './../components/config/axiosConfig';
-import { DELETE_CUSTOMER, DELETE_ERROR, DELETE_SUCCESS, GETALL_AND_SREACH_CUSTOMER, SAVE_ERROR, SAVE_SUCCESS } from './../components/component/MessageContants';
+import { DELETE_CUSTOMER, DELETE_ERROR, DELETE_SUCCESS, GETALL_AND_SREACH_CUSTOMER, SAVE_ERROR, SAVE_SUCCESS, SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER_ERR } from './../components/component/MessageContants';
 import { Search as SearchIcon } from '../icons/search';
 import {
   Container,
@@ -35,10 +35,10 @@ const Customers = () => {
   useEffect(()=>{
     handleSearch();
    },[])
+
  useEffect(()=>{
   handleSearch();
  },[query.page,query.limit])
-
 
   const handleTextSearch = (e) => {
     setQuery({
@@ -76,11 +76,23 @@ const Customers = () => {
     axiosInstance.post(DELETE_CUSTOMER + "?id=" + dataDelete.id)
       .then(response => {
         toastifyAlert.success(DELETE_SUCCESS)
+        handleSearch();
       })
       .catch(err => {
         console.log(err);
         toastifyAlert.error(DELETE_ERROR)
       })
+  }
+  const onSave = (val) => {
+    axiosInstance.post(SAVE_UPDATE_CUSTOMER, val)
+    .then(response => {
+      toastifyAlert.success(TB_SAVE_UPDATE_CUSTOMER)
+      handleSearch();
+    })
+    .catch(err => {
+      console.log("ee", err);
+      toastifyAlert.error(TB_SAVE_UPDATE_CUSTOMER_ERR)
+    })
   }
   return <>
     <Head>
@@ -121,6 +133,7 @@ const Customers = () => {
       setDataEdit={setDataEdit}
       open={open}
       setOpen={setOpen}
+      onSave={onSave}
     />
     <AlertDialog open={openModal}
       setOpen={setOpenModal}

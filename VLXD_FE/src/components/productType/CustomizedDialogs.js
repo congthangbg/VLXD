@@ -60,12 +60,11 @@ BootstrapDialogTitle.propTypes = {
 
 export default function CustomizedDialogs(props) {
   const router = useRouter();
-  const { open, setOpen, setCheck, dataEdit, setDataEdit } = props;
+  const { open, setOpen, dataEdit, setDataEdit,  handleSearch } = props;
   const handleClose = () => {
     setOpen(false);
     formik.resetForm();
     setDataEdit({})
-    setCheck(false)
   };
 
 
@@ -86,13 +85,12 @@ export default function CustomizedDialogs(props) {
     onSubmit: (values, { resetForm }) => {
       axiosInstance.post(PRODUCT_TYPE.SAVE_UPDATE, values)
         .then(response => {
-          setCheck(true)
+          handleSearch();
           toastifyAlert.success(SAVE_SUCCESS)
         })
         .catch(err => {
           console.log("ee", err);
           toastifyAlert.error(SAVE_ERROR)
-          setCheck(false)
         })
       handleClose();
       resetForm();

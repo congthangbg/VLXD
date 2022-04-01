@@ -215,6 +215,7 @@ const Hdx = () => {
       dataProduct={dataProduct}
       dataUnit={dataUnit}
       getProduct={getProduct}
+      setDataProduct={setDataProduct}
     />
     <AlertDialog open={openModal}
       setOpen={setOpenModal}

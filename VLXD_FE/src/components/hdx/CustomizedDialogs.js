@@ -23,6 +23,8 @@ import { Box } from '@mui/system';
 import Customer from 'src/components/customer/CustomizedDialogs';
 import AddProductDialog from './AddProductDialog';
 import AlertDialog from '../component/AlertDialog';
+import { TonTable } from './TonTable';
+import AddTonDialog from './AddTonDialog';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -64,23 +66,32 @@ BootstrapDialogTitle.propTypes = {
 
 export default function CustomizedDialogs(props) {
   const router = useRouter();
-  const [openCus,setOpenCus] = useState(false)
-  const [openAddP,setOpenAddP] = useState(false)
-  const [dataPTable,setDataPTable] = useState([])
-  const [dataPTableEdit,setDataPTableEdit] = useState([])
+  const [openCus, setOpenCus] = useState(false)
+  const [openAddP, setOpenAddP] = useState(false)
+  const [openAddTon, setOpenAddTon] = useState(false)
+  const [dataPTable, setDataPTable] = useState([])
+  const [dataPTableEdit, setDataPTableEdit] = useState([])
+  const [dataTon, setDataTon] = useState([])
+  const [dataTonEdit, setDataTonEdit] = useState([])
   const [openModal, setOpenModal] = useState(false)
+  const [openModalTon, setOpenModalTon] = useState(false)
   const { open, setOpen, dataEdit, setDataEdit, handleSearch,
-     dataCustomer,getInitCustomer,dataProductType,dataProduct,dataUnit,getProduct } = props;
+    dataCustomer, getInitCustomer, dataProductType, dataProduct, dataUnit, getProduct,
+    setDataProduct } = props;
   const handleClose = () => {
     setOpen(false);
     formik.resetForm();
     setDataEdit({})
   };
 
-  
-useEffect(()=>{
- getInitCustomer();
-},[openCus])
+
+  useEffect(() => {
+    getInitCustomer();
+  }, [openCus])
+  useEffect(() => {
+    getProduct();
+  }, [openAddP])
+
 
 
   const formik = useFormik({
@@ -112,52 +123,135 @@ useEffect(()=>{
     }
   });
   const handAddProduct = (p) => {
-    if(p.id){
-      const a ={
-        id:p.id,
-        name:p.product.name,
-        price:p.price,
-        quantity:p.quantity,
-        unit:p.product.unit.unitName,
-        product :p.product
+    if (p.id) {
+      const a = {
+        id: p.id,
+        name: p.product.name,
+        price: p.price,
+        quantity: p.quantity,
+        unit: p.product.unit.unitName,
+        product: p.product
       }
-     const index = dataPTable && dataPTable.findIndex(e=>e.id ===p.id)
-      dataPTable && dataPTable.map((e,idx)=>{
-        if(index===idx){
+      const index = dataPTable && dataPTable.findIndex(e => e.id === p.id) || -1
+      dataPTable && dataPTable.map((e, idx) => {
+        if (index === idx) {
           dataPTable[idx] = a
         }
       })
-    }else{
-      const a ={
-        id:new Date().getTime(),
-        name:p.product.name,
-        price:p.price,
-        quantity:p.quantity,
-        unit:p.product.unit.unitName,
-        product :p.product
+    } else {
+      const product = dataPTable && dataPTable.find(e => e.name === p.product.name) || -1
+      if (product !== -1 && product !== undefined) {
+        let i = dataPTable && dataPTable.indexOf(product)
+        const a = {
+          ...product,
+          quantity: Number(product.quantity) + Number(p.quantity)
+        }
+        dataPTable[i] = a
+      } else {
+        const a = {
+          id: new Date().getTime(),
+          name: p.product.name,
+          price: p.price,
+          quantity: p.quantity,
+          unit: p.product.unit.unitName,
+          product: p.product
+        }
+        setDataPTable([...dataPTable, a]);
       }
-       setDataPTable([...dataPTable,a]);
     }
-  
+  }
+  const handAddTon = (p) => {
+    if (p.id) {
+      const a = {
+        id: p.id,
+        name: p.product.name,
+        price: p.price,
+        quantity: p.quantity,
+        unit: p.product.unit.unitName,
+        product: p.product,
+        width: p.width,
+        height: p.height
+      }
+      const index = dataTon && p && dataTon.findIndex((c,i) => c.id === p.id)
+       dataTon && dataTon.map((e, idx) => {
+        if (index === idx) {
+          dataTon[idx] = a
+        }
+      })
+    } else {
+
+      const a = {
+        id: new Date().getTime(),
+        name: p.product.name,
+        price: p.price,
+        quantity: p.quantity,
+        unit: p.product.unit.unitName,
+        product: p.product,
+        width: p.width,
+        height: p.height
+      }
+      setDataTon([...dataTon, a]);
+    }
   }
   const handleEdit = (a) => {
     setOpenAddP(true);
     setDataPTableEdit(a)
   }
+  const handleEditTon = (a) => {
+    setOpenAddTon(true);
+    setDataTonEdit(a)
+  }
+  const handleDeleteTon = (a) => {
+    setDataTonEdit(a)
+    setOpenModalTon(true)
+  }
   const handleDelete = (a) => {
+
     setDataPTableEdit(a)
     setOpenModal(true)
   }
-  const onDetele =()=>{
-    
-    if(dataPTableEdit){
-     const index = dataPTable && dataPTable.findIndex(e=>e.id ===dataPTableEdit.id)
-     dataPTable.splice(index, 1)
+  const onDetele = () => {
+    if (dataPTableEdit) {
+      const index = dataPTable && dataPTable.findIndex(e => e.id === dataPTableEdit.id)
+      dataPTable.splice(index, 1)
     }
     setDataPTableEdit({})
     setOpenModal(false)
   }
-  
+  const onDeteleTon = () => {
+     if(dataTonEdit){
+      const index = dataTon && dataTon.findIndex(e => e.id === dataTonEdit.id)
+      dataTon.splice(index, 1)
+    }
+    setDataTonEdit({})
+    setOpenModalTon(false)
+  }
+
+  ////customer
+  const onSave = (val) => {
+    axiosInstance.post(SAVE_UPDATE_CUSTOMER, val)
+      .then(response => {
+        toastifyAlert.success(TB_SAVE_UPDATE_CUSTOMER)
+        getInitCustomer();
+      })
+      .catch(err => {
+        console.log("ee", err);
+        toastifyAlert.error(TB_SAVE_UPDATE_CUSTOMER_ERR)
+      })
+  }
+  function currencyFormat(num) {
+    return  num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+ }
+  const total = ()=>{
+    let total = 0;
+    dataPTable && dataPTable.map(e=>{
+      total += Number(e.price) * Number(e.quantity)
+    })
+    dataTon && dataTon.map(p=>{
+      total += p.price * (Number(p.width) * Number(p.height) * Number(p.quantity))
+    })
+    return currencyFormat(total);
+  }
   return (
     <div>
       <BootstrapDialog
@@ -172,7 +266,7 @@ useEffect(()=>{
             Thêm mới hóa đơn
           </BootstrapDialogTitle>
           <DialogContent dividers>
-            <Grid container rowSpacing={1} style={{marginTop:-20,marginBottom:10}} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+            <Grid container rowSpacing={1} style={{ marginTop: -20, marginBottom: 10 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
               <Grid item xs={3}>
                 <Autocomplete
                   size="small"
@@ -198,7 +292,7 @@ useEffect(()=>{
                 />
               </Grid>
               <Grid item xs={3}>
-              {formik && formik.values && formik.values.customerId ?
+                {formik && formik.values && formik.values.customerId ?
                   <TextField
                     id="outlined-size-small"
                     size="small"
@@ -222,7 +316,7 @@ useEffect(()=>{
                 <p></p>
               </Grid>
               <Grid item xs={3}>
-              <Box
+                <Box
                   sx={{
                     display: 'flex',
                     justifyContent: 'flex-end',
@@ -243,18 +337,118 @@ useEffect(()=>{
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <PTable
-                handleDelete={handleDelete}
-                listData={dataPTable ? dataPTable : []}
-                handleEdit={handleEdit}
+                  handleDelete={handleDelete}
+                  listData={dataPTable ? dataPTable : []}
+                  handleEdit={handleEdit}
                 />
               </Grid>
 
+            </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    p: 1,
+                    m: 1,
+                    bgcolor: 'background.paper',
+                    borderRadius: 1,
+                  }}
+                >
+                  <Button style={{ marginRight: 6 }} type="button" onClick={() => setOpenAddTon(true)}
+                    color="success" size="small" variant="contained" autoFocus  >
+                    Thêm sản phẩm tôn
+                  </Button>
+
+                </Box>
+              </Grid>
+            </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TonTable
+                  handleDelete={handleDeleteTon}
+                  listData={dataTon ? dataTon : []}
+                  handleEdit={handleEditTon}
+                />
+              </Grid>
+
+            </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={10}></Grid>
+              <Grid item xs={2}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    mt: 1,
+                    bgcolor: 'background.paper',
+                    borderRadius: 1,
+                  }}
+                >
+                  <TextField
+                    id="outlined-size-small"
+                    size="small"
+                    fullWidth
+                    label="Nợ cũ"
+                    margin="normal"
+                    name="total"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    value={formik.values.total}
+                    variant="outlined"
+
+                  />
+
+                </Box>
+              </Grid>
+            </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={8}></Grid>
+              <Grid item xs={2}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    bgcolor: 'background.paper',
+                    borderRadius: 1,
+                    mt: 2
+                  }}
+                >
+                  <Button type="button"
+                    style={{ fontSize: 15, marginRight: 30, fontFamily: "Times New Roman", color: "black" }}
+                    color="info" size="small" variant="contained" autoFocus  >
+                    Thanh toán
+                  </Button>
+                </Box>
+              </Grid>
+              <Grid item xs={2}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-center',
+                    bgcolor: 'background.paper',
+                    borderRadius: 1,
+                    mt:2,
+                    fontSize:18
+                  }}
+                  style={{fontWeight:'bold'}}
+                >
+                
+
+                </Box>
+              </Grid>
             </Grid>
 
           </DialogContent>
 
           {/* <DialogActions  > */}
-          <Box
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+
+            </Grid>
+            <Grid item xs={4}>
+            <Box
             sx={{
               display: 'flex',
               justifyContent: 'center',
@@ -272,32 +466,63 @@ useEffect(()=>{
               Lưu lại
             </Button>
           </Box>
-
+            </Grid>
+            <Grid item xs={4}>
+              <p style={{fontSize:20,fontWeight:"bold" ,marginTop:10}}>
+              Tổng tiền : {total()} VND
+              </p>
+           
+            </Grid>
+          </Grid>
+         
+        
+        
           {/* </DialogActions> */}
         </form>
       </BootstrapDialog>
       <Customer
-      open={openCus}
-      setOpen={setOpenCus}
-      setDataEdit={()=>console.log("sss")}
-    />
-    <AddProductDialog
-    open={openAddP}
-    setOpen={setOpenAddP}
-    dataProductType={dataProductType}
-    setDataEdit={setDataPTableEdit}
-    dataProduct={dataProduct}
-    handAddProduct={handAddProduct}
-    setOpenCus={setOpenCus}
-    dataEdit={dataPTableEdit}
-    dataUnit={dataUnit}
-    getProduct={getProduct}
-    />
-     <AlertDialog
-      open={openModal}
-      setOpen={setOpenModal}
-      onDelete={onDetele}
-    />
+        open={openCus}
+        setOpen={setOpenCus}
+        setDataEdit={() => console.log("sss")}
+        onSave={onSave}
+      />
+      <AddProductDialog
+        open={openAddP}
+        setOpen={setOpenAddP}
+        dataProductType={dataProductType}
+        setDataEdit={setDataPTableEdit}
+        dataProduct={dataProduct}
+        handAddProduct={handAddProduct}
+        setOpenCus={setOpenCus}
+        dataEdit={dataPTableEdit}
+        dataUnit={dataUnit}
+        getProduct={getProduct}
+        setDataProduct={setDataProduct}
+      />
+      <AddTonDialog
+        open={openAddTon}
+        setOpen={setOpenAddTon}
+        dataProductType={dataProductType}
+        setDataEdit={setDataTonEdit}
+        dataProduct={dataProduct}
+        handAddTon={handAddTon}
+        // setOpenCus={setOpenCus}
+        dataEdit={dataTonEdit}
+        dataUnit={dataUnit}
+        getProduct={getProduct}
+        setDataProduct={setDataProduct}
+      />
+
+      <AlertDialog
+        open={openModal}
+        setOpen={setOpenModal}
+        onDelete={onDetele}
+      />
+       <AlertDialog
+        open={openModalTon}
+        setOpen={setOpenModalTon}
+        onDelete={onDeteleTon}
+      />
     </div>
   );
 }

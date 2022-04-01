@@ -15,7 +15,6 @@ import { ProductTypeListResults } from 'src/components/productType/ProductTypeLi
 import CustomizedDialogs from 'src/components/productType/CustomizedDialogs';
 import useCallProductType from 'src/hook/useCallProductType';
 const ProductType = () => {
-  const [check, setCheck] = useState(false)
   const [open, setOpen] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [dataDelete, setDataDelete] = useState({})
@@ -128,7 +127,7 @@ const ProductType = () => {
       setDataEdit={setDataEdit}
       open={open}
       setOpen={setOpen}
-      setCheck={setCheck}
+        handleSearch={  handleSearch}
     />
     <AlertDialog open={openModal}
       setOpen={setOpenModal}
