@@ -16,6 +16,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 
+import com.vn.VLXD.entities.Product;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 @Data
@@ -27,7 +29,7 @@ public class HdxCtRequest implements Serializable {
     private double price;
     private String note;
     private long status;
-    private long productId;
+    private Product product;
 
     /** Default constructor. */
     public HdxCtRequest() {

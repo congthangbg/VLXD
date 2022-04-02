@@ -8,7 +8,7 @@ const SeverityPillRoot = styled('span')(({ theme, ownerState }) => {
   return {
     alignItems: 'center',
     backgroundColor,
-    borderRadius: 12,
+    borderRadius: 6,
     color,
     cursor: 'default',
     display: 'inline-flex',

@@ -82,10 +82,10 @@ export const PTable = ({
                   {i+1}
                 </TableCell>
                 <TableCell>
-                  {p.name}
+                  {p.name ? p.name : (p.product && p.product.name|| '')} 
                 </TableCell>
                 <TableCell>
-                  {p.unit}
+                  {p.unit ? p.unit : (p.product && p.product.unit && p.product.unit.unitName || '')}
                 </TableCell>
                 <TableCell>
                   {p.quantity}

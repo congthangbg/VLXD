@@ -16,20 +16,22 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 
+import com.vn.VLXD.entities.Product;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 @Data
 @AllArgsConstructor
 public class HdxCtTonRequest implements Serializable {
     private long id;
-    private double width;
-    private double height;
+    private String width;
+    private String height;
     private double quantity;
-    private double numberM2;
+    private String numberM2;
     private double price;
     private String note;
     private long status;
-    private long productId;
+    private Product product;
 
     /** Default constructor. */
     public HdxCtTonRequest() {

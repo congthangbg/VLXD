@@ -154,7 +154,6 @@ export default function AddTonDialog(props) {
 
     }
   }, [formik.values.productType,open])
-console.log("formik",formik);
   return (
     <div>
       <BootstrapDialog

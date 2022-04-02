@@ -28,13 +28,13 @@ public class HdxCtTon implements Serializable {
     @Column(name="ID", unique=true, nullable=false, precision=19)
     private long id;
     @Column(name="WIDTH", precision=53)
-    private double width;
+    private String width;
     @Column(name="HEIGHT", precision=53)
-    private double height;
+    private String height;
     @Column(name="QUANTITY", precision=53)
     private double quantity;
     @Column(name="NUMBER_M2", precision=53)
-    private double numberM2;
+    private String numberM2;
     @Column(name="PRICE", precision=53)
     private double price;
     @Column(name="NOTE", length=500)

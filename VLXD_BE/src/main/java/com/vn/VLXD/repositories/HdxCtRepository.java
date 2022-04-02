@@ -22,4 +22,7 @@ public interface HdxCtRepository extends JpaRepository<HdxCt, Long> {
 //	@Query(value = "select s from Hdn s where :keySearch is null or s.id like %:keySearch%")
 //	Page<Hdn> findAllSearch(String keySearch,Pageable pageable);
 	List<HdxCt> findByHdx(Hdx hdx);
+	
+	@Query(value = "select * from HDX_CT s where s.hdx_id = :idHdx",nativeQuery = true)
+	List<HdxCt> findByIdHdx(Long idHdx);
 }

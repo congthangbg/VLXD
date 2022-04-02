@@ -23,6 +23,7 @@ import { getInitials } from '../../utils/get-initials';
 import useMagicColor from '../../hook/useMagicColor';
 import { AccessAlarm, ThreeDRotation, Edit, Delete, Preview, Visibility, LocalPrintshop } from '@mui/icons-material';
 import { SeverityPill } from '../severity-pill';
+import { currencyFormat } from '../component/MessageContants';
 
 
 export const HdxListResults = ({
@@ -73,7 +74,7 @@ export const HdxListResults = ({
                 STT
               </TableCell>
               <TableCell>
-               Mã hóa đơn
+               MHD
               </TableCell>
               <TableCell>
                 Tên khách hàng
@@ -82,7 +83,13 @@ export const HdxListResults = ({
                 Địa chỉ
               </TableCell>
               <TableCell>
-                Tổng tiền
+                Tổng tiền hóa đơn
+              </TableCell>
+              <TableCell>
+                Số tiền đã thanh toán
+              </TableCell>
+              <TableCell>
+                Còn lại
               </TableCell>
               <TableCell>
                 Ngày xuất
@@ -105,7 +112,7 @@ export const HdxListResults = ({
                   {customer.order}
                 </TableCell>
                 <TableCell>
-                {customer.code || 0}
+                {"HD"+ customer.id}
                 </TableCell>
                 <TableCell>
                 {customer && customer.customer && customer.customer.name || ''}
@@ -114,16 +121,25 @@ export const HdxListResults = ({
                 {customer && customer.customer && customer.customer.village.villageName || ''}
                 </TableCell>
                 <TableCell>
-                {customer && customer.totalMoney  || 0}
+                {customer && customer.totalBill  || 0}
+                </TableCell>
+                <TableCell>
+                {customer && customer.pay && currencyFormat(customer.pay)  || 0}
+                </TableCell>
+                <TableCell>
+                <SeverityPill color={"secondary"}>
+                {customer && customer.totalMoney && currencyFormat(customer.totalMoney)  || 0}
+                </SeverityPill>
+              
                 </TableCell>
                 <TableCell>
                   {customer && customer.releaseDate ? format(new Date(customer.releaseDate), 'hh:mm dd/MM/yyyy') : new Date()}
                 </TableCell>
                 <TableCell>
                 <SeverityPill
-                    color={customer && customer.status == 1 ? 'error' : (customer.status == 2 ? 'warning':'success')}
+                    color={customer && customer.status == 1 ? 'error' : (customer.status == 2 ? 'success':'warning')}
                   >
-                    {customer.status == 1? 'Chưa thanh toán' : (customer.status == 2 ? 'Đang thanh toán' : 'Đã thanh toán')}
+                    {customer.status == 1? 'Chờ thanh toán' : (customer.status == 2 ?  'Đã thanh toán' :"Khác")}
                   </SeverityPill>
                 </TableCell>
                 <TableCell style={{width: '300px'}}>

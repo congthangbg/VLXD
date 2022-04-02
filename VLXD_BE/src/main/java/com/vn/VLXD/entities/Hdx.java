@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,6 +20,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
+
+import org.springframework.data.relational.core.mapping.Embedded.Nullable;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,11 +40,16 @@ public class Hdx implements Serializable {
     @Column(name="CODE")
     private String code;
     @Column(name="TOTAL_MONEY")
-    private String totalMoney;
+    private double totalMoney;
+    @Column(name="TOTAL_BILL")
+    private String totalBill;
     @Column(name="RELEASE_DATE")
     private LocalDateTime releaseDate;
     @Column(name="OWE", precision=53)
     private double owe;
+    @Column(name="PAY")
+    @Nullable
+    private Double pay;
     @Column(name="CREATE_DATE")
     private LocalDateTime createDate;
     @Column(name="CREATE_BY", length=100)
@@ -52,7 +60,7 @@ public class Hdx implements Serializable {
     private String updateBy;
     @Column(name="STATUS", precision=19)
     private long status;
-//    @OneToMany(mappedBy="hdx",fetch = FetchType.LAZY)
+//    @OneToMany(mappedBy="hdx",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 //    private Set<HdxCt> hdxCt;
 //    @OneToMany(mappedBy="hdx",fetch = FetchType.LAZY)
 //    private Set<HdxCtTon> hdxCtTon;

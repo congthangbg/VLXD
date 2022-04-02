@@ -60,7 +60,16 @@ export const SUPPLIER_API={
    DELETE:"/supplier/delete",
 }
 
+export function currencyFormat3(num) {
+   return  num.toFixed(3).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+ }
+ export function currencyFormat(num) {
+   return  num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+}
+
 export const STATUS_401 = 401
+export const DA_THANH_TOAN = 2
+export const CHO_THANH_TOAN = 1 // 2: đã thanh toán,1: chờ thanh toán
 export const SAVE_SUCCESS = "Thêm mới thành công!"
 export const SAVE_ERROR = "Thêm mới thất bại!"
 

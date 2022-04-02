@@ -9,10 +9,10 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
-import { Autocomplete, Grid, TextField } from '@mui/material';
+import { Autocomplete, Checkbox, FormControlLabel, FormGroup, Grid, TextField } from '@mui/material';
 import { Field, useFormik } from 'formik';
 import * as Yup from 'yup';
-import { GETALL_AND_SEARCH_VILLAGE, LOGIN, LOGIN_FAILED, NOTIFY, PRODUCT_TYPE, SAVE_ERROR, SAVE_SUCCESS, SAVE_UPDATE_CUSTOMER, STATUS_401, STAUTS_401, TB_SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER_ERR, UNIT_API, VILLAGE_API } from '../component/MessageContants';
+import { CHO_THANH_TOAN, currencyFormat, currencyFormat3, DA_THANH_TOAN, GETALL_AND_SEARCH_VILLAGE, HDX_API, LOGIN, LOGIN_FAILED, NOTIFY, PRODUCT_TYPE, SAVE_ERROR, SAVE_SUCCESS, SAVE_UPDATE_CUSTOMER, STATUS_401, STAUTS_401, TB_SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER_ERR, UNIT_API, VILLAGE_API } from '../component/MessageContants';
 import axiosInstance from '../config/axiosConfig';
 import toastifyAlert from '../component/toastify-message/toastify';
 import { ToastContainer } from 'react-toastify';
@@ -25,6 +25,7 @@ import AddProductDialog from './AddProductDialog';
 import AlertDialog from '../component/AlertDialog';
 import { TonTable } from './TonTable';
 import AddTonDialog from './AddTonDialog';
+import CurrencyFormat from 'react-currency-format';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -75,15 +76,78 @@ export default function CustomizedDialogs(props) {
   const [dataTonEdit, setDataTonEdit] = useState([])
   const [openModal, setOpenModal] = useState(false)
   const [openModalTon, setOpenModalTon] = useState(false)
+  const [pay, setPay] = useState({ owe: 0, pay: 0 })
   const { open, setOpen, dataEdit, setDataEdit, handleSearch,
     dataCustomer, getInitCustomer, dataProductType, dataProduct, dataUnit, getProduct,
     setDataProduct } = props;
+    const formik = useFormik({
+      enableReinitialize: true,
+      initialValues: {
+        id: dataEdit && dataEdit.id ? dataEdit.id : '',
+        customer: dataEdit && dataEdit.customer ? dataEdit.customer : '',
+        isPaySuccess: dataEdit && dataEdit.isPaySuccess ? dataEdit.isPaySuccess : false,
+      },
+      validationSchema: Yup.object({
+        customer: Yup
+          .object().nullable()
+          .required(NOTIFY.NOT_BLANK),
+      }),
+      onSubmit: (values, { resetForm }) => {
+        if (dataTon && dataTon.length <= 0 && dataPTable && dataPTable.length <= 0) {
+          toastifyAlert.error("Chưa nhập sản phẩm")
+        } else {
+          const newData = {
+            ...values,
+            customerId: values.customer.id,
+            owe: pay.owe,
+            pay: pay.pay,
+            hdxCtTonRequest: dataTon,
+            hdxCtRequest: dataPTable,
+            status: values.isPaySuccess === true ? DA_THANH_TOAN : CHO_THANH_TOAN,
+            releaseDate: new Date().getTime(),
+            total: total(),
+            totalBill: currencyFormat(totalBill())
+  
+          }
+          axiosInstance.post(HDX_API.SAVE_UPDATE, newData)
+            .then(response => {
+              handleSearch();
+              toastifyAlert.success(SAVE_SUCCESS)
+            })
+            .catch(err => {
+              console.log("ee", err);
+              toastifyAlert.error(SAVE_ERROR)
+            })
+          console.log("newData", newData);
+          handleClose();
+          resetForm();
+        }
+      }
+    });
   const handleClose = () => {
     setOpen(false);
     formik.resetForm();
-    setDataEdit({})
+    setDataEdit(null)
+    setPay({ owe: 0, pay: 0 })
+    setDataPTable([])
+    setDataTon([])
   };
+  useEffect(() => {
+    if (dataEdit && dataEdit !== null) {
+      setPay({ pay: dataEdit && dataEdit.pay ? dataEdit.pay : 0, owe: dataEdit && dataEdit.owe ? dataEdit.owe : 0 })
+      formik.setFieldValue("pay",dataEdit && dataEdit.pay && dataEdit.pay || '')
+      formik.setFieldValue("owe", dataEdit.owe  && dataEdit.owe && dataEdit.owe || '')
+      setDataPTable(dataEdit.hdxCt)
+      setDataTon(dataEdit.hdxCtTon)
 
+    }
+  }, [dataEdit])
+
+  useEffect(() => {
+    if (!open) {
+      handleClose();
+    }
+  }, [open])
 
   useEffect(() => {
     getInitCustomer();
@@ -94,34 +158,7 @@ export default function CustomizedDialogs(props) {
 
 
 
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      id: dataEdit ? dataEdit.id : '',
-      unitName: dataEdit ? dataEdit.unitName : '',
-    },
-    validationSchema: Yup.object({
-      unitName: Yup
-        .string()
-        .trim()
-        .max(255)
-        .required(NOTIFY.NOT_BLANK),
-    }),
-    onSubmit: (values, { resetForm }) => {
-      axiosInstance.post(UNIT_API.SAVE_UPDATE, values)
-        .then(response => {
-          handleSearch();
-          toastifyAlert.success(SAVE_SUCCESS)
-        })
-        .catch(err => {
-          console.log("ee", err);
-          toastifyAlert.error(SAVE_ERROR)
-        })
-      handleClose();
-      resetForm();
-
-    }
-  });
+  
   const handAddProduct = (p) => {
     if (p.id) {
       const a = {
@@ -170,10 +207,11 @@ export default function CustomizedDialogs(props) {
         unit: p.product.unit.unitName,
         product: p.product,
         width: p.width,
-        height: p.height
+        height: p.height,
+        numberM2: currencyFormat3((Number(p.quantity) * Number(p.height) * Number(p.width)))
       }
-      const index = dataTon && p && dataTon.findIndex((c,i) => c.id === p.id)
-       dataTon && dataTon.map((e, idx) => {
+      const index = dataTon && p && dataTon.findIndex((c, i) => c.id === p.id)
+      dataTon && dataTon.map((e, idx) => {
         if (index === idx) {
           dataTon[idx] = a
         }
@@ -188,7 +226,8 @@ export default function CustomizedDialogs(props) {
         unit: p.product.unit.unitName,
         product: p.product,
         width: p.width,
-        height: p.height
+        height: p.height,
+        numberM2: currencyFormat3((Number(p.quantity) * Number(p.height) * Number(p.width)))
       }
       setDataTon([...dataTon, a]);
     }
@@ -219,7 +258,7 @@ export default function CustomizedDialogs(props) {
     setOpenModal(false)
   }
   const onDeteleTon = () => {
-     if(dataTonEdit){
+    if (dataTonEdit) {
       const index = dataTon && dataTon.findIndex(e => e.id === dataTonEdit.id)
       dataTon.splice(index, 1)
     }
@@ -239,19 +278,40 @@ export default function CustomizedDialogs(props) {
         toastifyAlert.error(TB_SAVE_UPDATE_CUSTOMER_ERR)
       })
   }
-  function currencyFormat(num) {
-    return  num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
- }
-  const total = ()=>{
+  
+  const handleChangowe = (name, value) => {
+    setPay({
+      ...pay,
+      [name]: value
+    })
+  }
+  const totalBill = () => {
     let total = 0;
-    dataPTable && dataPTable.map(e=>{
+    dataPTable && dataPTable.map(e => {
       total += Number(e.price) * Number(e.quantity)
     })
-    dataTon && dataTon.map(p=>{
+    dataTon && dataTon.map(p => {
       total += p.price * (Number(p.width) * Number(p.height) * Number(p.quantity))
     })
-    return currencyFormat(total);
+    total = total + Number(pay.owe)//Nợ cũ
+    // total = total - Number(pay.pay)//số tiền thanh toán
+
+    return total;
   }
+  const total = () => {
+    let total = 0;
+    dataPTable && dataPTable.map(e => {
+      total += Number(e.price) * Number(e.quantity)
+    })
+    dataTon && dataTon.map(p => {
+      total += p.price * (Number(p.width) * Number(p.height) * Number(p.quantity))
+    })
+    total = total + Number(pay.owe)//Nợ cũ
+    total = total - Number(pay.pay)//số tiền thanh toán
+
+    return total;
+  }
+  // console.log("formik",formik);
   return (
     <div>
       <BootstrapDialog
@@ -270,13 +330,13 @@ export default function CustomizedDialogs(props) {
               <Grid item xs={3}>
                 <Autocomplete
                   size="small"
-                  id="customerId"
-                  name="customerId"
+                  id="customer"
+                  name="customer"
                   options={dataCustomer ? dataCustomer.data : []}
                   // groupBy={ option => option.state }
                   getOptionLabel={option => option.name}
-                  onChange={(event, value) => formik.setFieldValue("customerId", value)}
-                  value={formik.values && formik.values.customerId ? formik.values.customerId : undefined}
+                  onChange={(event, value) => formik.setFieldValue("customer", value)}
+                  value={formik.values && formik.values.customer ? formik.values.customer : undefined}
                   // style={{ width: 300 }}
                   renderInput={params => (
                     <TextField
@@ -285,14 +345,14 @@ export default function CustomizedDialogs(props) {
                       margin="normal"
                       label="Khách hàng"
                       fullWidth
-                      error={Boolean(formik.touched.customerId && formik.errors.customerId)}
-                      helperText={formik.touched.customerId && formik.errors.customerId}
+                      error={Boolean(formik.touched.customer && formik.errors.customer)}
+                      helperText={formik.touched.customer && formik.errors.customer}
                     />
                   )}
                 />
               </Grid>
               <Grid item xs={3}>
-                {formik && formik.values && formik.values.customerId ?
+                {formik && formik.values && formik.values.customer ?
                   <TextField
                     id="outlined-size-small"
                     size="small"
@@ -301,7 +361,7 @@ export default function CustomizedDialogs(props) {
                     margin="normal"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    value={'SĐT: ' + formik.values.customerId.phone + '- Địa chỉ: ' + formik.values.customerId.village.villageName}
+                    value={'SĐT: ' + formik.values.customer.phone + '- Địa chỉ: ' + formik.values.customer.village.villageName}
                     variant="outlined"
                     disabled
 
@@ -375,108 +435,100 @@ export default function CustomizedDialogs(props) {
 
             </Grid>
             <Grid container spacing={2}>
-              <Grid item xs={10}></Grid>
-              <Grid item xs={2}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    mt: 1,
-                    bgcolor: 'background.paper',
-                    borderRadius: 1,
+
+              <Grid item xs={3}>
+                Nợ cũ :  <CurrencyFormat
+                  style={{
+                    marginTop: 16, width: 200, height: 38,
+                    borderRadius: 5, borderWidth: 1, variant: 'outlined',
+                    paddingLeft: 10, fontSize: 15,
                   }}
-                >
-                  <TextField
-                    id="outlined-size-small"
-                    size="small"
-                    fullWidth
-                    label="Nợ cũ"
-                    margin="normal"
-                    name="total"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    value={formik.values.total}
-                    variant="outlined"
+                  value={formik.values.owe}
+                  thousandSeparator={true}
+                  //  suffix={' VND'}
+                  onValueChange={(values) => {
+                    const { formattedValue, value } = values;
+                    // formattedValue = $2,223
+                    // value ie, 2223
+                    handleChangowe("owe", value);
+                    formik.setFieldValue("owe", value)
+                  }}
+                /> VND
+                {Boolean(formik.touched.owe && formik.errors.owe) ? <p style={{ color: '#D14343', fontSize: 12, marginLeft: 40, marginTop: 5 }} >{formik.errors.owe}</p> : ''}
 
-                  />
+              </Grid>
+              <Grid item xs={3}>
+                Thanh toán :  <CurrencyFormat
+                  style={{
+                    marginTop: 16, width: 200, height: 38,
+                    borderRadius: 5, borderWidth: 1, variant: 'outlined',
+                    paddingLeft: 10, fontSize: 15,
+                  }}
+                  value={formik.values.pay}
+                  thousandSeparator={true}
+                  //  suffix={' VND'}
+                  onValueChange={(values) => {
+                    const { formattedValue, value } = values;
+                    // formattedValue = $2,223
+                    // value ie, 2223
+                    handleChangowe("pay", value);
+                    formik.setFieldValue("pay", value)
+                  }}
+                /> VND
+                {Boolean(formik.touched.pay && formik.errors.pay) ? <p style={{ color: '#D14343', fontSize: 12, marginLeft: 40, marginTop: 5 }} >{formik.errors.pay}</p> : ''}
+              </Grid>
+              <Grid item xs={4}></Grid>
+              <Grid item xs={2}>
 
-                </Box>
               </Grid>
             </Grid>
-            <Grid container spacing={2}>
-              <Grid item xs={8}></Grid>
-              <Grid item xs={2}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    bgcolor: 'background.paper',
-                    borderRadius: 1,
-                    mt: 2
-                  }}
-                >
-                  <Button type="button"
-                    style={{ fontSize: 15, marginRight: 30, fontFamily: "Times New Roman", color: "black" }}
-                    color="info" size="small" variant="contained" autoFocus  >
-                    Thanh toán
-                  </Button>
-                </Box>
-              </Grid>
-              <Grid item xs={2}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'flex-center',
-                    bgcolor: 'background.paper',
-                    borderRadius: 1,
-                    mt:2,
-                    fontSize:18
-                  }}
-                  style={{fontWeight:'bold'}}
-                >
-                
 
-                </Box>
-              </Grid>
-            </Grid>
 
           </DialogContent>
 
           {/* <DialogActions  > */}
           <Grid container spacing={2}>
-            <Grid item xs={4}>
+            {/* <Grid item xs={1}>
+
+            </Grid> */}
+            <Grid item xs={7}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'end',
+                  pt: 1,
+                  pb: 1
+                }}
+              >
+                <Button type="reset" onClick={() => handleClose()}
+                  style={{ fontSize: 20, marginRight: 10, fontFamily: "Times New Roman", color: "black" }} color="error" size="small" variant="contained" autoFocus  >
+                  Hủy
+                </Button>
+                <Button type="submit"
+                  style={{ fontSize: 20, marginRight: 30, fontFamily: "Times New Roman", color: "black" }}
+                  color="secondary" size="small" variant="contained" autoFocus  >
+                  Lưu lại
+                </Button>
+              </Box>
+            </Grid>
+            <Grid item xs={3}>
+              <p style={{ fontSize: 20, fontWeight: "bold", marginTop: 10 }}>
+                Tổng tiền : {currencyFormat(total())} VND
+              </p>
 
             </Grid>
-            <Grid item xs={4}>
-            <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              pt: 1,
-              pb: 1
-            }}
-          >
-            <Button type="reset" onClick={() => handleClose()}
-              style={{ fontSize: 20, marginRight: 10, fontFamily: "Times New Roman", color: "black" }} color="error" size="small" variant="contained" autoFocus  >
-              Hủy
-            </Button>
-            <Button type="submit"
-              style={{ fontSize: 20, marginRight: 30, fontFamily: "Times New Roman", color: "black" }}
-              color="secondary" size="small" variant="contained" autoFocus  >
-              Lưu lại
-            </Button>
-          </Box>
+            <Grid item xs={2}>
+              <FormGroup>
+                <FormControlLabel control={<Checkbox
+                  checked={formik.values.isPaySuccess} onChange={formik.handleChange} name="isPaySuccess"
+                />} label="Đã thanh toán xong" />
+              </FormGroup>
             </Grid>
-            <Grid item xs={4}>
-              <p style={{fontSize:20,fontWeight:"bold" ,marginTop:10}}>
-              Tổng tiền : {total()} VND
-              </p>
-           
-            </Grid>
+
           </Grid>
-         
-        
-        
+
+
+
           {/* </DialogActions> */}
         </form>
       </BootstrapDialog>
@@ -518,7 +570,7 @@ export default function CustomizedDialogs(props) {
         setOpen={setOpenModal}
         onDelete={onDetele}
       />
-       <AlertDialog
+      <AlertDialog
         open={openModalTon}
         setOpen={setOpenModalTon}
         onDelete={onDeteleTon}

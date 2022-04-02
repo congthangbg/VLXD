@@ -110,8 +110,9 @@ export default function AddProductDialog(props) {
       formik.setFieldValue("price", formik.values.product.price)
     }
   }, [formik.values.product])
+  
   React.useEffect(() => {
-    formik.setFieldValue("product", undefined);
+   
     if (formik.values.productType !== undefined) {
       const typeId = formik.values.productType ? formik.values.productType.id : null
       if(typeId !== null){
@@ -138,7 +139,14 @@ export default function AddProductDialog(props) {
      
     }
   }, [formik.values.productType])
-  console.log({formik});
+  const [dataP,setDataP] = React.useState([])
+React.useEffect(() => {
+  if(dataProduct){
+    const result = dataProduct &&dataProduct.data && dataProduct.data.filter(e => e.productType.id !== 5);//5 loại bỏ loại sp tôn
+    setDataP(result)
+  }
+},[dataProduct])
+console.log("dataP",dataP);
   return (
     <div>
       <BootstrapDialog
@@ -179,15 +187,14 @@ export default function AddProductDialog(props) {
                   size="small"
                   id="product"
                   name="product"
-                  options={dataProduct ? dataProduct.data : []}
+                  options={dataP ? dataP : []}
                   getOptionLabel={option => option.name}
                   onChange={(event, value) => formik.setFieldValue("product", value)}
                   value={formik.values.product ? formik.values.product : undefined}
                   renderInput={params => (
                     <TextField
-                 
                       {...params}
-                      onChange={formik.handleChange}
+                      // onChange={formik.handleChange}
                       margin="normal"
                       label="Sản phẩm"
                       fullWidth

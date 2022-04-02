@@ -94,7 +94,7 @@ export const TonTable = ({
                   {i+1}
                 </TableCell>
                 <TableCell>
-                  {p.name}
+                  {p.name ? p.name : (p.product && p.product.name || '')}
                 </TableCell>
                 <TableCell>
                   {p.width}
@@ -106,7 +106,7 @@ export const TonTable = ({
                   {p.quantity}
                 </TableCell>
                 <TableCell>
-                  {p.unit}
+                  {p.unit ? p.unit : (p.product && p.product.unit && p.product.unit.unitName || '')}
                 </TableCell>
                 <TableCell>
                   {currencyFormat3(Number(p.width) * Number(p.height) * Number(p.quantity))}

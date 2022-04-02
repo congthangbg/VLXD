@@ -23,6 +23,7 @@ import com.vn.VLXD.dto.request.HdxCtTonRequest;
 import com.vn.VLXD.dto.request.HdxRequest;
 import com.vn.VLXD.dto.request.ProductRequest;
 import com.vn.VLXD.dto.request.ProductTypeRequest;
+import com.vn.VLXD.dto.response.HdxResponse;
 import com.vn.VLXD.dto.response.ProductResponse;
 import com.vn.VLXD.entities.Customer;
 import com.vn.VLXD.entities.Hdn;
@@ -88,6 +89,7 @@ public class HdxServiceImpl implements HdxService{
 			u.setUpdateBy(UserLogonService.getUsername());
 			u.setModifyDate(LocalDateTime.now());
 			u.setStatus(request.getStatus() != 0 ? request.getStatus() : Constants.ChuaThanhToan);
+			u.setTotalMoney(request.getTotal());
 			Optional<Customer> cOptional = customerRepository.findById(request.getCustomerId());
 			if(cOptional.isPresent()) {
 				u.setCustomer(cOptional.get());
@@ -99,7 +101,7 @@ public class HdxServiceImpl implements HdxService{
 				for (HdxCtRequest e : request.getHdxCtRequest()) {
 					HdxCt hdnCt = MapperUtils.map(e, HdxCt.class);
 					
-					Optional<Product> optional = productRepository.findById(e.getProductId());
+					Optional<Product> optional = productRepository.findById(e.getProduct().getId());
 					if(optional.isPresent()) {
 						hdnCt.setProduct(optional.get());
 						//Trừ số lượng của product
@@ -113,15 +115,13 @@ public class HdxServiceImpl implements HdxService{
 					hdnCt.setModifyDate(LocalDateTime.now());
 					hdnCt.setStatus(1);
 					hdxCtRepository.save(hdnCt);
-					
-					
 				}
 			}
 			if(!request.getHdxCtTonRequest().isEmpty()) {
 				for (HdxCtTonRequest e : request.getHdxCtTonRequest()) {
 					HdxCtTon hdnCt = MapperUtils.map(e, HdxCtTon.class);
 					
-					Optional<Product> optional = productRepository.findById(e.getProductId());
+					Optional<Product> optional = productRepository.findById(e.getProduct().getId());
 					if(optional.isPresent()) {
 						hdnCt.setProduct(optional.get());
 						//Trừ số lượng của product
@@ -154,12 +154,19 @@ public class HdxServiceImpl implements HdxService{
 				if(!request.getHdxCtRequest().isEmpty()) {
 					List<HdxCt> hdnCts = hdxCtRepository.findByHdx(u2);
 					if(!hdnCts.isEmpty()) {
+						for(HdxCt hdxCt : hdnCts) {
+							Optional<Product> o = productRepository.findById(hdxCt.getProduct().getId());
+							if(o.isPresent()) {
+								o.get().setQuantity(hdxCt.getQuantity() + o.get().getQuantity());
+								productRepository.save(o.get());
+							}
+						}
 						hdxCtRepository.deleteAll(hdnCts);
 					}
 					for (HdxCtRequest e : request.getHdxCtRequest()) {
 						HdxCt hdnCt = MapperUtils.map(e, HdxCt.class);
 						
-						Optional<Product> optional2 = productRepository.findById(e.getProductId());
+						Optional<Product> optional2 = productRepository.findById(e.getProduct().getId());
 						if(optional2.isPresent()) {
 							hdnCt.setProduct(optional2.get());
 							//Trừ số lượng của product
@@ -181,12 +188,19 @@ public class HdxServiceImpl implements HdxService{
 				if(!request.getHdxCtTonRequest().isEmpty()) {
 					List<HdxCtTon> hdnCts = hdxCtTonRepository.findByHdx(u2);
 					if(!hdnCts.isEmpty()) {
+						for(HdxCtTon hdxCt : hdnCts) {
+							Optional<Product> o = productRepository.findById(hdxCt.getProduct().getId());
+							if(o.isPresent()) {
+								o.get().setQuantity(hdxCt.getQuantity() + o.get().getQuantity());
+								productRepository.save(o.get());
+							}
+						}
 						hdxCtTonRepository.deleteAll(hdnCts);
 					}
 					for (HdxCtTonRequest e : request.getHdxCtTonRequest()) {
 						HdxCtTon hdnCt = MapperUtils.map(e, HdxCtTon.class);
 						
-						Optional<Product> optional1 = productRepository.findById(e.getProductId());
+						Optional<Product> optional1 = productRepository.findById(e.getProduct().getId());
 						if(optional1.isPresent()) {
 							hdnCt.setProduct(optional1.get());
 							//Trừ số lượng của product
@@ -206,6 +220,11 @@ public class HdxServiceImpl implements HdxService{
 				}
 				u2.setUpdateBy(UserLogonService.getUsername());
 				u2.setModifyDate(LocalDateTime.now());
+				u2.setOwe(request.getOwe());
+				u2.setPay(request.getPay());
+				u2.setTotalMoney(request.getTotal());
+				u2.setTotalBill(request.getTotalBill());
+				u2.setStatus(request.getStatus());
 				
 				Hdx u1 = hdxRepository.save(u2);
 				dto.setData(u1);
@@ -223,8 +242,17 @@ public class HdxServiceImpl implements HdxService{
 	public ResponseBodyDto<Object> findAllSearch(String keySearch,Pageable pageable) {
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
 		Page<Hdx> page = hdxRepository.findAll( pageable);
-		dto.setData(page.getContent());
-		dto.setTotalRecords(page.getTotalElements());
+		List<HdxResponse> hdxResponses = MapperUtils.mapAll(page.getContent(), HdxResponse.class);
+		
+		for (HdxResponse r : hdxResponses) {
+			List<HdxCt> hdxCts = hdxCtRepository.findByIdHdx(r.getId());
+			List<HdxCtTon> hdxCtTons = hdxCtTonRepository.findByIdHdx(r.getId());
+			r.setHdxCt(hdxCts);
+			r.setHdxCtTon(hdxCtTons);
+		}
+		
+		dto.setData(hdxResponses);
+		dto.setTotalRecords(hdxResponses.size());
 		dto.setMessage(MessageConstant.MSG_OK);
 		dto.setMessageCode(MessageConstant.MSG_OK_CODE);
 		return dto;
@@ -258,7 +286,7 @@ public class HdxServiceImpl implements HdxService{
 			if(!optional2.isEmpty()) {
 				hdxCtTonRepository.deleteAll(optional2);
 			}
-			hdxRepository.deleteById(id);
+			hdxRepository.delete(optional.get());
 			dto.setMessage(MessageConstant.MSG_OK);
 			dto.setMessageCode(MessageConstant.MSG_OK_CODE);
 		}else {
