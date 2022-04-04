@@ -78,7 +78,7 @@ export default function CustomizedDialogs(props) {
   const [openModalTon, setOpenModalTon] = useState(false)
   const [pay, setPay] = useState({ owe: 0, pay: 0 })
   const { open, setOpen, dataEdit, setDataEdit, handleSearch,
-    dataCustomer, getInitCustomer, dataProductType, dataProduct, dataUnit, getProduct,
+    dataCustomer, getInitCustomer, dataProductType, dataProduct, dataUnit, getProduct,query,
     setDataProduct } = props;
     const formik = useFormik({
       enableReinitialize: true,
@@ -94,8 +94,11 @@ export default function CustomizedDialogs(props) {
       }),
       onSubmit: (values, { resetForm }) => {
         if (dataTon && dataTon.length <= 0 && dataPTable && dataPTable.length <= 0) {
-          toastifyAlert.error("Chưa nhập sản phẩm")
-        } else {
+          toastifyAlert.error(NOTIFY.PRODUCT)
+        }else if(values.isPaySuccess === true && pay.pay <= 0){
+          toastifyAlert.error(NOTIFY.PAY)
+        }
+         else {
           const newData = {
             ...values,
             customerId: values.customer.id,
@@ -111,7 +114,7 @@ export default function CustomizedDialogs(props) {
           }
           axiosInstance.post(HDX_API.SAVE_UPDATE, newData)
             .then(response => {
-              handleSearch();
+              handleSearch(query);
               toastifyAlert.success(SAVE_SUCCESS)
             })
             .catch(err => {
@@ -293,7 +296,7 @@ export default function CustomizedDialogs(props) {
     dataTon && dataTon.map(p => {
       total += p.price * (Number(p.width) * Number(p.height) * Number(p.quantity))
     })
-    total = total + Number(pay.owe)//Nợ cũ
+    // total = total + Number(pay.owe)//Nợ cũ
     // total = total - Number(pay.pay)//số tiền thanh toán
 
     return total;
@@ -435,13 +438,16 @@ export default function CustomizedDialogs(props) {
 
             </Grid>
             <Grid container spacing={2}>
+            <Grid item xs={4}></Grid>
+              <Grid item xs={2}>
 
-              <Grid item xs={3}>
+              </Grid>
+              <Grid item xs={3} >
                 Nợ cũ :  <CurrencyFormat
                   style={{
-                    marginTop: 16, width: 200, height: 38,
+                    marginTop: 16, width: 300, height: 38,
                     borderRadius: 5, borderWidth: 1, variant: 'outlined',
-                    paddingLeft: 10, fontSize: 15,
+                    paddingLeft: 10, fontSize: 15
                   }}
                   value={formik.values.owe}
                   thousandSeparator={true}
@@ -455,12 +461,11 @@ export default function CustomizedDialogs(props) {
                   }}
                 /> VND
                 {Boolean(formik.touched.owe && formik.errors.owe) ? <p style={{ color: '#D14343', fontSize: 12, marginLeft: 40, marginTop: 5 }} >{formik.errors.owe}</p> : ''}
-
               </Grid>
               <Grid item xs={3}>
                 Thanh toán :  <CurrencyFormat
                   style={{
-                    marginTop: 16, width: 200, height: 38,
+                    marginTop: 16, width: 250, height: 38,
                     borderRadius: 5, borderWidth: 1, variant: 'outlined',
                     paddingLeft: 10, fontSize: 15,
                   }}
@@ -477,10 +482,7 @@ export default function CustomizedDialogs(props) {
                 /> VND
                 {Boolean(formik.touched.pay && formik.errors.pay) ? <p style={{ color: '#D14343', fontSize: 12, marginLeft: 40, marginTop: 5 }} >{formik.errors.pay}</p> : ''}
               </Grid>
-              <Grid item xs={4}></Grid>
-              <Grid item xs={2}>
-
-              </Grid>
+         
             </Grid>
 
 

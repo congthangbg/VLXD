@@ -93,9 +93,12 @@ export const PTable = ({
                 <TableCell>
                   {currencyFormat(p.price)}
                 </TableCell>
-                <TableCell>
-                  {p.price && p.quantity ? currencyFormat(p.price * p.quantity) : ""}
+                <TableCell style={{ width: '165px' }}>
+                <SeverityPill color={"secondary"}>
+                {p.price && p.quantity ? currencyFormat(p.price * p.quantity) : ""}
+                </SeverityPill>
                 </TableCell>
+                
                 <TableCell style={{ width: '200px' }}>
                   <Button size="small" onClick={() => handleUpdate(p)} style={{ marginRight: 4 }} color="warning" variant="contained">
                     <Edit />

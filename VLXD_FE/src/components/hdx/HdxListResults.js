@@ -29,6 +29,7 @@ import { currencyFormat } from '../component/MessageContants';
 export const HdxListResults = ({
   customers,
   setOpenModal,
+  setOpenView,
   handleDelete,
   handleEdit,
   setOpen,
@@ -83,10 +84,13 @@ export const HdxListResults = ({
                 Địa chỉ
               </TableCell>
               <TableCell>
-                Tổng tiền hóa đơn
+                Tổng tiền HĐ
               </TableCell>
               <TableCell>
-                Số tiền đã thanh toán
+                Nợ cũ
+              </TableCell>
+              <TableCell>
+                Đã thanh toán
               </TableCell>
               <TableCell>
                 Còn lại
@@ -124,6 +128,9 @@ export const HdxListResults = ({
                 {customer && customer.totalBill  || 0}
                 </TableCell>
                 <TableCell>
+                {customer && customer.owe &&  currencyFormat(customer.owe) || 0}
+                </TableCell>
+                <TableCell>
                 {customer && customer.pay && currencyFormat(customer.pay)  || 0}
                 </TableCell>
                 <TableCell>
@@ -142,8 +149,11 @@ export const HdxListResults = ({
                     {customer.status == 1? 'Chờ thanh toán' : (customer.status == 2 ?  'Đã thanh toán' :"Khác")}
                   </SeverityPill>
                 </TableCell>
-                <TableCell style={{width: '300px'}}>
-                <Button  size="small"  onClick={()=>handleUpdate(customer) }  style={{marginRight:4}} color="success" variant="contained">
+                <TableCell style={{width: '200px'}}>
+                <Button  size="small"  onClick={()=>{
+                        setOpenView(true)
+                        handleEdit(customer)
+                        } }  style={{marginRight:4}} color="success" variant="contained">
                         <Visibility/>
                       </Button>
                       <Button  size="small"  onClick={()=>handleUpdate(customer) }  style={{marginRight:4}} color="primary" variant="contained">

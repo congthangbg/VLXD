@@ -15,12 +15,14 @@ import useCallVillage from 'src/hook/useCallVillage';
 import { HdxListResults } from 'src/components/hdx/HdxListResults';
 import CustomizedDialogs from 'src/components/hdx/CustomizedDialogs';
 import useCallCustomer from 'src/hook/useCallCustomer';
+import ViewDetails from 'src/components/hdx/ViewDetails';
 const Hdx = () => {
   const [open, setOpen] = useState(false)
   const [openModal, setOpenModal] = useState(false)
+  const [openView, setOpenView] = useState(false)
   const [dataDelete, setDataDelete] = useState({})
   const [dataEdit, setDataEdit] = useState({})
-  const [query, setQuery] = useState({ keySearch: '', limit: 10, page: 0,skip:0 })
+  const [query, setQuery] = useState({ keySearch: '', limit: 10, page: 0,skip:0,status :"" })
 //  const {data,setData}= useCallVillage()
  const [data,setData] = useState([])
  const [dataCustomer, setDataCustomer] = useState([]);
@@ -104,14 +106,14 @@ const Hdx = () => {
     })
 }
  useEffect(()=>{
-  handleSearch();
+  handleSearch(query);
   getInitCustomer();
   getProductType();
   getProduct();
   getListUnit();
  },[])
  useEffect(()=>{
-  handleSearch();
+  handleSearch(query);
  },[query.page,query.limit])
 
 
@@ -122,8 +124,8 @@ const Hdx = () => {
     })
   }
  
-  const handleSearch = () => {
-    axiosInstance.get(HDX_API.GET_ALL  + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}`)
+  const handleSearch = (query) => {
+    axiosInstance.get(HDX_API.GET_ALL  + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}&status=${query.status}`)
       .then(response => {
         const result = {
           data: null,
@@ -152,13 +154,14 @@ const Hdx = () => {
     axiosInstance.post(HDX_API.DELETE + "?id=" + dataDelete.id)
       .then(response => {
         toastifyAlert.success(DELETE_SUCCESS)
-        handleSearch();
+        handleSearch(query);
       })
       .catch(err => {
         console.log(err);
         toastifyAlert.error(DELETE_ERROR)
       })
   }
+  console.log("dataEdit",dataEdit);
   return <>
     <Head>
       <title>
@@ -180,6 +183,7 @@ const Hdx = () => {
           query={query}
           setQuery={setQuery}
           title = "Hóa đơn xuất"
+          isCombox={true}
         />
         
         <Box sx={{ mt: 3 }}>
@@ -191,6 +195,7 @@ const Hdx = () => {
             setOpen={setOpen}
             setQuery={setQuery}
             query={query}
+            setOpenView={setOpenView}
           />
         </Box>
         <Box
@@ -216,11 +221,18 @@ const Hdx = () => {
       dataUnit={dataUnit}
       getProduct={getProduct}
       setDataProduct={setDataProduct}
+      query={query}
     />
     <AlertDialog open={openModal}
       setOpen={setOpenModal}
       onDelete={onDetele}
     />
+      <ViewDetails
+        open={openView}
+        setOpen={setOpenView}
+        setDataEdit={setDataEdit}
+        dataEdit={dataEdit}
+      />
   </>
 }
 

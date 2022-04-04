@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,6 +44,7 @@ import io.swagger.v3.oas.annotations.Operation;
 @RestController
 @RequestMapping("/api/hdx")
 @Api(value = "HdxController", description = "REST APIs Hoá đơn xuất !!!!")
+@EnableTransactionManagement
 public class HdxController {
 	@Autowired
 	HdxService service;
@@ -50,13 +52,14 @@ public class HdxController {
     @GetMapping("")
     @ApiOperation(value = "Danh sách All")
     public ResponseBodyDto<Object> findAllSearch(
-    		@RequestParam(value = "keySearch",required = false) String keyString,
+    		@RequestParam(value = "keySearch",required = false) Optional<String> keyString,
+    		@RequestParam(value = "status",required = false) Integer status,
     		@RequestParam(value = "page",required = false) Optional<Integer> page,
     		@RequestParam(value = "size",required = false) Optional<Integer> size ) {
     	int currentPage = page.orElse(0);
     	int limit = size.orElse(100);
-    	Pageable pageable = PageRequest.of(currentPage, limit, Sort.by("id").ascending());
-    	ResponseBodyDto<Object> dto = service.findAllSearch(keyString, pageable);
+    	Pageable pageable = PageRequest.of(currentPage, limit, Sort.by("id").descending());
+    	ResponseBodyDto<Object> dto = service.findAllSearch(keyString.orElse(""),status, pageable);
     	
         return dto;
     }

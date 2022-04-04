@@ -26,7 +26,7 @@ import com.vn.VLXD.services.UserLogonService;
 import com.vn.VLXD.utils.MapperUtils;
 
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class CustomerServiceImpl implements CustomerService{
 
 	@Autowired

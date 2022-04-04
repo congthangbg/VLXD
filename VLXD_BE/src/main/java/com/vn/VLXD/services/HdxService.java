@@ -16,8 +16,8 @@ public interface HdxService {
 
 	ResponseBodyDto<Object> findById(Long id);
 
-	ResponseBodyDto<Object> findAllSearch(String keySearch, Pageable pageable);
-
 	ResponseBodyDto<Object> save(HdxRequest request);
+
+	ResponseBodyDto<Object> findAllSearch(String keySearch, Integer status, Pageable pageable);
 
 }

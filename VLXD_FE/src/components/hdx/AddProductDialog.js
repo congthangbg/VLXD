@@ -146,7 +146,6 @@ React.useEffect(() => {
     setDataP(result)
   }
 },[dataProduct])
-console.log("dataP",dataP);
   return (
     <div>
       <BootstrapDialog

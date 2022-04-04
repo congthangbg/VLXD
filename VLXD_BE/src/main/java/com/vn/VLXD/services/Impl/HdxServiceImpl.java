@@ -239,10 +239,11 @@ public class HdxServiceImpl implements HdxService{
 	}
 
 	@Override
-	public ResponseBodyDto<Object> findAllSearch(String keySearch,Pageable pageable) {
+	public ResponseBodyDto<Object> findAllSearch(String keySearch,Integer status,Pageable pageable) {
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
-		Page<Hdx> page = hdxRepository.findAll( pageable);
-		List<HdxResponse> hdxResponses = MapperUtils.mapAll(page.getContent(), HdxResponse.class);
+		List<Hdx> page = hdxRepository.SearchHdx(keySearch,status, pageable.getPageNumber(),pageable.getPageSize());
+		Integer count = hdxRepository.countSearch(keySearch,status, pageable.getPageNumber(),pageable.getPageSize());
+		List<HdxResponse> hdxResponses = MapperUtils.mapAll(page, HdxResponse.class);
 		
 		for (HdxResponse r : hdxResponses) {
 			List<HdxCt> hdxCts = hdxCtRepository.findByIdHdx(r.getId());
@@ -252,7 +253,7 @@ public class HdxServiceImpl implements HdxService{
 		}
 		
 		dto.setData(hdxResponses);
-		dto.setTotalRecords(hdxResponses.size());
+		dto.setTotalRecords(count);
 		dto.setMessage(MessageConstant.MSG_OK);
 		dto.setMessageCode(MessageConstant.MSG_OK_CODE);
 		return dto;

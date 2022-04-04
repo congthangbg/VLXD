@@ -84,6 +84,7 @@ export const NOTIFY ={
    P_TYPE : 'Bạn chưa chọn loại sản phẩm !',
    PRODUCT : 'Bạn chưa chọn sản phẩm !',
    UNIT : 'Bạn chưa chọn đơn vị tính !',
-   NUMBER: "Chỉ được nhập ký tự số !"
+   NUMBER: "Chỉ được nhập ký tự số !",
+   PAY: "Chưa nhập số tiền thanh toán !",
 
 }

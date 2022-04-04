@@ -115,7 +115,9 @@ export const TonTable = ({
                   {p && p.price ? currencyFormat(p.price) : 0}
                 </TableCell>
                 <TableCell>
-                  {p.price && p.quantity && p.width && p.height ? currencyFormat(p.price * (Number(p.width) * Number(p.height) * Number(p.quantity))) : ""}
+                <SeverityPill color={"secondary"}>
+                {p.price && p.quantity && p.width && p.height ? currencyFormat(p.price * (Number(p.width) * Number(p.height) * Number(p.quantity))) : ""}
+                </SeverityPill>
                 </TableCell>
                 <TableCell style={{ width: '200px' }}>
                   <Button size="small" onClick={() => handleUpdate(p)} style={{ marginRight: 4 }} color="warning" variant="contained">
