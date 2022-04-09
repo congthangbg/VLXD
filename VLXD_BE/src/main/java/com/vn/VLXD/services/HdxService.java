@@ -8,6 +8,7 @@ import com.vn.VLXD.dto.request.HdxRequest;
 import com.vn.VLXD.dto.request.SupplierRequest;
 import com.vn.VLXD.dto.request.UnitRequest;
 import com.vn.VLXD.dto.request.VillageRequest;
+import com.vn.VLXD.dto.response.HdxResponse;
 import com.vn.VLXD.repositories.HdnRepository;
 
 public interface HdxService {
@@ -19,5 +20,7 @@ public interface HdxService {
 	ResponseBodyDto<Object> save(HdxRequest request);
 
 	ResponseBodyDto<Object> findAllSearch(String keySearch, Integer status, Pageable pageable);
+
+	HdxResponse findByIdHdx(Long id);
 
 }

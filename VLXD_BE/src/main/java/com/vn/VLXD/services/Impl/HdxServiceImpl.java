@@ -258,6 +258,27 @@ public class HdxServiceImpl implements HdxService{
 		dto.setMessageCode(MessageConstant.MSG_OK_CODE);
 		return dto;
 	}
+	
+	@Override
+	public HdxResponse findByIdHdx(Long id) {
+		try {
+			Optional<Hdx> optional = hdxRepository.findById(id);
+			if(optional.isPresent()) {
+				HdxResponse hdxResponses = MapperUtils.map(optional.get(), HdxResponse.class);
+			
+					List<HdxCt> hdxCts = hdxCtRepository.findByIdHdx(hdxResponses.getId());
+					List<HdxCtTon> hdxCtTons = hdxCtTonRepository.findByIdHdx(hdxResponses.getId());
+					hdxResponses.setHdxCt(hdxCts);
+					hdxResponses.setHdxCtTon(hdxCtTons);
+				return hdxResponses;
+			}
+			
+			return null;
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	
+	}
 
 	@Override
 	public ResponseBodyDto<Object> findById(Long id) {
