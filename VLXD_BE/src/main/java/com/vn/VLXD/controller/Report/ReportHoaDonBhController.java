@@ -49,8 +49,10 @@ public class ReportHoaDonBhController {
 		JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(Arrays.asList(hdxResponse), false);
 
 		JRBeanCollectionDataSource itemsJRBean = new JRBeanCollectionDataSource(hdxResponse.getHdxCt());
+		JRBeanCollectionDataSource itemsJRBean2 = new JRBeanCollectionDataSource(hdxResponse.getHdxCtTon());
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("hdxCt", itemsJRBean);
+		parameters.put("hdxCtTon", itemsJRBean2);
 
 //		JasperReport compileReport = JasperCompileManager
 //				.compileReport(new FileInputStream("/reports/Hoadonbanhang.jrxml"));
