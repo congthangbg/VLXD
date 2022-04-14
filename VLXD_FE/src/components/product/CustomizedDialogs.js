@@ -129,7 +129,7 @@ export default function CustomizedDialogs(props) {
                 <Autocomplete
                   id="typeId"
                   name="typeId"
-                  options={dataType ? dataType.data : []}
+                  options={dataType &&dataType.data ? dataType.data : []}
                   // groupBy={ option => option.state }
                   getOptionLabel={option => option.typeName}
                   onChange={(event, value) => formik.setFieldValue("typeId", value)}
@@ -153,7 +153,7 @@ export default function CustomizedDialogs(props) {
                 <Autocomplete
                   id="unitId"
                   name="unitId"
-                  options={dataUnit ? dataUnit.data : []}
+                  options={dataUnit && dataUnit.data ? dataUnit.data : []}
                   // groupBy={ option => option.state }
                   getOptionLabel={option => option.unitName}
                   onChange={(event, value) => formik.setFieldValue("unitId", value)}

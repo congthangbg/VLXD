@@ -7,7 +7,7 @@ import {
   TextField,
   InputAdornment,
   Autocomplete,
-  SvgIcon, Typography, Grid, Paper, IconButton
+  SvgIcon, Typography, Grid, Paper, IconButton, Fab
 } from '@mui/material';
 import { Search as SearchIcon } from '../../icons/search';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -92,13 +92,13 @@ function CustomerTextField(props) {
         </Typography>
 
         <Box sx={{ m: 1 }}>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={e => setOpen(true)}
-          >
-            Thêm mới {title}
-          </Button>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={e => setOpen(true)}
+            >
+              Thêm mới {title}
+            </Button>
         </Box>
       </Box>
       <Box sx={{ mt: 1 }}>

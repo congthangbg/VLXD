@@ -174,7 +174,7 @@ export default function AddTonDialog(props) {
                   size="small"
                   id="productType"
                   name="productType"
-                  options={dataProductType ? dataProductType.data : []}
+                  options={dataProductType && dataProductType.data ? dataProductType.data : []}
                   getOptionLabel={option => option.typeName}
                   defaultValue={dataProductType && dataProductType.data ? dataProductType.data[2] : []}
                   onChange={(event, value) => formik.setFieldValue("productType", value)}
@@ -195,7 +195,7 @@ export default function AddTonDialog(props) {
                   size="small"
                   id="product"
                   name="product"
-                  options={dataProduct ? dataProduct.data : []}
+                  options={dataProduct && dataProduct.data ? dataProduct.data : []}
                   getOptionLabel={option => option.name}
                   onChange={(event, value) => formik.setFieldValue("product", value)}
                   value={formik.values && formik.values.product ? formik.values.product : undefined}
@@ -296,6 +296,7 @@ export default function AddTonDialog(props) {
 
           </DialogContent>
           <DialogActions  >
+            <div>
             <Button type="reset" onClick={() => handleClose()}
               style={{ fontSize: 20, marginRight: 10, fontFamily: "Times New Roman", color: "black" }}
               color="error" size="small" variant="contained" autoFocus  >
@@ -306,6 +307,7 @@ export default function AddTonDialog(props) {
               color="secondary" size="small" variant="contained" autoFocus  >
               Lưu lại
             </Button>
+            </div>
           </DialogActions>
         </form>
       </BootstrapDialog>

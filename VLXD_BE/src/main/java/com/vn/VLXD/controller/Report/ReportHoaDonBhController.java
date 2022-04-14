@@ -1,6 +1,8 @@
 package com.vn.VLXD.controller.Report;
 
 
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +39,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 @RestController
 @RequestMapping("api/report")
+@CrossOrigin("*")
 public class ReportHoaDonBhController {
 	@Autowired
 	ReportHoaDonBanHang reportHoaDonBanHang;
@@ -63,6 +67,7 @@ public class ReportHoaDonBhController {
 			  = JasperCompileManager.compileReport(employeeReportStream);
 			JasperPrint jasperPrint = JasperFillManager.fillReport(compileReport, parameters, beanCollectionDataSource);
 			byte data[] = JasperExportManager.exportReportToPdf(jasperPrint);
+			
 			HttpHeaders headers = new HttpHeaders();
 			headers.add("Content-Disposition", "inline; filename=hoadon.pdf");
 

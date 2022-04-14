@@ -16,120 +16,122 @@ import { HdxListResults } from 'src/components/hdx/HdxListResults';
 import CustomizedDialogs from 'src/components/hdx/CustomizedDialogs';
 import useCallCustomer from 'src/hook/useCallCustomer';
 import ViewDetails from 'src/components/hdx/ViewDetails';
+import axios from 'axios';
+import { saveAs } from 'file-saver';
 const Hdx = () => {
   const [open, setOpen] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [openView, setOpenView] = useState(false)
   const [dataDelete, setDataDelete] = useState({})
   const [dataEdit, setDataEdit] = useState({})
-  const [query, setQuery] = useState({ keySearch: '', limit: 10, page: 0,skip:0,status :"" })
-//  const {data,setData}= useCallVillage()
- const [data,setData] = useState([])
- const [dataCustomer, setDataCustomer] = useState([]);
- const [dataProductType, setDataProductType] = useState([]);
- const [dataProduct, setDataProduct] = useState([]);
- const [dataUnit, setDataUnit] = useState([]);
- const getInitCustomer = ()=>{
-  axiosInstance.get(GETALL_AND_SREACH_CUSTOMER)
-  .then(response => {
-    const result ={
-      data:null,
-      totalRecords :null
-    }
-    result.data= response && response.data.map((item, index) => ({
-      ...item,
-      order: index + 1,
-    }))
-    result.totalRecords = response.totalRecords;
-    setDataCustomer(result)
-  })
-  .catch(err => {
-    console.log(err);
-    login401(err && err.response&&err.response.status)
-  })
- }
- const getProductType = ()=>{
-  axiosInstance.get(PRODUCT_TYPE.GET_ALL)
-  .then(response => {
-    const result ={
-      data:null,
-      totalRecords :null
-    }
-    result.data= response && response.data.map((item, index) => ({
-      ...item,
-      order: index + 1,
-    }))
-    result.totalRecords = response.totalRecords;
-    setDataProductType(result)
-  })
-  .catch(err => {
-    console.log(err);
-    login401(err && err.response&&err.response.status)
-  })
- }
- const getProduct = ()=>{
-  axiosInstance.get(PRODUCT.GET_ALL)
-  .then(response => {
-    const result ={
-      data:null,
-      totalRecords :null
-    }
-    result.data= response && response.data.map((item, index) => ({
-      ...item,
-      order: index + 1,
-    }))
-    result.totalRecords = response.totalRecords;
-    setDataProduct(result)
-  })
-  .catch(err => {
-    console.log(err);
-    login401(err && err.response&&err.response.status)
-  })
- }
- const getListUnit= () => {
-  axiosInstance.get(UNIT_API.GET_ALL)
-    .then(response => {
-      const result = {
-        data: null,
-        totalRecords:null
-      }
-      result.data = response.data.map((item, index) => ({
-        ...item,
-        order: index + 1,
-      }))
-      result.totalRecords = response.totalRecords;
-      setDataUnit(result)
-    })
-    .catch(err => {
-      console.log(err);
-      login401(err && err.response && err.response.status)
-    })
-}
- useEffect(()=>{
-  handleSearch(query);
-  getInitCustomer();
-  getProductType();
-  getProduct();
-  getListUnit();
- },[])
- useEffect(()=>{
-  handleSearch(query);
- },[query.page,query.limit])
+  const [query, setQuery] = useState({ keySearch: '', limit: 10, page: 0, skip: 0, status: "" })
+  //  const {data,setData}= useCallVillage()
+  const [data, setData] = useState([])
+  const [dataCustomer, setDataCustomer] = useState([]);
+  const [dataProductType, setDataProductType] = useState([]);
+  const [dataProduct, setDataProduct] = useState([]);
+  const [dataUnit, setDataUnit] = useState([]);
+  const getInitCustomer = () => {
+    axiosInstance.get(GETALL_AND_SREACH_CUSTOMER)
+      .then(response => {
+        const result = {
+          data: null,
+          totalRecords: null
+        }
+        result.data = response && response.data.map((item, index) => ({
+          ...item,
+          order: index + 1,
+        }))
+        result.totalRecords = response.totalRecords;
+        setDataCustomer(result)
+      })
+      .catch(err => {
+        console.log(err);
+        login401(err && err.response && err.response.status)
+      })
+  }
+  const getProductType = () => {
+    axiosInstance.get(PRODUCT_TYPE.GET_ALL)
+      .then(response => {
+        const result = {
+          data: null,
+          totalRecords: null
+        }
+        result.data = response && response.data.map((item, index) => ({
+          ...item,
+          order: index + 1,
+        }))
+        result.totalRecords = response.totalRecords;
+        setDataProductType(result)
+      })
+      .catch(err => {
+        console.log(err);
+        login401(err && err.response && err.response.status)
+      })
+  }
+  const getProduct = () => {
+    axiosInstance.get(PRODUCT.GET_ALL)
+      .then(response => {
+        const result = {
+          data: null,
+          totalRecords: null
+        }
+        result.data = response && response.data.map((item, index) => ({
+          ...item,
+          order: index + 1,
+        }))
+        result.totalRecords = response.totalRecords;
+        setDataProduct(result)
+      })
+      .catch(err => {
+        console.log(err);
+        login401(err && err.response && err.response.status)
+      })
+  }
+  const getListUnit = () => {
+    axiosInstance.get(UNIT_API.GET_ALL)
+      .then(response => {
+        const result = {
+          data: null,
+          totalRecords: null
+        }
+        result.data = response.data.map((item, index) => ({
+          ...item,
+          order: index + 1,
+        }))
+        result.totalRecords = response.totalRecords;
+        setDataUnit(result)
+      })
+      .catch(err => {
+        console.log(err);
+        login401(err && err.response && err.response.status)
+      })
+  }
+  useEffect(() => {
+    handleSearch(query);
+    getInitCustomer();
+    getProductType();
+    getProduct();
+    getListUnit();
+  }, [])
+  useEffect(() => {
+    handleSearch(query);
+  }, [query.page, query.limit])
 
 
   const handleTextSearch = (e) => {
     setQuery({
       ...query,
-      keySearch:e ? e :""
+      keySearch: e ? e : ""
     })
   }
- 
+
   const handleSearch = (query) => {
-    axiosInstance.get(HDX_API.GET_ALL  + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}&status=${query.status}`)
+    axiosInstance.get(HDX_API.GET_ALL + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}&status=${query.status}`)
       .then(response => {
         const result = {
           data: null,
-          totalRecords:null
+          totalRecords: null
         }
         result.data = response.data.map((item, index) => ({
           ...item,
@@ -149,6 +151,21 @@ const Hdx = () => {
   const handleEdit = (e) => {
     setDataEdit(e)
   }
+  const print =async (e) => {
+    axiosInstance.get(HDX_API.GET_REPORT + `/${e.id}`,{
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/pdf',
+    },
+    responseType: 'blob'
+  })
+.then((response) => {
+  let FileSaver = require('file-saver');
+  let blob = new Blob([response], {type: "application/octet-stream"});
+  let filename = `${e.customer.name}_${e.customer.phone}_${e.id}.pdf`
+  FileSaver.saveAs(blob, filename)
+});
+}
   const onDetele = () => {
     setOpenModal(false)
     axiosInstance.post(HDX_API.DELETE + "?id=" + dataDelete.id)
@@ -161,7 +178,6 @@ const Hdx = () => {
         toastifyAlert.error(DELETE_ERROR)
       })
   }
-  console.log("dataEdit",dataEdit);
   return <>
     <Head>
       <title>
@@ -182,12 +198,12 @@ const Hdx = () => {
           onSearch={handleSearch}
           query={query}
           setQuery={setQuery}
-          title = "Hóa đơn xuất"
+          title="Hóa đơn xuất"
           isCombox={true}
         />
-        
+
         <Box sx={{ mt: 3 }}>
-            <HdxListResults
+          <HdxListResults
             setOpenModal={setOpenModal}
             handleDelete={handleDelete}
             customers={data}
@@ -196,6 +212,7 @@ const Hdx = () => {
             setQuery={setQuery}
             query={query}
             setOpenView={setOpenView}
+            print={print}
           />
         </Box>
         <Box
@@ -227,12 +244,13 @@ const Hdx = () => {
       setOpen={setOpenModal}
       onDelete={onDetele}
     />
-      <ViewDetails
-        open={openView}
-        setOpen={setOpenView}
-        setDataEdit={setDataEdit}
-        dataEdit={dataEdit}
-      />
+    <ViewDetails
+      open={openView}
+      setOpen={setOpenView}
+      setDataEdit={setDataEdit}
+      dataEdit={dataEdit}
+      print={print}
+    />
   </>
 }
 

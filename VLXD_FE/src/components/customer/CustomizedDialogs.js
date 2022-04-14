@@ -147,7 +147,7 @@ export default function CustomizedDialogs(props) {
             <Autocomplete
               id="villageId"
               name="villageId"
-              options={data ? data.data : []}
+              options={data && data.data ? data.data : []}
               // groupBy={ option => option.state }
               getOptionLabel={option => option.villageName}
               onChange={(event, value) => formik.setFieldValue("villageId", value)}

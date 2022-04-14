@@ -120,12 +120,14 @@ export const TonTable = ({
                 </SeverityPill>
                 </TableCell>
                 <TableCell style={{ width: '200px' }}>
+                  <div>
                   <Button size="small" onClick={() => handleUpdate(p)} style={{ marginRight: 4 }} color="warning" variant="contained">
                     <Edit />
                   </Button>
                   <Button size="small" onClick={() => handleDelete1(p)} color="error" variant="contained">
                     <Delete />
                   </Button>
+                  </div>
                 </TableCell>
 
               </TableRow>

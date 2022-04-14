@@ -34,6 +34,7 @@ export const HdxListResults = ({
   handleEdit,
   setOpen,
   setQuery,
+  print,
   query, ...rest }) => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
@@ -65,6 +66,9 @@ export const HdxListResults = ({
     setOpen(true)
     handleEdit(e)
   }
+  const handlePrint = (e) => {
+    print(e)
+  }
   return (
     <Card >
       <Box sx={{ minWidth: 1050 }}>
@@ -75,7 +79,7 @@ export const HdxListResults = ({
                 STT
               </TableCell>
               <TableCell>
-               MHD
+                MHD
               </TableCell>
               <TableCell>
                 Tên khách hàng
@@ -116,72 +120,74 @@ export const HdxListResults = ({
                   {customer.order}
                 </TableCell>
                 <TableCell>
-                {"HD"+ customer.id}
+                  {"HD" + customer.id}
                 </TableCell>
                 <TableCell>
-                {customer && customer.customer && customer.customer.name || ''}
+                  {customer && customer.customer && customer.customer.name || ''}
                 </TableCell>
                 <TableCell>
-                {customer && customer.customer && customer.customer.village.villageName || ''}
+                  {customer && customer.customer && customer.customer.village.villageName || ''}
                 </TableCell>
                 <TableCell>
-                {customer && customer.totalBill  || 0}
+                  {customer && customer.totalBill || 0}
                 </TableCell>
                 <TableCell>
-                {customer && customer.owe &&  currencyFormat(customer.owe) || 0}
+                  {customer && customer.owe && currencyFormat(customer.owe) || 0}
                 </TableCell>
                 <TableCell>
-                {customer && customer.pay && currencyFormat(customer.pay)  || 0}
+                  {customer && customer.pay && currencyFormat(customer.pay) || 0}
                 </TableCell>
                 <TableCell>
-                <SeverityPill color={"secondary"}>
-                {customer && customer.totalMoney && currencyFormat(customer.totalMoney)  || 0}
-                </SeverityPill>
-              
+                  <SeverityPill color={"secondary"}>
+                    {customer && customer.totalMoney && currencyFormat(customer.totalMoney) || 0}
+                  </SeverityPill>
+
                 </TableCell>
                 <TableCell>
                   {customer && customer.releaseDate ? format(new Date(customer.releaseDate), 'hh:mm dd/MM/yyyy') : new Date()}
                 </TableCell>
                 <TableCell>
-                <SeverityPill
-                    color={customer && customer.status == 1 ? 'error' : (customer.status == 2 ? 'success':'warning')}
+                  <SeverityPill
+                    color={customer && customer.status == 1 ? 'error' : (customer.status == 2 ? 'success' : 'warning')}
                   >
-                    {customer.status == 1? 'Chờ thanh toán' : (customer.status == 2 ?  'Đã thanh toán' :"Khác")}
+                    {customer.status == 1 ? 'Chờ thanh toán' : (customer.status == 2 ? 'Đã thanh toán' : "Khác")}
                   </SeverityPill>
                 </TableCell>
-                <TableCell style={{width: '200px'}}>
-                <Button  size="small"  onClick={()=>{
-                        setOpenView(true)
-                        handleEdit(customer)
-                        } }  style={{marginRight:4}} color="success" variant="contained">
-                        <Visibility/>
-                      </Button>
-                      <Button  size="small"  onClick={()=>handleUpdate(customer) }  style={{marginRight:4}} color="primary" variant="contained">
-                        <LocalPrintshop/>
-                      </Button>
-                      <Button  size="small"  onClick={()=>handleUpdate(customer) }  style={{marginRight:4}} color="warning" variant="contained">
-                        <Edit/>
-                      </Button>
-                      <Button  size="small" onClick={()=>handleDelete1(customer) } color="error" variant="contained">
-                        <Delete/>
-                      </Button>
+                <TableCell style={{ width: '200px' }}>
+                  <div>
+                    <Button size="small" onClick={() => {
+                      setOpenView(true)
+                      handleEdit(customer)
+                    }} style={{ marginRight: 4 }} color="success" variant="contained">
+                      <Visibility />
+                    </Button>
+                    <Button size="small" onClick={() => handlePrint(customer)} style={{ marginRight: 4 }} color="primary" variant="contained">
+                      <LocalPrintshop />
+                    </Button>
+                    <Button size="small" onClick={() => handleUpdate(customer)} style={{ marginRight: 4 }} color="warning" variant="contained">
+                      <Edit />
+                    </Button>
+                    <Button size="small" onClick={() => handleDelete1(customer)} color="error" variant="contained">
+                      <Delete />
+                    </Button>
+                  </div>
                 </TableCell>
-               
+
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </Box>
-    <TablePagination
-      component="div"
-      count={customers && customers.totalRecords || 0}
-      onPageChange={handlePageChange}
-      onRowsPerPageChange={handleLimitChange}
-      page={page}
-      rowsPerPage={limit}
-      rowsPerPageOptions={[5, 10, 25]}
-    />
-  </Card>
+      <TablePagination
+        component="div"
+        count={customers && customers.totalRecords || 0}
+        onPageChange={handlePageChange}
+        onRowsPerPageChange={handleLimitChange}
+        page={page}
+        rowsPerPage={limit}
+        rowsPerPageOptions={[5, 10, 25]}
+      />
+    </Card>
   );
 };
 

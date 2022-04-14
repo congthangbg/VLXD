@@ -66,11 +66,16 @@ export default function ViewDetails(props) {
   const [openAddSp, setOpenAddSp] = React.useState(false)
   const { open, setOpen, dataEdit,
     setDataEdit, dataProductType, dataProduct
-    , handAddProduct, setOpenCus, dataUnit, getProduct, setDataProduct } = props;
+    , handAddProduct, setOpenCus, dataUnit, getProduct, setDataProduct,print } = props;
   const handleClose = () => {
     setOpen(false);
     setDataEdit({})
   };
+  const onPrint = () => {
+    if(dataEdit){
+      print(dataEdit)
+    }
+  }
 
   return (
     <div>
@@ -289,16 +294,18 @@ export default function ViewDetails(props) {
 
           </DialogContent>
           <DialogActions  >
-            <Button type="reset" onClick={() => handleClose()}
+            <div>
+              <Button type="reset" onClick={() => handleClose()}
               style={{ fontSize: 20, marginRight: 10, fontFamily: "Times New Roman", color: "black" }}
               color="error" size="small" variant="contained" autoFocus  >
               Hủy
             </Button>
-            <Button type="submit"
+            <Button type="button"
               style={{ fontSize: 20, marginRight: 30, fontFamily: "Times New Roman", color: "black" }}
-              color="secondary" size="small" variant="contained" autoFocus  >
+              color="secondary" size="small" variant="contained" autoFocus onClick={onPrint} >
               In hóa đơn
             </Button>
+            </div>
           </DialogActions>
         </form>
       </BootstrapDialog>

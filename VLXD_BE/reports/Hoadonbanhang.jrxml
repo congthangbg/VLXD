@@ -546,7 +546,7 @@
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Times New Roman" size="13"/>
 								</textElement>
-								<textFieldExpression><![CDATA[new DecimalFormat("#,##0").format(Double.valueOf($F{quantity})  * Double.valueOf($F{width}) * Double.valueOf($F{height}))]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new DecimalFormat("#,###,##0.000").format(Double.valueOf($F{quantity})  * Double.valueOf($F{width}) * Double.valueOf($F{height}))]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

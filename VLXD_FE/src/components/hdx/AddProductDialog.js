@@ -166,7 +166,7 @@ React.useEffect(() => {
                   size="small"
                   id="productType"
                   name="productType"
-                  options={dataProductType ? dataProductType.data : []}
+                  options={dataProductType && dataProductType.data ? dataProductType.data : []}
                   getOptionLabel={option => option.typeName}
                   onChange={(event, value) => formik.setFieldValue("productType", value)}
                   value={formik.values && formik.values.productType ? formik.values.productType : undefined}
@@ -254,6 +254,7 @@ React.useEffect(() => {
 
           </DialogContent>
           <DialogActions  >
+            <div>
             <Button type="reset" onClick={() => handleClose()}
               style={{ fontSize: 20, marginRight: 10, fontFamily: "Times New Roman", color: "black" }}
               color="error" size="small" variant="contained" autoFocus  >
@@ -264,6 +265,7 @@ React.useEffect(() => {
               color="secondary" size="small" variant="contained" autoFocus  >
               Lưu lại
             </Button>
+            </div>
           </DialogActions>
         </form>
       </BootstrapDialog>

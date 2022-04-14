@@ -50,6 +50,7 @@ export const UNIT_API={
 //Hóa đơn xuất
 export const HDX_API={
    GET_ALL : '/hdx',
+   GET_REPORT : '/report',
    SAVE_UPDATE:"/hdx/saveOrUpdate",
    DELETE:"/hdx/delete",
 }

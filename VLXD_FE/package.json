@@ -24,6 +24,7 @@
     "axios": "^0.26.0",
     "chart.js": "^3.5.1",
     "date-fns": "^2.25.0",
+    "file-saver": "^2.0.5",
     "formik": "^2.1.5",
     "formik-material-ui": "^4.0.0-alpha.2",
     "history": "^5.0.0",

@@ -335,7 +335,7 @@ export default function CustomizedDialogs(props) {
                   size="small"
                   id="customer"
                   name="customer"
-                  options={dataCustomer ? dataCustomer.data : []}
+                  options={dataCustomer && dataCustomer.data ? dataCustomer.data : []}
                   // groupBy={ option => option.state }
                   getOptionLabel={option => option.name}
                   onChange={(event, value) => formik.setFieldValue("customer", value)}
@@ -502,6 +502,7 @@ export default function CustomizedDialogs(props) {
                   pb: 1
                 }}
               >
+                <div>
                 <Button type="reset" onClick={() => handleClose()}
                   style={{ fontSize: 20, marginRight: 10, fontFamily: "Times New Roman", color: "black" }} color="error" size="small" variant="contained" autoFocus  >
                   Hủy
@@ -511,6 +512,7 @@ export default function CustomizedDialogs(props) {
                   color="secondary" size="small" variant="contained" autoFocus  >
                   Lưu lại
                 </Button>
+                </div>
               </Box>
             </Grid>
             <Grid item xs={3}>
