@@ -68,6 +68,9 @@ export const PTable = ({
                 Thành tiền
               </TableCell>
               <TableCell>
+                Ghi chú
+              </TableCell>
+              <TableCell>
                 Hành động
               </TableCell>
             </TableRow>
@@ -98,7 +101,9 @@ export const PTable = ({
                 {p.price && p.quantity ? currencyFormat(p.price * p.quantity) : ""}
                 </SeverityPill>
                 </TableCell>
-                
+                <TableCell>
+                  {p.createDate && format(new Date(p.createDate), 'dd/MM/yyyy') || format(new Date(), 'dd/MM/yyyy') }
+                </TableCell>
                 <TableCell style={{ width: '200px' }}>
                   <div>
                   <Button size="small" onClick={() => handleUpdate(p)} style={{ marginRight: 4 }} color="warning" variant="contained">

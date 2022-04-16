@@ -31,6 +31,10 @@ public class HdxCtTonRequest implements Serializable {
     private double price;
     private String note;
     private long status;
+    private LocalDateTime createDate;
+    private String createBy;
+    private LocalDateTime modifyDate;
+    private String updateBy;
     private Product product;
 
     /** Default constructor. */

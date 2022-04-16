@@ -30,9 +30,6 @@ public class test {
 		 String[] d = StringUtils.commaDelimitedListToStringArray(g);
 		 System.out.println(d[1]);
 		 
-		 LocalDateTime date = LocalDateTime.now();
-		 Timestamp time = new Timestamp(System.currentTimeMillis());
-		 System.out.println(time);
 		 
 	}
 

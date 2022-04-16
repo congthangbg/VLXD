@@ -100,7 +100,7 @@ export const HdxListResults = ({
                 Còn lại
               </TableCell>
               <TableCell>
-                Ngày xuất
+                Ngày tạo
               </TableCell>
               <TableCell>
                 Trạng thái

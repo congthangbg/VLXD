@@ -121,7 +121,6 @@ export default function CustomizedDialogs(props) {
               console.log("ee", err);
               toastifyAlert.error(SAVE_ERROR)
             })
-          console.log("newData", newData);
           handleClose();
           resetForm();
         }
@@ -172,9 +171,9 @@ export default function CustomizedDialogs(props) {
         unit: p.product.unit.unitName,
         product: p.product
       }
-      const index = dataPTable && dataPTable.findIndex(e => e.id === p.id) || -1
+      const index1 = dataPTable && p && dataPTable.findIndex((c, i) => c.id === p.id)
       dataPTable && dataPTable.map((e, idx) => {
-        if (index === idx) {
+        if (index1 === idx) {
           dataPTable[idx] = a
         }
       })
@@ -203,6 +202,7 @@ export default function CustomizedDialogs(props) {
   const handAddTon = (p) => {
     if (p.id) {
       const a = {
+        ...p,
         id: p.id,
         name: p.product.name,
         price: p.price,
@@ -326,7 +326,7 @@ export default function CustomizedDialogs(props) {
       >
         <form onSubmit={formik.handleSubmit}>
           <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-            Thêm mới hóa đơn
+            {dataEdit && dataEdit != null ? "Cập nhật hóa đơn":"Thêm mới hóa đơn" }
           </BootstrapDialogTitle>
           <DialogContent dividers>
             <Grid container rowSpacing={1} style={{ marginTop: -20, marginBottom: 10 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>

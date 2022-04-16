@@ -201,7 +201,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="13"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Ngày xuất : "+java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy").format($F{releaseDate})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Ngày xuất : "+  new SimpleDateFormat("HH:mm dd-MM-yyyy").format(new Date())]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="409" y="127" width="148" height="18" uuid="0c4e6c79-9496-4daa-b8ba-eab76c54513f"/>

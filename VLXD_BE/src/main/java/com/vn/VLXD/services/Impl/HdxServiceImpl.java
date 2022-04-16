@@ -2,10 +2,12 @@ package com.vn.VLXD.services.Impl;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -136,7 +138,6 @@ public class HdxServiceImpl implements HdxService{
 					hdnCt.setStatus(1);
 					hdxCtTonRepository.save(hdnCt);
 					
-					
 				}
 			}
 			dto.setData(u2);
@@ -161,6 +162,8 @@ public class HdxServiceImpl implements HdxService{
 								productRepository.save(o.get());
 							}
 						}
+					
+						
 						hdxCtRepository.deleteAll(hdnCts);
 					}
 					for (HdxCtRequest e : request.getHdxCtRequest()) {
@@ -174,10 +177,10 @@ public class HdxServiceImpl implements HdxService{
 								productRepository.save(optional2.get());
 						}
 						hdnCt.setHdx(u2);
-						hdnCt.setCreateBy(UserLogonService.getUsername());
-						hdnCt.setCreateDate(LocalDateTime.now());
-						hdnCt.setUpdateBy(UserLogonService.getUsername());
-						hdnCt.setModifyDate(LocalDateTime.now());
+						hdnCt.setCreateBy(e.getCreateBy() != null ? e.getCreateBy() : UserLogonService.getUsername());
+						hdnCt.setCreateDate(e.getCreateDate() != null ? e.getCreateDate() : LocalDateTime.now());
+						hdnCt.setUpdateBy(e.getUpdateBy() != null ? e.getUpdateBy() :UserLogonService.getUsername());
+						hdnCt.setModifyDate(e.getModifyDate() != null ? e.getModifyDate() : LocalDateTime.now());
 						hdnCt.setStatus(1);
 						hdxCtRepository.save(hdnCt);
 						
@@ -208,10 +211,10 @@ public class HdxServiceImpl implements HdxService{
 								productRepository.save(optional1.get());
 						}
 						hdnCt.setHdx(u2);
-						hdnCt.setCreateBy(UserLogonService.getUsername());
-						hdnCt.setCreateDate(LocalDateTime.now());
-						hdnCt.setUpdateBy(UserLogonService.getUsername());
-						hdnCt.setModifyDate(LocalDateTime.now());
+						hdnCt.setCreateBy(e.getCreateBy() != null ? e.getCreateBy() : UserLogonService.getUsername());
+						hdnCt.setCreateDate(e.getCreateDate() != null ? e.getCreateDate() : LocalDateTime.now());
+						hdnCt.setUpdateBy(e.getUpdateBy() != null ? e.getUpdateBy() :UserLogonService.getUsername());
+						hdnCt.setModifyDate(e.getModifyDate() != null ? e.getModifyDate() : LocalDateTime.now());
 						hdnCt.setStatus(1);
 						hdxCtTonRepository.save(hdnCt);
 						

@@ -21,6 +21,7 @@ import login401 from 'src/hook/login401';
 import CurrencyFormat from 'react-currency-format';
 import AddProduct from 'src/components/product/CustomizedDialogs';
 import { SeverityPill } from '../severity-pill';
+import { format } from 'date-fns';
 
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -66,17 +67,36 @@ export default function ViewDetails(props) {
   const [openAddSp, setOpenAddSp] = React.useState(false)
   const { open, setOpen, dataEdit,
     setDataEdit, dataProductType, dataProduct
-    , handAddProduct, setOpenCus, dataUnit, getProduct, setDataProduct,print } = props;
+    , handAddProduct, setOpenCus, dataUnit, getProduct, setDataProduct, print } = props;
   const handleClose = () => {
     setOpen(false);
     setDataEdit({})
   };
   const onPrint = () => {
-    if(dataEdit){
+    if (dataEdit) {
       print(dataEdit)
     }
   }
-
+  const [total,setTotal] = React.useState(0)
+  const [totalTon,setTotalTon] = React.useState(0)
+  React.useEffect(() => {
+    const tong = 0;
+    if(dataEdit && dataEdit.hdxCt) {
+      dataEdit.hdxCt.map((e,i)=>{
+        tong = tong + (e.quantity * e.price)
+     })  
+    }
+    setTotal(tong)
+  },[dataEdit])
+  React.useEffect(() => {
+    const tong = 0;
+    if(dataEdit && dataEdit.hdxCtTon) {
+      dataEdit.hdxCtTon.map((p,i)=>{
+        tong = tong + (p.price * (Number(p.width) * Number(p.height) * Number(p.quantity)))
+     })  
+    }
+    setTotalTon(tong)
+  },[dataEdit])
   return (
     <div>
       <BootstrapDialog
@@ -94,7 +114,7 @@ export default function ViewDetails(props) {
             <Grid container spacing={2}>
               <Grid item xs={5}>
                 <p style={{ fontSize: 25, fontWeight: "bold", fontFamily: "Times New Roman", textAlign: 'center' }}>
-                  THẮNG OANH</p>
+                  HUYỀN TOÀN</p>
                 <p style={{ fontFamily: "Times New Roman", textAlign: 'center' }}>
                   ĐC: Xuân Minh - Hương Mai - VY - BG</p>
                 <p style={{ fontFamily: "Times New Roman", textAlign: 'left', marginLeft: 64 }}>
@@ -118,6 +138,10 @@ export default function ViewDetails(props) {
               <Grid item xs={12}>
                 <p style={{ fontFamily: "Times New Roman", textAlign: 'center', fontSize: 30, fontWeight: "bold" }}>
                   HÓA ĐƠN THANH TOÁN</p>
+              </Grid>
+              <Grid item xs={12}>
+                <p style={{ fontFamily: "Times New Roman", textAlign: 'center', fontSize: 17 }}>
+                  Ngày tạo : {dataEdit &&dataEdit.releaseDate&& format(new Date(dataEdit.releaseDate ), 'dd/MM/yyyy')|| ''}</p>
               </Grid>
               <Grid item xs={12}>
                 <p style={{ fontFamily: "Times New Roman", textAlign: 'left', marginLeft: 65, fontWeight: "bold" }}>
@@ -180,8 +204,18 @@ export default function ViewDetails(props) {
                                 {p.price && p.quantity ? currencyFormat(p.price * p.quantity) : ""}
                               </SeverityPill>
                             </TableCell>
+
                           </TableRow>
                         ))}
+                        <TableRow>
+                        <TableCell colSpan={2}></TableCell>
+                          <TableCell colSpan={3}><p style={{fontSize:17,fontWeight: "bold"}} >Tổng</p></TableCell>
+                          <TableCell align="left">
+                          <SeverityPill color={"error"}>
+                          {currencyFormat(total)}
+                          </SeverityPill>
+                          </TableCell>
+                        </TableRow>
                       </TableBody>
                     </Table> : ""
                   }
@@ -211,7 +245,7 @@ export default function ViewDetails(props) {
                             Số tấm
                           </TableCell>
                           <TableCell>
-                            Đơn vị tính
+                            ĐVT
                           </TableCell>
                           <TableCell>
                             Số m2
@@ -261,50 +295,59 @@ export default function ViewDetails(props) {
                             </TableCell>
                           </TableRow>
                         ))}
+                        <TableRow>
+                        <TableCell colSpan={2}></TableCell>
+                          <TableCell colSpan={6}><p style={{fontSize:17,fontWeight: "bold"}} >Tổng</p></TableCell>
+                          <TableCell align="left">
+                          <SeverityPill color={"error"}>
+                          {currencyFormat(totalTon)}
+                          </SeverityPill>
+                          </TableCell>
+                        </TableRow>
                       </TableBody>
                     </Table> : ""
                   }
                 </Card>
               </Grid>
-              <Grid item xs={12} md={12}>
-              <p style={{ fontFamily: "Times New Roman", textAlign: 'left', fontWeight: "bold",fontSize:18,marginLeft:65 }}>
-              Tổng hóa đơn : {dataEdit &&dataEdit.totalBill&& dataEdit.totalBill || 0 } VND
-                  </p>
+              {/* <Grid item xs={7} md={7}>
+              </Grid> */}
+              <Grid item xs={6} md={6}>
+                <p style={{ fontFamily: "Times New Roman", textAlign: 'left', fontWeight: "bold", fontSize: 20, marginLeft: 65 }}>
+                  Tổng hóa đơn : {dataEdit && dataEdit.totalBill && dataEdit.totalBill || 0} VND
+                </p>
               </Grid>
               <Grid item xs={4} md={4}>
-              <p style={{ fontFamily: "Times New Roman", textAlign: 'left', fontWeight: "bold",fontSize:18,marginLeft:65 }}>
-              Nợ cũ : {dataEdit &&dataEdit.owe&& currencyFormat(dataEdit.owe) || 0 } VND
-                  </p>
+                <p style={{ fontFamily: "Times New Roman", textAlign: 'left', fontWeight: "bold", fontSize: 18, marginLeft: 65 }}>
+                  Nợ cũ : {dataEdit && dataEdit.owe && currencyFormat(dataEdit.owe) || 0} VND
+                </p>
               </Grid>
-              <Grid item xs={4} md={4}> 
-              <p style={{ fontFamily: "Times New Roman", textAlign: 'left', fontWeight: "bold",fontSize:18,marginLeft:65  }}>
-              Đã thanh toán : {dataEdit && dataEdit.pay && currencyFormat(dataEdit.pay) || 0 } VND
-                  </p>
-             
+              <Grid item xs={6} md={6}>
+                <p style={{ fontFamily: "Times New Roman", textAlign: 'left', fontWeight: "bold", fontSize: 18, marginLeft: 65 }}>
+                  Đã thanh toán : {dataEdit && dataEdit.pay && currencyFormat(dataEdit.pay) || 0} VND
+                </p>
+
               </Grid>
-                 <Grid item xs={4} md={4}> 
-                 <p style={{ fontFamily: "Times New Roman", textAlign: 'left', fontWeight: "bold",fontSize:18,marginLeft:65  }}>
-                 Còn lại : {dataEdit &&dataEdit.totalMoney&& currencyFormat(dataEdit.totalMoney) || 0 } VND
-                  </p>
-                    
-                 </Grid>
+              <Grid item xs={4} md={4}>
+                <p style={{ fontFamily: "Times New Roman", textAlign: 'left', fontWeight: "bold", fontSize: 18, marginLeft: 65 }}>
+                  Còn lại : {dataEdit && dataEdit.totalMoney && currencyFormat(dataEdit.totalMoney) || 0} VND
+                </p>
+
+              </Grid>
             </Grid>
-
-
 
           </DialogContent>
           <DialogActions  >
             <div>
               <Button type="reset" onClick={() => handleClose()}
-              style={{ fontSize: 20, marginRight: 10, fontFamily: "Times New Roman", color: "black" }}
-              color="error" size="small" variant="contained" autoFocus  >
-              Hủy
-            </Button>
-            <Button type="button"
-              style={{ fontSize: 20, marginRight: 30, fontFamily: "Times New Roman", color: "black" }}
-              color="secondary" size="small" variant="contained" autoFocus onClick={onPrint} >
-              In hóa đơn
-            </Button>
+                style={{ fontSize: 20, marginRight: 10, fontFamily: "Times New Roman", color: "black" }}
+                color="error" size="small" variant="contained" autoFocus  >
+                Hủy
+              </Button>
+              <Button type="button"
+                style={{ fontSize: 20, marginRight: 30, fontFamily: "Times New Roman", color: "black" }}
+                color="secondary" size="small" variant="contained" autoFocus onClick={onPrint} >
+                In hóa đơn
+              </Button>
             </div>
           </DialogActions>
         </form>

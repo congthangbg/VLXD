@@ -72,7 +72,7 @@ export default function AddTonDialog(props) {
     setDataEdit({})
     // setOpenCus(false)
   };
-
+console.log("dataEdit",dataEdit);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -84,6 +84,10 @@ export default function AddTonDialog(props) {
       quantity: dataEdit ? dataEdit.quantity : '',
       width: dataEdit ? dataEdit.width : '',
       height: dataEdit && dataEdit.height ? dataEdit.height :'1.080',
+      createBy:dataEdit && dataEdit.createBy ? dataEdit.createBy :'',
+      createDate:dataEdit && dataEdit.createDate ? dataEdit.createDate :'',
+      modifyDate:dataEdit && dataEdit.modifyDate ? dataEdit.modifyDate :'',
+      updateBy:dataEdit && dataEdit.updateBy ? dataEdit.updateBy :'',
     },
     validationSchema: Yup.object({
       product: Yup

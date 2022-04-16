@@ -80,6 +80,9 @@ export const TonTable = ({
                 Thành tiền
               </TableCell>
               <TableCell>
+                Ghi chú
+              </TableCell>
+              <TableCell>
                 Hành động
               </TableCell>
             </TableRow>
@@ -118,6 +121,9 @@ export const TonTable = ({
                 <SeverityPill color={"secondary"}>
                 {p.price && p.quantity && p.width && p.height ? currencyFormat(p.price * (Number(p.width) * Number(p.height) * Number(p.quantity))) : ""}
                 </SeverityPill>
+                </TableCell>
+                <TableCell>
+                {p.createDate && format(new Date(p.createDate), 'dd/MM/yyyy') || format(new Date(), 'dd/MM/yyyy') }
                 </TableCell>
                 <TableCell style={{ width: '200px' }}>
                   <div>
