@@ -53,6 +53,7 @@ export const HDX_API={
    GET_REPORT : '/report',
    SAVE_UPDATE:"/hdx/saveOrUpdate",
    DELETE:"/hdx/delete",
+   FIND_TOTAL_OWN:"/hdx/findTotalOwn",
 }
 //nahf cung ccaps
 export const SUPPLIER_API={
@@ -62,17 +63,20 @@ export const SUPPLIER_API={
 }
 
 export function currencyFormat3(num) {
-   return  num.toFixed(3).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+   return num && num.toFixed(3).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') || 0
  }
  export function currencyFormat(num) {
-   return  num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    if(String(num).includes(",")){
+       return num;
+    }else{
+      return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
 }
-
 export const STATUS_401 = 401
 export const DA_THANH_TOAN = 2
 export const CHO_THANH_TOAN = 1 // 2: đã thanh toán,1: chờ thanh toán
-export const SAVE_SUCCESS = "Thêm mới thành công!"
-export const SAVE_ERROR = "Thêm mới thất bại!"
+export const SAVE_SUCCESS = "Thao tác thành công!"
+export const SAVE_ERROR = "Thao tác thất bại!"
 
 export const DELETE_SUCCESS = "Xóa thành công!"
 export const DELETE_ERROR = "Xóa thất bại!"
@@ -87,5 +91,7 @@ export const NOTIFY ={
    UNIT : 'Bạn chưa chọn đơn vị tính !',
    NUMBER: "Chỉ được nhập ký tự số !",
    PAY: "Chưa nhập số tiền thanh toán !",
+   IS_PAY_SUCCESS: "Bản ghi đã thanh toán , không thể cập nhật !",
+   MESSAGE_CODE_OK: "OK",
 
 }

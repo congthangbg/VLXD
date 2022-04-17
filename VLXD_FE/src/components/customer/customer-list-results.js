@@ -82,7 +82,7 @@ const handleUpdate = (e) => {
                 <TableCell>
                   Chú thích
                 </TableCell>
-                <TableCell>
+                <TableCell style={{textAlign: 'center'}}>
                   Hành động
                 </TableCell>
               </TableRow>
@@ -127,11 +127,11 @@ const handleUpdate = (e) => {
                     {customer.address}
                     {/* {`${customer.address.city}, ${customer.address.state}, ${customer.address.country}`} */}
                   </TableCell>
-                  <TableCell>
+                  <TableCell style={{ width: '200px' }}>
                     <Box
                       sx={{
                         alignItems: 'center',
-                        display: 'flex'
+                        display: 'flex',
                       }}
                     >
 
@@ -139,11 +139,11 @@ const handleUpdate = (e) => {
                         color="textPrimary"
                         variant="body1"
                       >
-                        <Button  onClick={()=>handleUpdate(customer) }  style={{marginRight:4}} color="warning" variant="contained">
+                        <Button size="small"  onClick={()=>handleUpdate(customer) }  style={{marginRight:4}} color="warning" variant="contained">
                           Sửa
                           <Edit/>
                         </Button>
-                        <Button onClick={()=>handleDelete1(customer) } color="error" variant="contained">
+                        <Button size="small" onClick={()=>handleDelete1(customer) } color="error" variant="contained">
                           Xóa
                           <Delete/>
                         </Button>

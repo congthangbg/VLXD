@@ -158,7 +158,7 @@ export default function ViewDetails(props) {
                     <Table>
                       <TableHead>
                         <TableRow>
-                          <TableCell>
+                          <TableCell style={{width:10}}>
                             STT
                           </TableCell>
                           <TableCell>
@@ -175,6 +175,9 @@ export default function ViewDetails(props) {
                           </TableCell>
                           <TableCell>
                             Thành tiền
+                          </TableCell>
+                          <TableCell>
+                            Ghi chú
                           </TableCell>
                         </TableRow>
                       </TableHead>
@@ -204,7 +207,9 @@ export default function ViewDetails(props) {
                                 {p.price && p.quantity ? currencyFormat(p.price * p.quantity) : ""}
                               </SeverityPill>
                             </TableCell>
-
+                            <TableCell style={{ width: 50 }}>
+                              {p.createDate && format(new Date(p.createDate), 'dd/MM/yyyy')}
+                            </TableCell>
                           </TableRow>
                         ))}
                         <TableRow>
@@ -229,17 +234,17 @@ export default function ViewDetails(props) {
                     <Table>
                       <TableHead>
                         <TableRow>
-                          <TableCell>
+                          <TableCell style={{width:10}}>
                             STT
                           </TableCell>
                           <TableCell>
                             Tên sản phẩm
                           </TableCell>
                           <TableCell>
-                            Chiều dài(m)
+                            CD
                           </TableCell>
                           <TableCell>
-                            Chiều rộng(m)
+                            CR
                           </TableCell>
                           <TableCell>
                             Số tấm
@@ -248,13 +253,16 @@ export default function ViewDetails(props) {
                             ĐVT
                           </TableCell>
                           <TableCell>
-                            Số m2
+                            m2
                           </TableCell>
                           <TableCell>
                             Đơn giá
                           </TableCell>
                           <TableCell>
                             Thành tiền
+                          </TableCell>
+                          <TableCell>
+                            Ghi chú
                           </TableCell>
                         </TableRow>
                       </TableHead>
@@ -293,6 +301,9 @@ export default function ViewDetails(props) {
                                 {p.price && p.quantity && p.width && p.height ? currencyFormat(p.price * (Number(p.width) * Number(p.height) * Number(p.quantity))) : ""}
                               </SeverityPill>
                             </TableCell>
+                            <TableCell style={{ width: 50 }}>
+                              {p.createDate && format(new Date(p.createDate), 'dd/MM/yyyy')}
+                            </TableCell>
                           </TableRow>
                         ))}
                         <TableRow>
@@ -312,23 +323,23 @@ export default function ViewDetails(props) {
               {/* <Grid item xs={7} md={7}>
               </Grid> */}
               <Grid item xs={6} md={6}>
-                <p style={{ fontFamily: "Times New Roman", textAlign: 'left', fontWeight: "bold", fontSize: 20, marginLeft: 65 }}>
+                <p style={{  textAlign: 'left', fontWeight: "bold", fontSize: 20, marginLeft: 65 }}>
                   Tổng hóa đơn : {dataEdit && dataEdit.totalBill && dataEdit.totalBill || 0} VND
                 </p>
               </Grid>
               <Grid item xs={4} md={4}>
-                <p style={{ fontFamily: "Times New Roman", textAlign: 'left', fontWeight: "bold", fontSize: 18, marginLeft: 65 }}>
+                <p style={{  textAlign: 'left', fontWeight: "bold", fontSize: 18, marginLeft: 65 }}>
                   Nợ cũ : {dataEdit && dataEdit.owe && currencyFormat(dataEdit.owe) || 0} VND
                 </p>
               </Grid>
               <Grid item xs={6} md={6}>
-                <p style={{ fontFamily: "Times New Roman", textAlign: 'left', fontWeight: "bold", fontSize: 18, marginLeft: 65 }}>
+                <p style={{  textAlign: 'left', fontWeight: "bold", fontSize: 18, marginLeft: 65 }}>
                   Đã thanh toán : {dataEdit && dataEdit.pay && currencyFormat(dataEdit.pay) || 0} VND
                 </p>
 
               </Grid>
               <Grid item xs={4} md={4}>
-                <p style={{ fontFamily: "Times New Roman", textAlign: 'left', fontWeight: "bold", fontSize: 18, marginLeft: 65 }}>
+                <p style={{  textAlign: 'left', fontWeight: "bold", fontSize: 18, marginLeft: 65 }}>
                   Còn lại : {dataEdit && dataEdit.totalMoney && currencyFormat(dataEdit.totalMoney) || 0} VND
                 </p>
 

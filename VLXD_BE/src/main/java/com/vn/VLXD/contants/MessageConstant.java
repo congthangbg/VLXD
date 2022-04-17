@@ -42,8 +42,8 @@ public class MessageConstant {
 	public static final String MSG_11 = "Sai định dạng ngày tháng (yyyy-MM-dd)";
 	public static final String MSG_11_CODE = "MSG_11";
 	
-	public static final String MSG_12 = "Tài khoản chưa được Active";
-	public static final String MSG_12_CODE = "MSG_11";
+	public static final String MSG_12 = "Khách hàng đã có hóa đơn xuất,không thể xóa!";
+	public static final String MSG_12_CODE = "MSG_12";
 	
 	
 }

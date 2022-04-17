@@ -72,7 +72,6 @@ export default function AddTonDialog(props) {
     setDataEdit({})
     // setOpenCus(false)
   };
-console.log("dataEdit",dataEdit);
 
   const formik = useFormik({
     enableReinitialize: true,

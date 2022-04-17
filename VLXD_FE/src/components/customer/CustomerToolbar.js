@@ -80,8 +80,8 @@ function CustomerToolbar(props) {
         </Box>
       </Box>
       <Box sx={{ mt: 3 }}>
-        <Card>
-          <CardContent>
+        {/* <Card>
+          <CardContent> */}
             <Grid container spacing={2}>
               <Grid item xs={3} md={5}>
                 <TextField
@@ -118,8 +118,8 @@ function CustomerToolbar(props) {
               </Grid>
             </Grid>
 
-          </CardContent>
-        </Card>
+          {/* </CardContent>
+        </Card> */}
       </Box>
 
     </div>

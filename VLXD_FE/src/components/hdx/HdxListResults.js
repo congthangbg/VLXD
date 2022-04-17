@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
@@ -23,7 +23,8 @@ import { getInitials } from '../../utils/get-initials';
 import useMagicColor from '../../hook/useMagicColor';
 import { AccessAlarm, ThreeDRotation, Edit, Delete, Preview, Visibility, LocalPrintshop } from '@mui/icons-material';
 import { SeverityPill } from '../severity-pill';
-import { currencyFormat } from '../component/MessageContants';
+import { currencyFormat, DELETE_ERROR, NOTIFY } from '../component/MessageContants';
+import toastifyAlert from '../component/toastify-message/toastify';
 
 
 export const HdxListResults = ({
@@ -39,6 +40,9 @@ export const HdxListResults = ({
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
+  useEffect(() => {
+    setPage(query && query.page || 0)
+  },[query.page]);
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -63,8 +67,8 @@ export const HdxListResults = ({
     handleDelete(e)
   }
   const handleUpdate = (e) => {
-    setOpen(true)
-    handleEdit(e)
+      setOpen(true)
+      handleEdit(e)
   }
   const handlePrint = (e) => {
     print(e)
@@ -164,12 +168,18 @@ export const HdxListResults = ({
                     <Button size="small" onClick={() => handlePrint(customer)} style={{ marginRight: 4 }} color="primary" variant="contained">
                       <LocalPrintshop />
                     </Button>
-                    <Button size="small" onClick={() => handleUpdate(customer)} style={{ marginRight: 4 }} color="warning" variant="contained">
-                      <Edit />
-                    </Button>
-                    <Button size="small" onClick={() => handleDelete1(customer)} color="error" variant="contained">
-                      <Delete />
-                    </Button>
+                    {customer && customer.status !== 2 ?
+                      <div>
+                        <Button size="small" onClick={() => handleUpdate(customer)} style={{ marginRight: 4 }} color="warning" variant="contained">
+                          <Edit />
+                        </Button>
+                        <Button size="small" onClick={() => handleDelete1(customer)} color="error" variant="contained">
+                          <Delete />
+                        </Button>
+                      </div>
+                      : ''}
+
+
                   </div>
                 </TableCell>
 

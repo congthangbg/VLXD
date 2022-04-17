@@ -536,7 +536,7 @@
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Times New Roman" size="14"/>
 								</textElement>
-								<text><![CDATA[Số m2]]></text>
+								<text><![CDATA[m2]]></text>
 							</staticText>
 						</jr:tableHeader>
 						<jr:columnFooter style="Table_CH" height="30" rowSpan="1"/>

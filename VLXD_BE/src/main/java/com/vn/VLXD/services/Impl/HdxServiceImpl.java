@@ -305,13 +305,23 @@ public class HdxServiceImpl implements HdxService{
 		if(optional.isPresent()) {
 			List<HdxCt> optional1 = hdxCtRepository.findByHdx(optional.get());
 			if(!optional1.isEmpty()) {
-				hdxCtRepository.deleteAll(optional1);
+//				hdxCtRepository.deleteAll(optional1);
+				for (HdxCt hdxCt : optional1) {
+					hdxCt.setStatus(0);
+					hdxCtRepository.save(hdxCt);
+				}
 			}
 			List<HdxCtTon> optional2 = hdxCtTonRepository.findByHdx(optional.get());
 			if(!optional2.isEmpty()) {
-				hdxCtTonRepository.deleteAll(optional2);
+				for (HdxCtTon hdxCt : optional2) {
+					hdxCt.setStatus(0);
+					hdxCtTonRepository.save(hdxCt);
+				}
+//				hdxCtTonRepository.deleteAll(optional2);
 			}
-			hdxRepository.delete(optional.get());
+			Hdx hd = optional.get();
+			hd.setStatus(0L);
+			hdxRepository.save(hd);
 			dto.setMessage(MessageConstant.MSG_OK);
 			dto.setMessageCode(MessageConstant.MSG_OK_CODE);
 		}else {
@@ -319,6 +329,22 @@ public class HdxServiceImpl implements HdxService{
 			dto.setMessageCode(MessageConstant.MSG_10_CODE);
 		}
 		return dto;
+	}
+
+	@Override
+	public Integer totalOwe(Long idCustomer) {
+		Optional<Customer> cuOptional= customerRepository.findById(idCustomer);
+		if(cuOptional.isPresent()) {
+			Hdx hdx = hdxRepository.findTopByStatusAndCustomerOrderByIdDesc(1L, cuOptional.get());
+			if(hdx != null) {
+				int total = (int) hdx.getTotalMoney();
+				return total;
+			}else {
+				return 0;
+			}
+		}else {
+			return 0;
+		}
 	}
 
 }

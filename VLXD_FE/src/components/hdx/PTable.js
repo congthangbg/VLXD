@@ -23,6 +23,7 @@ import { getInitials } from '../../utils/get-initials';
 import useMagicColor from '../../hook/useMagicColor';
 import { AccessAlarm, ThreeDRotation, Edit, Delete, Preview, Visibility, LocalPrintshop } from '@mui/icons-material';
 import { SeverityPill } from '../severity-pill';
+import { currencyFormat } from '../component/MessageContants';
 
 
 export const PTable = ({
@@ -40,9 +41,7 @@ export const PTable = ({
   const handleUpdate = (e) => {
     handleEdit(e)
   }
-  function currencyFormat(num) {
-    return  num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
- }
+
   return (
     <Card >
       <Box sx={{ minWidth: 1050 }}>
@@ -94,7 +93,7 @@ export const PTable = ({
                   {p.quantity}
                 </TableCell>
                 <TableCell>
-                  {currencyFormat(p.price)}
+                  {p && p.price &&currencyFormat(p.price) || 0}
                 </TableCell>
                 <TableCell style={{ width: '165px' }}>
                 <SeverityPill color={"secondary"}>

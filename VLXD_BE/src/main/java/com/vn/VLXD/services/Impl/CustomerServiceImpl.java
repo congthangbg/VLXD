@@ -15,9 +15,11 @@ import com.vn.VLXD.contants.MessageConstant;
 import com.vn.VLXD.dto.request.CustomerRequest;
 import com.vn.VLXD.dto.request.ProductTypeRequest;
 import com.vn.VLXD.entities.Customer;
+import com.vn.VLXD.entities.Hdx;
 import com.vn.VLXD.entities.ProductType;
 import com.vn.VLXD.entities.Village;
 import com.vn.VLXD.repositories.CustomerRepository;
+import com.vn.VLXD.repositories.HdxRepository;
 import com.vn.VLXD.repositories.ProductTypeRepository;
 import com.vn.VLXD.repositories.VillageRepository;
 import com.vn.VLXD.services.CustomerService;
@@ -34,6 +36,9 @@ public class CustomerServiceImpl implements CustomerService{
 	
 	@Autowired
 	VillageRepository villageRepository;
+	
+	@Autowired
+	HdxRepository hdxRepository;
 
 	@Override
 	public ResponseBodyDto<Object> save(CustomerRequest request) {
@@ -116,9 +121,18 @@ public class CustomerServiceImpl implements CustomerService{
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
 		Optional<Customer> optional = repository.findById(id);
 		if(optional.isPresent()) {
-			repository.deleteById(id);
-			dto.setMessage(MessageConstant.MSG_OK);
-			dto.setMessageCode(MessageConstant.MSG_OK_CODE);
+			List<Long> hdx = hdxRepository.findListIdCustomer();
+			if(hdx.contains(id)) {
+				dto.setMessage(MessageConstant.MSG_12);
+				dto.setMessageCode(MessageConstant.MSG_12_CODE);
+			}else {
+				Customer cus = optional.get();
+				cus.setStatus(0);
+				repository.save(cus);
+				dto.setMessage(MessageConstant.MSG_OK);
+				dto.setMessageCode(MessageConstant.MSG_OK_CODE);
+			}
+			
 		}else {
 			dto.setMessage(MessageConstant.MSG_10);
 			dto.setMessageCode(MessageConstant.MSG_10_CODE);

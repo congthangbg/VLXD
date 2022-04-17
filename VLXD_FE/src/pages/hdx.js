@@ -31,6 +31,7 @@ const Hdx = () => {
   const [dataProductType, setDataProductType] = useState([]);
   const [dataProduct, setDataProduct] = useState([]);
   const [dataUnit, setDataUnit] = useState([]);
+
   const getInitCustomer = () => {
     axiosInstance.get(GETALL_AND_SREACH_CUSTOMER)
       .then(response => {
@@ -88,6 +89,7 @@ const Hdx = () => {
         login401(err && err.response && err.response.status)
       })
   }
+
   const getListUnit = () => {
     axiosInstance.get(UNIT_API.GET_ALL)
       .then(response => {

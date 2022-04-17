@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,6 +75,13 @@ public class HdxController {
     public ResponseBodyDto<Object> findById(
     		@RequestParam(value = "id",required =  true)Long id )throws Exception {
     	ResponseBodyDto<Object> dto = service.findById(id);
+        return dto;
+    }
+    @GetMapping("/findTotalOwn/{id}")
+    public ResponseBodyDto<Integer> findTotalOwn(@PathVariable Long id )throws Exception {
+    	ResponseBodyDto<Integer> dto = new ResponseBodyDto<>();
+    	Integer a = service.totalOwe(id);
+    	dto.setData(a == null ? 0 : a);
         return dto;
     }
     @PostMapping("/delete")

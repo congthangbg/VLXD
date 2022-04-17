@@ -23,4 +23,6 @@ public interface HdxService {
 
 	HdxResponse findByIdHdx(Long id);
 
+	Integer totalOwe(Long idCustomer);
+
 }

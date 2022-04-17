@@ -66,6 +66,8 @@ BootstrapDialogTitle.propTypes = {
 };
 
 export default function CustomizedDialogs(props) {
+
+
   const router = useRouter();
   const [openCus, setOpenCus] = useState(false)
   const [openAddP, setOpenAddP] = useState(false)
@@ -77,55 +79,68 @@ export default function CustomizedDialogs(props) {
   const [openModal, setOpenModal] = useState(false)
   const [openModalTon, setOpenModalTon] = useState(false)
   const [pay, setPay] = useState({ owe: 0, pay: 0 })
+  const [totalOwe, setTotalOwe] = useState(0);
+  const [customerChange, setCustomerChange] = useState(null);
   const { open, setOpen, dataEdit, setDataEdit, handleSearch,
-    dataCustomer, getInitCustomer, dataProductType, dataProduct, dataUnit, getProduct,query,
+    dataCustomer, getInitCustomer, dataProductType, dataProduct, dataUnit, getProduct, query,
     setDataProduct } = props;
-    const formik = useFormik({
-      enableReinitialize: true,
-      initialValues: {
-        id: dataEdit && dataEdit.id ? dataEdit.id : '',
-        customer: dataEdit && dataEdit.customer ? dataEdit.customer : '',
-        isPaySuccess: dataEdit && dataEdit.isPaySuccess ? dataEdit.isPaySuccess : false,
-      },
-      validationSchema: Yup.object({
-        customer: Yup
-          .object().nullable()
-          .required(NOTIFY.NOT_BLANK),
-      }),
-      onSubmit: (values, { resetForm }) => {
-        if (dataTon && dataTon.length <= 0 && dataPTable && dataPTable.length <= 0) {
-          toastifyAlert.error(NOTIFY.PRODUCT)
-        }else if(values.isPaySuccess === true && pay.pay <= 0){
-          toastifyAlert.error(NOTIFY.PAY)
-        }
-         else {
-          const newData = {
-            ...values,
-            customerId: values.customer.id,
-            owe: pay.owe,
-            pay: pay.pay,
-            hdxCtTonRequest: dataTon,
-            hdxCtRequest: dataPTable,
-            status: values.isPaySuccess === true ? DA_THANH_TOAN : CHO_THANH_TOAN,
-            releaseDate: new Date().getTime(),
-            total: total(),
-            totalBill: currencyFormat(totalBill())
-  
-          }
-          axiosInstance.post(HDX_API.SAVE_UPDATE, newData)
-            .then(response => {
-              handleSearch(query);
-              toastifyAlert.success(SAVE_SUCCESS)
-            })
-            .catch(err => {
-              console.log("ee", err);
-              toastifyAlert.error(SAVE_ERROR)
-            })
-          handleClose();
-          resetForm();
-        }
+  const getTotalOwe = (id) => {
+    axiosInstance.get(HDX_API.FIND_TOTAL_OWN + `/${id}`)
+      .then(response => {
+        setTotalOwe(response.data)
+      })
+      .catch(err => {
+        console.log(err);
+        login401(err && err.response && err.response.status)
+      })
+  }
+  const formik = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      id: dataEdit && dataEdit.id ? dataEdit.id : '',
+      customer: dataEdit && dataEdit.customer ? dataEdit.customer : (customerChange != null ? customerChange : ''),
+      isPaySuccess: dataEdit && dataEdit.isPaySuccess ? dataEdit.isPaySuccess : false,
+      owe: dataEdit && dataEdit.owe ? dataEdit.owe : totalOwe
+    },
+    validationSchema: Yup.object({
+      customer: Yup
+        .object().nullable()
+        .required(NOTIFY.NOT_BLANK),
+    }),
+    onSubmit: (values, { resetForm }) => {
+      if (dataTon && dataTon.length <= 0 && dataPTable && dataPTable.length <= 0) {
+        toastifyAlert.error(NOTIFY.PRODUCT)
+      } else if (values.isPaySuccess === true && pay.pay <= 0) {
+        toastifyAlert.error(NOTIFY.PAY)
       }
-    });
+      else {
+        const newData = {
+          ...values,
+          customerId: values.customer.id,
+          owe: pay.owe,
+          pay: pay.pay,
+          hdxCtTonRequest: dataTon,
+          hdxCtRequest: dataPTable,
+          status: values.isPaySuccess === true ? DA_THANH_TOAN : CHO_THANH_TOAN,
+          releaseDate: new Date().getTime(),
+          total: total(),
+          totalBill: currencyFormat(totalBill())
+
+        }
+        axiosInstance.post(HDX_API.SAVE_UPDATE, newData)
+          .then(response => {
+            handleSearch(query);
+            toastifyAlert.success(SAVE_SUCCESS)
+          })
+          .catch(err => {
+            console.log("ee", err);
+            toastifyAlert.error(SAVE_ERROR)
+          })
+        handleClose();
+        resetForm();
+      }
+    }
+  });
   const handleClose = () => {
     setOpen(false);
     formik.resetForm();
@@ -133,18 +148,19 @@ export default function CustomizedDialogs(props) {
     setPay({ owe: 0, pay: 0 })
     setDataPTable([])
     setDataTon([])
+    setTotalOwe(0)
+    setCustomerChange(null)
   };
   useEffect(() => {
     if (dataEdit && dataEdit !== null) {
-      setPay({ pay: dataEdit && dataEdit.pay ? dataEdit.pay : 0, owe: dataEdit && dataEdit.owe ? dataEdit.owe : 0 })
-      formik.setFieldValue("pay",dataEdit && dataEdit.pay && dataEdit.pay || '')
-      formik.setFieldValue("owe", dataEdit.owe  && dataEdit.owe && dataEdit.owe || '')
+      setPay({ pay: dataEdit && dataEdit.pay ? dataEdit.pay : 0, owe: dataEdit && dataEdit.owe || totalOwe })
+      formik.setFieldValue("pay", dataEdit && dataEdit.pay && dataEdit.pay || '')
+      formik.setFieldValue("owe", dataEdit && dataEdit.owe || totalOwe)
       setDataPTable(dataEdit.hdxCt)
       setDataTon(dataEdit.hdxCtTon)
-
+      setCustomerChange(dataEdit && dataEdit.customer || null)
     }
   }, [dataEdit])
-
   useEffect(() => {
     if (!open) {
       handleClose();
@@ -158,16 +174,13 @@ export default function CustomizedDialogs(props) {
     getProduct();
   }, [openAddP])
 
-
-
-  
   const handAddProduct = (p) => {
     if (p.id) {
       const a = {
         id: p.id,
         name: p.product.name,
-        price: p.price,
-        quantity: p.quantity,
+        price: Number(p.price),
+        quantity:  Number(p.quantity),
         unit: p.product.unit.unitName,
         product: p.product
       }
@@ -190,8 +203,8 @@ export default function CustomizedDialogs(props) {
         const a = {
           id: new Date().getTime(),
           name: p.product.name,
-          price: p.price,
-          quantity: p.quantity,
+          price: Number(p.price),
+          quantity:  Number(p.quantity),
           unit: p.product.unit.unitName,
           product: p.product
         }
@@ -205,12 +218,12 @@ export default function CustomizedDialogs(props) {
         ...p,
         id: p.id,
         name: p.product.name,
-        price: p.price,
-        quantity: p.quantity,
+        price: Number(p.price),
+        quantity:  Number(p.quantity),
         unit: p.product.unit.unitName,
         product: p.product,
-        width: p.width,
-        height: p.height,
+        width: Number(p.width),
+        height: Number(p.height),
         numberM2: currencyFormat3((Number(p.quantity) * Number(p.height) * Number(p.width)))
       }
       const index = dataTon && p && dataTon.findIndex((c, i) => c.id === p.id)
@@ -224,12 +237,12 @@ export default function CustomizedDialogs(props) {
       const a = {
         id: new Date().getTime(),
         name: p.product.name,
-        price: p.price,
-        quantity: p.quantity,
+        price: Number(p.price),
+        quantity:  Number(p.quantity),
         unit: p.product.unit.unitName,
         product: p.product,
-        width: p.width,
-        height: p.height,
+        width: Number(p.width),
+        height: Number(p.height),
         numberM2: currencyFormat3((Number(p.quantity) * Number(p.height) * Number(p.width)))
       }
       setDataTon([...dataTon, a]);
@@ -281,13 +294,23 @@ export default function CustomizedDialogs(props) {
         toastifyAlert.error(TB_SAVE_UPDATE_CUSTOMER_ERR)
       })
   }
-  
+
   const handleChangowe = (name, value) => {
     setPay({
       ...pay,
       [name]: value
     })
   }
+  const handleChangeCustomer = (name, value) => {
+    if (value && value.id) {
+      getTotalOwe(value.id)
+      setCustomerChange(value)
+      // setDataEdit({...dataEdit,customer:value})
+    }
+  }
+  useEffect(() => {
+    setPay({ ...pay, owe: totalOwe })
+  }, [totalOwe])
   const totalBill = () => {
     let total = 0;
     dataPTable && dataPTable.map(e => {
@@ -314,7 +337,6 @@ export default function CustomizedDialogs(props) {
 
     return total;
   }
-  // console.log("formik",formik);
   return (
     <div>
       <BootstrapDialog
@@ -326,7 +348,7 @@ export default function CustomizedDialogs(props) {
       >
         <form onSubmit={formik.handleSubmit}>
           <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-            {dataEdit && dataEdit != null ? "Cập nhật hóa đơn":"Thêm mới hóa đơn" }
+            {dataEdit && dataEdit != null ? "Cập nhật hóa đơn" : "Thêm mới hóa đơn"}
           </BootstrapDialogTitle>
           <DialogContent dividers>
             <Grid container rowSpacing={1} style={{ marginTop: -20, marginBottom: 10 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -337,8 +359,12 @@ export default function CustomizedDialogs(props) {
                   name="customer"
                   options={dataCustomer && dataCustomer.data ? dataCustomer.data : []}
                   // groupBy={ option => option.state }
+                  disabled={dataEdit && dataEdit != null ? true : false}
                   getOptionLabel={option => option.name}
-                  onChange={(event, value) => formik.setFieldValue("customer", value)}
+                  onChange={(event, value) => {
+                    formik.setFieldValue("customer", value),
+                      handleChangeCustomer("customer", value)
+                  }}
                   value={formik.values && formik.values.customer ? formik.values.customer : undefined}
                   // style={{ width: 300 }}
                   renderInput={params => (
@@ -360,11 +386,13 @@ export default function CustomizedDialogs(props) {
                     id="outlined-size-small"
                     size="small"
                     fullWidth
+                    style={{ width: 500 }}
                     label="Thông tin"
                     margin="normal"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    value={'SĐT: ' + formik.values.customer.phone + '- Địa chỉ: ' + formik.values.customer.village.villageName}
+                    value={'SĐT: ' + (formik.values && formik.values.customer &&formik.values.customer.phone || '') 
+                    + '- Địa chỉ: ' + (formik.values&&formik.values.customer&&formik.values.customer.village&&formik.values.customer.village.villageName || '')}
                     variant="outlined"
                     disabled
 
@@ -438,7 +466,7 @@ export default function CustomizedDialogs(props) {
 
             </Grid>
             <Grid container spacing={2}>
-            <Grid item xs={4}></Grid>
+              <Grid item xs={4}></Grid>
               <Grid item xs={2}>
 
               </Grid>
@@ -482,7 +510,7 @@ export default function CustomizedDialogs(props) {
                 /> VND
                 {Boolean(formik.touched.pay && formik.errors.pay) ? <p style={{ color: '#D14343', fontSize: 12, marginLeft: 40, marginTop: 5 }} >{formik.errors.pay}</p> : ''}
               </Grid>
-         
+
             </Grid>
 
 
@@ -503,15 +531,15 @@ export default function CustomizedDialogs(props) {
                 }}
               >
                 <div>
-                <Button type="reset" onClick={() => handleClose()}
-                  style={{ fontSize: 20, marginRight: 10, fontFamily: "Times New Roman", color: "black" }} color="error" size="small" variant="contained" autoFocus  >
-                  Hủy
-                </Button>
-                <Button type="submit"
-                  style={{ fontSize: 20, marginRight: 30, fontFamily: "Times New Roman", color: "black" }}
-                  color="secondary" size="small" variant="contained" autoFocus  >
-                  Lưu lại
-                </Button>
+                  <Button type="reset" onClick={() => handleClose()}
+                    style={{ fontSize: 20, marginRight: 10, fontFamily: "Times New Roman", color: "black" }} color="error" size="small" variant="contained" autoFocus  >
+                    Hủy
+                  </Button>
+                  <Button type="submit"
+                    style={{ fontSize: 20, marginRight: 30, fontFamily: "Times New Roman", color: "black" }}
+                    color="secondary" size="small" variant="contained" autoFocus  >
+                    Lưu lại
+                  </Button>
                 </div>
               </Box>
             </Grid>

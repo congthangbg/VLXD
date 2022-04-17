@@ -60,7 +60,8 @@ function CustomerTextField(props) {
     if (e) {
       const newData = {
         ...query,
-        status: e ? e.id : ""
+        status: e ? e.id : "",
+        limit: 10, page: 0, skip: 0
       }
       setQuery(newData)
       onSearch(newData)

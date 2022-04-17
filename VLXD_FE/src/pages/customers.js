@@ -4,7 +4,7 @@ import { DashboardLayout } from '../components/dashboard-layout';
 // import { customers } from '../__mocks__/customers';
 import { useEffect, useState } from 'react';
 import axiosInstance from './../components/config/axiosConfig';
-import { DELETE_CUSTOMER, DELETE_ERROR, DELETE_SUCCESS, GETALL_AND_SREACH_CUSTOMER, SAVE_ERROR, SAVE_SUCCESS, SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER_ERR } from './../components/component/MessageContants';
+import { DELETE_CUSTOMER, DELETE_ERROR, DELETE_SUCCESS, GETALL_AND_SREACH_CUSTOMER, NOTIFY, SAVE_ERROR, SAVE_SUCCESS, SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER_ERR } from './../components/component/MessageContants';
 import { Search as SearchIcon } from '../icons/search';
 import {
   Container,
@@ -75,8 +75,12 @@ const Customers = () => {
     setOpenModal(false)
     axiosInstance.post(DELETE_CUSTOMER + "?id=" + dataDelete.id)
       .then(response => {
-        toastifyAlert.success(DELETE_SUCCESS)
-        handleSearch();
+        if(response.messageCode === NOTIFY.MESSAGE_CODE_OK){
+          toastifyAlert.success(DELETE_SUCCESS)
+          handleSearch();
+        }else{
+          toastifyAlert.error(response.message ? response.message : DELETE_ERROR)
+        }
       })
       .catch(err => {
         console.log(err);
