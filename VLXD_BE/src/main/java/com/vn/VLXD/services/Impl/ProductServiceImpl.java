@@ -111,11 +111,12 @@ public class ProductServiceImpl implements ProductService{
 	}
 
 	@Override
-	public ResponseBodyDto<Object> findAllSearch(String keySearch,Pageable pageable) {
+	public ResponseBodyDto<Object> findAllSearch(String keySearch,Integer type,Pageable pageable) {
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
-		Page<Product> page = productRepository.findAllSearch(keySearch, pageable);
-		dto.setData(page.getContent());
-		dto.setTotalRecords(page.getTotalElements());
+		List<Product> page = productRepository.findAllSearchCallStore(keySearch,type, pageable.getPageNumber(),pageable.getPageSize(),"id");
+		Integer count = productRepository.countAllSearchCallStore(keySearch,type, pageable.getPageNumber(),pageable.getPageSize(),"id");
+		dto.setData(page);
+		dto.setTotalRecords(count);
 		dto.setMessage(MessageConstant.MSG_OK);
 		dto.setMessageCode(MessageConstant.MSG_OK_CODE);
 		return dto;

@@ -31,15 +31,16 @@ function CustomerTextField(props) {
     if (event.key === 'Enter') {
       const newData = {
         ...query,
-        keySearch: data
+        keySearch: data ? data :'',
+        limit: 10, page: 0, skip: 0
       }
       setQuery(newData)
       onSearch(newData)
     }
   }
   const onTextSearch = (e) => {
-    setData(e.target.value)
-    handleSearch(e.target.value)
+      setData(e.target.value)
+    // handleSearch(e.target.value)
   }
   const onClear = () => {
     const newData = {
@@ -56,7 +57,6 @@ function CustomerTextField(props) {
 
   }, [data])
   const onChange = (e) => {
-    setFilterStatus(e)
     if (e) {
       const newData = {
         ...query,
@@ -73,6 +73,9 @@ function CustomerTextField(props) {
       setQuery(newData)
       onSearch(newData)
     }
+  }
+  const search = () => {
+    onSearch(query)
   }
   return (
     <div>
@@ -119,7 +122,7 @@ function CustomerTextField(props) {
                     <IconButton onClick={onClear} type="reset" sx={{ p: '10px' }} aria-label="search">
                       <ClearIcon />
                     </IconButton>
-                    <IconButton onClick={onSearch} type="submit" sx={{ p: '10px' }} aria-label="search">
+                    <IconButton onClick={search} type="submit" sx={{ p: '10px' }} aria-label="search">
                       <SearchIcon />
                     </IconButton>
                   </InputAdornment>

@@ -47,12 +47,13 @@ public class ProductController {
     @ApiOperation(value = "Danh sách All")
     public ResponseBodyDto<Object> findAllSearch(
     		@RequestParam(value = "keySearch",required = false) String keyString,
+    		@RequestParam(value = "type",required = false) Integer type,
     		@RequestParam(value = "page",required = false) Optional<Integer> page,
     		@RequestParam(value = "size",required = false) Optional<Integer> size ) {
     	int currentPage = page.orElse(0);
     	int limit = size.orElse(1000);
     	Pageable pageable = PageRequest.of(currentPage, limit, Sort.by("id").descending());
-    	ResponseBodyDto<Object> dto = service.findAllSearch(keyString, pageable);
+    	ResponseBodyDto<Object> dto = service.findAllSearch(keyString,type, pageable);
     	
         return dto;
     }

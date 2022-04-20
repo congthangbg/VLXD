@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
@@ -62,6 +62,9 @@ export const ProductTypeListResults = ({
     setOpen(true)
     handleEdit(e)
   }
+  useEffect(() => {
+    setPage(query && query.page || 0)
+  },[query.page]);
   return (
     <Card {...rest} sx={{ mt: 3 ,ml:3 }} style ={{width:"100%"}}>
       <PerfectScrollbar>

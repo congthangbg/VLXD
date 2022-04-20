@@ -20,4 +20,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	Page<Product> findAllSearch(String keySearch,Pageable pageable);
 	
 	List<Product> findByProductType(ProductType productType);
+	
+	@Query(value = "{CALL ProductSearch(:text,:type,:page,:size,:sort)}",nativeQuery = true)
+	List<Product> findAllSearchCallStore(String text,Integer type,Integer page,Integer size,String sort);
+	
+	@Query(value = "{CALL ProductSearchCount(:text,:type,:page,:size,:sort)}",nativeQuery = true)
+	Integer countAllSearchCallStore(String text,Integer type,Integer page,Integer size,String sort);
 }

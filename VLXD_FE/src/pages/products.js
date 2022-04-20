@@ -26,18 +26,19 @@ const Products = () => {
   const handleTextSearch = (e) => {
     setQuery({
       ...query,
-      keySearch:e ? e :""
+      keySearch:e ? e :"",
+      limit: 10, page: 0,skip:0 
     })
   }
  useEffect(()=>{
-  handleSearch();
+  handleSearch(query);
  },[])
  useEffect(()=>{
-  handleSearch();
+  handleSearch(query);
   },[query.page,query.limit])
 
 
-  const handleSearch = () => {
+  const handleSearch = (query) => {
     axiosInstance.get(PRODUCT.GET_ALL  + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}`)
       .then(response => {
         const result = {
@@ -67,7 +68,7 @@ const Products = () => {
     axiosInstance.post(PRODUCT.DELETE + "?id=" + dataDelete.id)
       .then(response => {
         toastifyAlert.success(DELETE_SUCCESS)
-        handleSearch();
+        handleSearch(query);
       })
       .catch(err => {
         console.log(err);

@@ -14,7 +14,7 @@ public interface ProductService {
 
 	ResponseBodyDto<Object> findById(Long id);
 
-	ResponseBodyDto<Object> findAllSearch(String keySearch, Pageable pageable);
+	ResponseBodyDto<Object> findAllSearch(String keySearch,Integer type,Pageable pageable);
 
 	ResponseBodyDto<Object> save(ProductRequest request);
 
