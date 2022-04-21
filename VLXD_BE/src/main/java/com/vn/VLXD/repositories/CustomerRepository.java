@@ -20,9 +20,9 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 	@Query(value = "select s from Customer s where :keySearch is null or s.name like %:keySearch%")
 	Page<Customer> findAllSearch(String keySearch,Pageable pageable);
 	
-	@Query(value = "{CALL CustomerSearch(:Text,:page,:size,:orderBy)}", nativeQuery = true)
-	List<Customer> findAllTest(@Param("Text")String Text, @Param("page")Integer page,@Param("size")Integer size,@Param("orderBy")String orderBy);
+	@Query(value = "{CALL CustomerSearch(:Text,:villageId,:page,:size,:orderBy)}", nativeQuery = true)
+	List<Customer> findAllTest(@Param("Text")String Text,@Param("villageId")Integer villageId,  @Param("page")Integer page,@Param("size")Integer size,@Param("orderBy")String orderBy);
 	
-	@Query(value = "{CALL CustomerCount(:Text,:page,:size,:orderBy)}", nativeQuery = true)
-	Integer CustomerCount(@Param("Text")String Text, @Param("page")Integer page,@Param("size")Integer size,@Param("orderBy")String orderBy);
+	@Query(value = "{CALL CustomerCount(:Text,:villageId,:page,:size,:orderBy)}", nativeQuery = true)
+	Integer CustomerCount(@Param("Text")String Text,@Param("villageId")Integer villageId, @Param("page")Integer page,@Param("size")Integer size,@Param("orderBy")String orderBy);
 }

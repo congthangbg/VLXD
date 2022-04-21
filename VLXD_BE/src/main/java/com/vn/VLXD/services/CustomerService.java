@@ -19,6 +19,6 @@ public interface CustomerService {
 
 	ResponseBodyDto<Object> save(CustomerRequest request);
 
-	ResponseBodyDto<Object> findAllTest(String Text, Integer page, Integer size, String orderBy);
+	ResponseBodyDto<Object> findAllTest(String Text,Integer villageId, Integer page, Integer size, String orderBy);
 
 }

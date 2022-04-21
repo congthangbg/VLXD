@@ -6,7 +6,7 @@ import {
   CardContent,
   TextField,
   InputAdornment,
-  SvgIcon, Typography, Grid, Paper, IconButton
+  SvgIcon, Typography, Grid, Paper, IconButton, Autocomplete
 } from '@mui/material';
 import { Search as SearchIcon } from '../../icons/search';
 import CustomizedDialogs from './CustomizedDialogs';
@@ -14,8 +14,11 @@ import { ToastContainer } from 'react-toastify';
 import ClearIcon from '@mui/icons-material/Clear';
 
 import { styled } from '@mui/material/styles';
+import useCallVillage from 'src/hook/useCallVillage';
 function CustomerToolbar(props) {
-  const { setOpen, handleSearch, onSearch ,query,setQuery} = props;
+  const {data}=useCallVillage();
+  console.log("Data1",data);
+  const { setOpen, handleSearch, onSearch ,query,setQuery,isComboxVillage} = props;
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
@@ -23,12 +26,12 @@ function CustomerToolbar(props) {
     textAlign: 'center',
     color: theme.palette.text.secondary,
   }));
-  const [data, setData] = useState("")
+  const [data1, setData] = useState("")
  const handleKeyPress = (event) => {
     if(event.key === 'Enter'){
       const newData = {
         ...query,
-        keySearch:data
+        keySearch:data1 ? data1 :""
       }
       setQuery(newData)
       onSearch(newData)
@@ -47,10 +50,29 @@ function CustomerToolbar(props) {
     setData('')
   }
   useEffect(()=>{
-    if(data==''){
+    if(data1==''){
       onSearch(query)
     }
-  },[data])
+  },[data1])
+
+  const onChange = (e) => {
+    if (e) {
+      const newData = {
+        ...query,
+        limit: 10, page: 0, skip: 0,
+        villageId: e && e.id ? e.id:""
+      }
+      setQuery(newData)
+      onSearch(newData)
+    } else if (e == null) {
+      const newData = {
+        ...query,
+        villageId: ""
+      }
+      setQuery(newData)
+      onSearch(newData)
+    }
+  }
   return (
     <div>
       <Box
@@ -86,9 +108,10 @@ function CustomerToolbar(props) {
               <Grid item xs={3} md={5}>
                 <TextField
                   fullWidth
+                  size="small"
                   onChange={onTextSearch}
                   onKeyPress={handleKeyPress}
-                  value={data && data || ''}
+                  value={data1 && data1 || ''}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="start">
@@ -105,6 +128,20 @@ function CustomerToolbar(props) {
                   variant="outlined"
                 />
               </Grid>
+              {isComboxVillage == true ?
+            <Grid item xs={3} md={3}>
+              <Autocomplete
+                size="small"
+                onChange={(event, value) => onChange(value)}
+                disablePortal
+                id="combo-box-demo"
+                options={data && data.data ? data.data : []}
+                getOptionLabel={op => op.villageName}
+                sx={{ width: 300 }}
+                renderInput={(params) => <TextField {...params} label="Thôn" />}
+              />
+                </Grid>
+              : ""}
               <Grid item xs={6} md={4} >
                 {/* <Button
                   size="large"

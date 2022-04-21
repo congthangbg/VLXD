@@ -13,7 +13,7 @@ import { Search as SearchIcon } from '../../icons/search';
 import ClearIcon from '@mui/icons-material/Clear';
 import { styled } from '@mui/material/styles';
 function CustomerTextField(props) {
-  const { setOpen, handleSearch, onSearch, query, setQuery, title, isCombox } = props;
+  const { setOpen, handleSearch, onSearch, query, setQuery, title, isCombox ,isComboxVillage, dataVillage} = props;
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
@@ -61,7 +61,8 @@ function CustomerTextField(props) {
       const newData = {
         ...query,
         status: e ? e.id : "",
-        limit: 10, page: 0, skip: 0
+        limit: 10, page: 0, skip: 0,
+        villageId: e && e.id ? e.id:""
       }
       setQuery(newData)
       onSearch(newData)
@@ -132,8 +133,9 @@ function CustomerTextField(props) {
               variant="outlined"
             />
           </Grid>
-          <Grid item xs={3} md={3}>
+         
             {isCombox == true ?
+             <Grid item xs={3} md={3}>
               <Autocomplete
                 size="small"
                 onChange={(event, value) => onChange(value)}
@@ -144,9 +146,24 @@ function CustomerTextField(props) {
                 sx={{ width: 300 }}
                 renderInput={(params) => <TextField {...params} label="Trạng thái" />}
               />
+              </Grid>
+              : ""}
+            {isComboxVillage == true ?
+            <Grid item xs={3} md={3}>
+              <Autocomplete
+                size="small"
+                onChange={(event, value) => onChange(value)}
+                disablePortal
+                id="combo-box-demo"
+                options={dataVillage ? dataVillage : []}
+                getOptionLabel={op => op.name}
+                sx={{ width: 300 }}
+                renderInput={(params) => <TextField {...params} label="Thôn" />}
+              />
+                </Grid>
               : ""}
 
-          </Grid>
+        
           <Grid item xs={6} md={4} >
             {/* <Button
                   size="large"
@@ -168,6 +185,10 @@ function CustomerTextField(props) {
 
   )
 
+}
+CustomerTextField.propTypes = {
+  // isComboxVillage: PropTypes.bool,
+  // isCombox: PropTypes.bool,
 }
 
 export default CustomerTextField

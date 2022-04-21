@@ -60,12 +60,13 @@ public class CustomerController {
     @ApiOperation(value = "Danh sách All")
     public ResponseBodyDto<Object> callCustomer(
     		@RequestParam(value = "keySearch",required = false) String keySearch,
+    		@RequestParam(value = "villageId",required = false) Integer villageId,
     		@RequestParam(value = "page",required = false) Optional<Integer> page,
     		@RequestParam(value = "size",required = false) Optional<Integer> size,
     		@RequestParam(value = "order",required = false,defaultValue = "id") Optional<String> order ) throws Exception {
     	int currentPage = page.orElse(0);
     	int limit = size.orElse(1000);
-    	ResponseBodyDto<Object> lst = service.findAllTest(keySearch == null ? "" : keySearch ,currentPage,limit,order.get());
+    	ResponseBodyDto<Object> lst = service.findAllTest(keySearch == null ? "" : keySearch,villageId ,currentPage,limit,order.get());
     	
         return lst;
     }

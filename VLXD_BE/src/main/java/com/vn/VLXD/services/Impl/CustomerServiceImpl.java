@@ -141,11 +141,11 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	@Override
-	public ResponseBodyDto<Object> findAllTest(String Text, Integer page, Integer size, String orderBy) {
+	public ResponseBodyDto<Object> findAllTest(String Text,Integer villageId, Integer page, Integer size, String orderBy) {
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
 		try {
-			List<Customer> list = repository.findAllTest(Text, page, size, orderBy);
-			Integer count = repository.CustomerCount(Text, page, size, orderBy);
+			List<Customer> list = repository.findAllTest(Text,villageId, page, size, orderBy);
+			Integer count = repository.CustomerCount(Text,villageId, page, size, orderBy);
 			dto.setData(list);
 			dto.setTotalRecords(count);
 			dto.setMessage(MessageConstant.MSG_OK);

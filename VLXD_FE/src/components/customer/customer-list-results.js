@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
@@ -33,7 +33,10 @@ export const CustomerListResults = ({
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
-
+  useEffect(() => {
+    setPage(query && query.page || 0)
+  },[query.page]); 
+  
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
     setQuery({

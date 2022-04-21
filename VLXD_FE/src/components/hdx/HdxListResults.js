@@ -145,10 +145,9 @@ export const HdxListResults = ({
                   <SeverityPill color={"secondary"}>
                     {customer && customer.totalMoney && currencyFormat(customer.totalMoney) || 0}
                   </SeverityPill>
-
                 </TableCell>
                 <TableCell>
-                  {customer && customer.releaseDate ? format(new Date(customer.releaseDate), 'hh:mm dd/MM/yyyy') : new Date()}
+                  {customer && customer.releaseDate ? format(new Date(customer.releaseDate), 'HH:mm dd/MM/yyyy') : new Date()}
                 </TableCell>
                 <TableCell>
                   <SeverityPill

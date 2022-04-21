@@ -30,14 +30,14 @@ const Customers = () => {
   const [dataDelete, setDataDelete] = useState({})
   const [dataEdit, setDataEdit] = useState({})
   const [data, setData] = useState([])
-  const [query, setQuery] = useState({ keySearch: '', limit: 10, page: 0,skip:0 })
+  const [query, setQuery] = useState({ keySearch: '',villageId:'', limit: 10, page: 0,skip:0 })
 
   useEffect(()=>{
-    handleSearch();
+    handleSearch(query);
    },[])
 
  useEffect(()=>{
-  handleSearch();
+  handleSearch(query);
  },[query.page,query.limit])
 
   const handleTextSearch = (e) => {
@@ -46,8 +46,8 @@ const Customers = () => {
       keySearch:e ? e :""
     })
   }
-  const handleSearch = () => {
-    axiosInstance.get(GETALL_AND_SREACH_CUSTOMER + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}`)
+  const handleSearch = (query) => {
+    axiosInstance.get(GETALL_AND_SREACH_CUSTOMER + `?keySearch=${query.keySearch}&villageId=${query.villageId}&page=${query.page}&size=${query.limit}`)
       .then(response => {
         const result = {
           data: null,
@@ -77,7 +77,7 @@ const Customers = () => {
       .then(response => {
         if(response.messageCode === NOTIFY.MESSAGE_CODE_OK){
           toastifyAlert.success(DELETE_SUCCESS)
-          handleSearch();
+          handleSearch(query);
         }else{
           toastifyAlert.error(response.message ? response.message : DELETE_ERROR)
         }
@@ -91,7 +91,7 @@ const Customers = () => {
     axiosInstance.post(SAVE_UPDATE_CUSTOMER, val)
     .then(response => {
       toastifyAlert.success(TB_SAVE_UPDATE_CUSTOMER)
-      handleSearch();
+      handleSearch(query);
     })
     .catch(err => {
       console.log("ee", err);
@@ -118,6 +118,7 @@ const Customers = () => {
           onSearch={handleSearch}
           query={query}
           setQuery={setQuery}
+          isComboxVillage={true}
         />
         <Box sx={{ mt: 3 }}>
           <CustomerListResults
