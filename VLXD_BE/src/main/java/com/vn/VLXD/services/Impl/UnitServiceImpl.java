@@ -19,6 +19,7 @@ import com.vn.VLXD.dto.request.SupplierRequest;
 import com.vn.VLXD.dto.request.UnitRequest;
 import com.vn.VLXD.entities.Supplier;
 import com.vn.VLXD.entities.Unit;
+import com.vn.VLXD.repositories.ProductRepository;
 import com.vn.VLXD.repositories.SupplierRepository;
 import com.vn.VLXD.repositories.UnitRepository;
 import com.vn.VLXD.services.SupplierService;
@@ -32,6 +33,9 @@ public class UnitServiceImpl implements UnitService{
 
 	@Autowired
 	UnitRepository repository;
+	
+	@Autowired
+	ProductRepository productRepository;
 
 	@Override
 	public ResponseBodyDto<Object> save(UnitRequest request) {
@@ -99,9 +103,17 @@ public class UnitServiceImpl implements UnitService{
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
 		Optional<Unit> optional = repository.findById(id);
 		if(optional.isPresent()) {
-			repository.deleteById(id);
-			dto.setMessage(MessageConstant.MSG_OK);
-			dto.setMessageCode(MessageConstant.MSG_OK_CODE);
+			List<Long> lstIdUnitInProd = productRepository.lstIdUnit(optional.get());
+			if(lstIdUnitInProd.contains(optional.get().getId())) {
+				dto.setMessage(MessageConstant.MSG_16);
+				dto.setMessageCode(MessageConstant.MSG_16_CODE);
+			}else {
+				optional.get().setStatus(0);
+				repository.save(optional.get());
+				dto.setMessage(MessageConstant.MSG_OK);
+				dto.setMessageCode(MessageConstant.MSG_OK_CODE);
+			}
+			
 		}else {
 			dto.setMessage(MessageConstant.MSG_10);
 			dto.setMessageCode(MessageConstant.MSG_10_CODE);

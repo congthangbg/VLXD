@@ -11,6 +11,6 @@ import com.vn.VLXD.entities.Unit;
 @Repository
 public interface UnitRepository extends JpaRepository<Unit, Long> {
 	
-	@Query(value = "select s from Unit s where :keySearch is null or s.unitName like %:keySearch%")
+	@Query(value = "select s from Unit s where s.status != 0 and ( :keySearch is null or s.unitName like %:keySearch%)")
 	Page<Unit> findAllSearch(String keySearch,Pageable pageable);
 }

@@ -33,7 +33,7 @@ const Hdx = () => {
   const [dataUnit, setDataUnit] = useState([]);
 
   const getInitCustomer = () => {
-    axiosInstance.get(GETALL_AND_SREACH_CUSTOMER)
+    axiosInstance.get(GETALL_AND_SREACH_CUSTOMER + `?keySearch=&villageId=&page=&size=`)
       .then(response => {
         const result = {
           data: null,

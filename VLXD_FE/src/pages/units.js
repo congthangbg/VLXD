@@ -3,7 +3,7 @@ import { Box, Container, Grid, Pagination } from '@mui/material';
 import { products } from '../__mocks__/products';
 import { useEffect, useState } from 'react';
 import axiosInstance from '../components/config/axiosConfig';
-import { DELETE_CUSTOMER, DELETE_ERROR, DELETE_SUCCESS, GETALL_AND_SREACH_CUSTOMER, PRODUCT_TYPE, SAVE_ERROR, SAVE_SUCCESS, UNIT_API, VILLAGE_API } from '../components/component/MessageContants';
+import { DELETE_CUSTOMER, DELETE_ERROR, DELETE_SUCCESS, GETALL_AND_SREACH_CUSTOMER, NOTIFY, PRODUCT_TYPE, SAVE_ERROR, SAVE_SUCCESS, UNIT_API, VILLAGE_API } from '../components/component/MessageContants';
 import { Search as SearchIcon } from '../icons/search';
 
 import { DashboardLayout } from '../components/dashboard-layout';
@@ -23,10 +23,10 @@ const Units = () => {
  const {data,setData}= useCallVillage()
 
  useEffect(()=>{
-  handleSearch();
+  handleSearch(query);
  },[])
  useEffect(()=>{
-  handleSearch();
+  handleSearch(query);
  },[query.page,query.limit])
 
 
@@ -36,7 +36,7 @@ const Units = () => {
       keySearch:e ? e :""
     })
   }
-  const handleSearch = () => {
+  const handleSearch = (query) => {
     axiosInstance.get(UNIT_API.GET_ALL  + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}`)
       .then(response => {
         const result = {
@@ -65,8 +65,13 @@ const Units = () => {
     setOpenModal(false)
     axiosInstance.post(UNIT_API.DELETE + "?id=" + dataDelete.id)
       .then(response => {
-        toastifyAlert.success(DELETE_SUCCESS)
-        handleSearch();
+        if(response.messageCode == NOTIFY.MESSAGE_CODE_OK){
+          toastifyAlert.success(DELETE_SUCCESS)
+          handleSearch(query);
+        }else{
+          toastifyAlert.error(response.message ? response.message :DELETE_ERROR)
+        }
+      
       })
       .catch(err => {
         console.log(err);
@@ -123,6 +128,7 @@ const Units = () => {
       open={open}
       setOpen={setOpen}
       handleSearch={handleSearch}
+      query={query}
     />
     <AlertDialog open={openModal}
       setOpen={setOpenModal}

@@ -73,7 +73,7 @@ export default function AddProductDialog(props) {
     setOpenCus(false)
   };
 
-
+console.log("dataEdit",dataEdit);
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -107,7 +107,7 @@ export default function AddProductDialog(props) {
     if (formik.values.product == null) {
       formik.setFieldValue("price", '')
     } else {
-      formik.setFieldValue("price", formik.values.product.price)
+      formik.setFieldValue("price", dataEdit ? dataEdit.price: formik.values.product.price)
     }
   }, [formik.values.product])
   

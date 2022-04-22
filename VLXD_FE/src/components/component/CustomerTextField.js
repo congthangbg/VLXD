@@ -13,7 +13,9 @@ import { Search as SearchIcon } from '../../icons/search';
 import ClearIcon from '@mui/icons-material/Clear';
 import { styled } from '@mui/material/styles';
 function CustomerTextField(props) {
-  const { setOpen, handleSearch, onSearch, query, setQuery, title, isCombox ,isComboxVillage, dataVillage} = props;
+  const { setOpen, handleSearch, onSearch, query, 
+    setQuery, title, isCombox ,isComboxVillage, dataVillage,dataType,
+    isComboxProType } = props;
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
@@ -32,7 +34,7 @@ function CustomerTextField(props) {
       const newData = {
         ...query,
         keySearch: data ? data :'',
-        limit: 10, page: 0, skip: 0
+         page: 0, skip: 0
       }
       setQuery(newData)
       onSearch(newData)
@@ -49,27 +51,33 @@ function CustomerTextField(props) {
     }
     setQuery(newData)
     setData('')
+    onSearch(newData)
   }
-  useEffect(() => {
-    if (data == '') {
-      onSearch(query)
-    }
+  // useEffect(() => {
+  //   if (data == '') {
+  //     onSearch(query)
+  //   }
 
-  }, [data])
+  // }, [data])
   const onChange = (e) => {
     if (e) {
       const newData = {
         ...query,
         status: e ? e.id : "",
-        limit: 10, page: 0, skip: 0,
-        villageId: e && e.id ? e.id:""
+         page: 0, skip: 0,
+        villageId: e && e.id ? e.id:"",
+        type: e  && e.id || ""
       }
       setQuery(newData)
       onSearch(newData)
     } else if (e == null) {
       const newData = {
         ...query,
-        status: ""
+        status: "", 
+        type: "",
+        villageId:"",
+        page: 0, skip: 0,
+        keySearch:""
       }
       setQuery(newData)
       onSearch(newData)
@@ -162,7 +170,20 @@ function CustomerTextField(props) {
               />
                 </Grid>
               : ""}
-
+  {isComboxProType == true ?
+            <Grid item xs={3} md={3}>
+              <Autocomplete
+                size="small"
+                onChange={(event, value) => onChange(value)}
+                disablePortal
+                id="combo-box-demo"
+                options={dataType && dataType.data || []}
+                getOptionLabel={op => op.typeName}
+                sx={{ width: 300 }}
+                renderInput={(params) => <TextField {...params} label="Loại sản phẩm" />}
+              />
+                </Grid>
+              : ""}
         
           <Grid item xs={6} md={4} >
             {/* <Button

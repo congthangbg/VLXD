@@ -19,6 +19,7 @@ import com.vn.VLXD.dto.request.SupplierRequest;
 import com.vn.VLXD.dto.request.VillageRequest;
 import com.vn.VLXD.entities.Supplier;
 import com.vn.VLXD.entities.Village;
+import com.vn.VLXD.repositories.CustomerRepository;
 import com.vn.VLXD.repositories.SupplierRepository;
 import com.vn.VLXD.repositories.VillageRepository;
 import com.vn.VLXD.services.SupplierService;
@@ -28,29 +29,33 @@ import com.vn.VLXD.utils.MapperUtils;
 
 @Service
 @Transactional
-public class VillageServiceImpl implements VillageService{
+public class VillageServiceImpl implements VillageService {
 
 	@Autowired
 	VillageRepository villageRepository;
 
+	@Autowired
+	CustomerRepository customerRepository;
+
 	@Override
 	public ResponseBodyDto<Object> save(VillageRequest request) {
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
-		if(request.getId() == 0 ) {
-			Village village = MapperUtils.map(request, Village.class);	
+		if (request.getId() == 0) {
+			Village village = MapperUtils.map(request, Village.class);
 			village.setCreateBy(UserLogonService.getUsername());
 			village.setCreateDate(new Timestamp(System.currentTimeMillis()));
 			village.setUpdateBy(UserLogonService.getUsername());
 			village.setModifyDate(new Timestamp(System.currentTimeMillis()));
-			Village village2=  villageRepository.save(village);
+			village.setStatus(1);
+			Village village2 = villageRepository.save(village);
 			dto.setData(village2);
 			dto.setMessage(MessageConstant.MSG_OK);
 			dto.setMessageCode(MessageConstant.MSG_OK_CODE);
-		}else {
+		} else {
 			Optional<Village> optional = villageRepository.findById(request.getId());
-			if(optional.isPresent()) {
+			if (optional.isPresent()) {
 				Village village = optional.get();
-				if(request.getVillageName() != null) {
+				if (request.getVillageName() != null) {
 					village.setVillageName(request.getVillageName());
 				}
 				village.setUpdateBy(UserLogonService.getUsername());
@@ -59,16 +64,16 @@ public class VillageServiceImpl implements VillageService{
 				dto.setData(village2);
 				dto.setMessage(MessageConstant.MSG_OK);
 				dto.setMessageCode(MessageConstant.MSG_OK_CODE);
-			}else {
+			} else {
 				dto.setMessage(MessageConstant.MSG_10);
 				dto.setMessageCode(MessageConstant.MSG_10_CODE);
 			}
 		}
-		return dto ;
+		return dto;
 	}
 
 	@Override
-	public ResponseBodyDto<Object> findAllSearch(String keySearch,Pageable pageable) {
+	public ResponseBodyDto<Object> findAllSearch(String keySearch, Pageable pageable) {
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
 		Page<Village> page = villageRepository.findAllSearch(keySearch, pageable);
 		dto.setData(page.getContent());
@@ -82,11 +87,11 @@ public class VillageServiceImpl implements VillageService{
 	public ResponseBodyDto<Object> findById(Long id) {
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
 		Optional<Village> optional = villageRepository.findById(id);
-		if(optional.isPresent()) {
+		if (optional.isPresent()) {
 			dto.setData(optional.get());
 			dto.setMessage(MessageConstant.MSG_OK);
 			dto.setMessageCode(MessageConstant.MSG_OK_CODE);
-		}else {
+		} else {
 			dto.setMessage(MessageConstant.MSG_10);
 			dto.setMessageCode(MessageConstant.MSG_10_CODE);
 		}
@@ -97,17 +102,23 @@ public class VillageServiceImpl implements VillageService{
 	public ResponseBodyDto<Object> deleteById(Long id) {
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
 		Optional<Village> optional = villageRepository.findById(id);
-		if(optional.isPresent()) {
-			villageRepository.deleteById(id);
-			dto.setMessage(MessageConstant.MSG_OK);
-			dto.setMessageCode(MessageConstant.MSG_OK_CODE);
-		}else {
+		if (optional.isPresent()) {
+			List<Long> lstVillageInCustomer = customerRepository.lstIdVillageInCustomer(optional.get());
+			if (lstVillageInCustomer.contains(optional.get().getId())) {
+				dto.setMessage(MessageConstant.MSG_15);
+				dto.setMessageCode(MessageConstant.MSG_15_CODE);
+			} else {
+				optional.get().setStatus(0);
+				villageRepository.save(optional.get());
+				dto.setMessage(MessageConstant.MSG_OK);
+				dto.setMessageCode(MessageConstant.MSG_OK_CODE);
+			}
+
+		} else {
 			dto.setMessage(MessageConstant.MSG_10);
 			dto.setMessageCode(MessageConstant.MSG_10_CODE);
 		}
 		return dto;
 	}
-	
-	
-	
+
 }

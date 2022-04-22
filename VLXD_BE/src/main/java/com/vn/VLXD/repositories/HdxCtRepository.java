@@ -25,4 +25,8 @@ public interface HdxCtRepository extends JpaRepository<HdxCt, Long> {
 	
 	@Query(value = "select * from HDX_CT s where s.hdx_id = :idHdx",nativeQuery = true)
 	List<HdxCt> findByIdHdx(Long idHdx);
+	
+	@Query(value = "select distinct h.product.id from HdxCt h where h.product = :product")
+	List<Long> lstIdProduct(Product product);
+	
 }

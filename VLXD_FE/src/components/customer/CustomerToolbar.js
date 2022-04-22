@@ -31,7 +31,8 @@ function CustomerToolbar(props) {
     if(event.key === 'Enter'){
       const newData = {
         ...query,
-        keySearch:data1 ? data1 :""
+        keySearch:data1 ? data1 :"",
+        page: 0, skip: 0,
       }
       setQuery(newData)
       onSearch(newData)
@@ -55,11 +56,15 @@ function CustomerToolbar(props) {
     }
   },[data1])
 
+  const handleClickSearch = ()=>{
+    onSearch(query)
+  }
+
   const onChange = (e) => {
     if (e) {
       const newData = {
         ...query,
-        limit: 10, page: 0, skip: 0,
+         page: 0, skip: 0,
         villageId: e && e.id ? e.id:""
       }
       setQuery(newData)
@@ -67,7 +72,8 @@ function CustomerToolbar(props) {
     } else if (e == null) {
       const newData = {
         ...query,
-        villageId: ""
+        villageId: "",
+        page: 0, skip: 0,
       }
       setQuery(newData)
       onSearch(newData)
@@ -118,7 +124,7 @@ function CustomerToolbar(props) {
                          <IconButton onClick={onClear}  type="reset" sx={{ p: '10px' }} aria-label="search">
                             <ClearIcon />
                           </IconButton>
-                          <IconButton onClick={onSearch}  type="submit" sx={{ p: '10px' }} aria-label="search">
+                          <IconButton onClick={handleClickSearch}  type="submit" sx={{ p: '10px' }} aria-label="search">
                             <SearchIcon />
                           </IconButton>
                       </InputAdornment>

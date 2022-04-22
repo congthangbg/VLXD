@@ -18,11 +18,14 @@ import com.vn.VLXD.dto.request.ProductRequest;
 import com.vn.VLXD.dto.request.ProductTypeRequest;
 import com.vn.VLXD.dto.response.ProductResponse;
 import com.vn.VLXD.entities.Customer;
+import com.vn.VLXD.entities.HdxCt;
 import com.vn.VLXD.entities.Product;
 import com.vn.VLXD.entities.ProductType;
 import com.vn.VLXD.entities.Unit;
 import com.vn.VLXD.entities.Village;
 import com.vn.VLXD.repositories.CustomerRepository;
+import com.vn.VLXD.repositories.HdxCtRepository;
+import com.vn.VLXD.repositories.HdxCtTonRepository;
 import com.vn.VLXD.repositories.ProductRepository;
 import com.vn.VLXD.repositories.ProductTypeRepository;
 import com.vn.VLXD.repositories.UnitRepository;
@@ -45,6 +48,12 @@ public class ProductServiceImpl implements ProductService{
 	
 	@Autowired
 	ProductRepository productRepository;
+	
+	@Autowired
+	HdxCtRepository hdxCtRepository;
+	
+	@Autowired
+	HdxCtTonRepository hdxCtTonRepository;
 
 	@Override
 	@Transactional(rollbackFor = {SQLException.class})
@@ -159,9 +168,17 @@ public class ProductServiceImpl implements ProductService{
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
 		Optional<Product> optional = productRepository.findById(id);
 		if(optional.isPresent()) {
-			productRepository.deleteById(id);
-			dto.setMessage(MessageConstant.MSG_OK);
-			dto.setMessageCode(MessageConstant.MSG_OK_CODE);
+			List<Long> hdxCts = hdxCtRepository.lstIdProduct(optional.get());
+			if(hdxCts.contains(optional.get().getId())) {
+				dto.setMessage(MessageConstant.MSG_13);
+				dto.setMessageCode(MessageConstant.MSG_13_CODE);
+			}else {
+				optional.get().setStatus(0);
+				productRepository.save(optional.get());
+				dto.setMessage(MessageConstant.MSG_OK);
+				dto.setMessageCode(MessageConstant.MSG_OK_CODE);
+			}
+			
 		}else {
 			dto.setMessage(MessageConstant.MSG_10);
 			dto.setMessageCode(MessageConstant.MSG_10_CODE);

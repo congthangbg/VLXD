@@ -60,7 +60,7 @@ BootstrapDialogTitle.propTypes = {
 
 export default function CustomizedDialogs(props) {
   const router = useRouter();
-  const { open, setOpen, dataEdit, setDataEdit,handleSearch } = props;
+  const { open, setOpen, dataEdit, setDataEdit,handleSearch,query } = props;
   const handleClose = () => {
     setOpen(false);
     formik.resetForm();
@@ -85,8 +85,13 @@ export default function CustomizedDialogs(props) {
     onSubmit: (values, { resetForm }) => {
       axiosInstance.post(VILLAGE_API.SAVE_UPDATE, values)
         .then(response => {
-          handleSearch();
+          if(response.messageCode == NOTIFY.MESSAGE_CODE_OK){
+            handleSearch(query);
           toastifyAlert.success(SAVE_SUCCESS)
+          }else{
+            toastifyAlert.error(response.message ? response.message : SAVE_ERROR)
+          }
+        
         })
         .catch(err => {
           console.log("ee", err);

@@ -35,7 +35,10 @@ export const ProductTypeListResults = ({
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
-
+  useEffect(() => {
+    setPage(query && query.page || 0)
+  },[query.page]);
+  
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
     setQuery({
@@ -62,9 +65,7 @@ export const ProductTypeListResults = ({
     setOpen(true)
     handleEdit(e)
   }
-  useEffect(() => {
-    setPage(query && query.page || 0)
-  },[query.page]);
+ 
   return (
     <Card {...rest} sx={{ mt: 3 ,ml:3 }} style ={{width:"100%"}}>
       <PerfectScrollbar>
@@ -84,7 +85,7 @@ export const ProductTypeListResults = ({
                 <TableCell>
                   Ngày cập nhật
                 </TableCell>
-                <TableCell>
+                <TableCell style={{width: '250px' }}>
                   Hành động
                 </TableCell>
               </TableRow>

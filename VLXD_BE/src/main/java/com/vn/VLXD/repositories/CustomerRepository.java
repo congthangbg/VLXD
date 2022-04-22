@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.vn.VLXD.entities.Customer;
+import com.vn.VLXD.entities.ProductType;
 import com.vn.VLXD.entities.Supplier;
 import com.vn.VLXD.entities.Village;
 
@@ -25,4 +26,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 	
 	@Query(value = "{CALL CustomerCount(:Text,:villageId,:page,:size,:orderBy)}", nativeQuery = true)
 	Integer CustomerCount(@Param("Text")String Text,@Param("villageId")Integer villageId, @Param("page")Integer page,@Param("size")Integer size,@Param("orderBy")String orderBy);
+
+	@Query(value = "select distinct h.village.id from Customer h where h.village = :village")
+	List<Long> lstIdVillageInCustomer(Village village);
 }

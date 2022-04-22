@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.vn.VLXD.entities.Product;
 import com.vn.VLXD.entities.ProductType;
 import com.vn.VLXD.entities.Supplier;
+import com.vn.VLXD.entities.Unit;
 import com.vn.VLXD.entities.Village;
 
 @Repository
@@ -26,4 +27,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	
 	@Query(value = "{CALL ProductSearchCount(:text,:type,:page,:size,:sort)}",nativeQuery = true)
 	Integer countAllSearchCallStore(String text,Integer type,Integer page,Integer size,String sort);
+	
+	@Query(value = "select distinct h.productType.id from Product h where h.productType = :productType")
+	List<Long> lstIdProductType(ProductType productType);
+	
+	@Query(value = "select distinct h.unit.id from Product h where h.unit = :unit")
+	List<Long> lstIdUnit(Unit unit);
 }

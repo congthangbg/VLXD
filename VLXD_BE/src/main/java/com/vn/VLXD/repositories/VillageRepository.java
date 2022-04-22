@@ -12,6 +12,6 @@ import com.vn.VLXD.entities.Village;
 @Repository
 public interface VillageRepository extends JpaRepository<Village, Long> {
 	
-	@Query(value = "select s from Village s where :keySearch is null or s.villageName like %:keySearch%")
+	@Query(value = "select s from Village s where s.status != 0 and ( :keySearch is null or s.villageName like %:keySearch%)")
 	Page<Village> findAllSearch(String keySearch,Pageable pageable);
 }

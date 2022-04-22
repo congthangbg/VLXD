@@ -45,5 +45,16 @@ public class MessageConstant {
 	public static final String MSG_12 = "Khách hàng đã có hóa đơn xuất,không thể xóa!";
 	public static final String MSG_12_CODE = "MSG_12";
 	
+	public static final String MSG_13 = "Sản phẩm đã có hóa đơn xuất,không thể xóa!";
+	public static final String MSG_13_CODE = "MSG_13";
+	
+	public static final String MSG_14 = "Loại sản phẩm đã có danh sách sản phẩm,không thể xóa!";
+	public static final String MSG_14_CODE = "MSG_14";
+	
+	public static final String MSG_15 = "Thôn đã được gán với khách hàng,không thể xóa!";
+	public static final String MSG_15_CODE = "MSG_15";
+	
+	public static final String MSG_16 = "Đơn vị đã được gán với sản phẩm,không thể xóa!";
+	public static final String MSG_16_CODE = "MSG_16";
 	
 }

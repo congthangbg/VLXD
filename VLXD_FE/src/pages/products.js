@@ -4,7 +4,7 @@ import { products } from '../__mocks__/products';
 import CustomerTextField from 'src/components/component/CustomerTextField';
 import { useState,useEffect } from 'react';
 import axiosInstance from 'src/components/config/axiosConfig';
-import { DELETE_ERROR, DELETE_SUCCESS, PRODUCT } from 'src/components/component/MessageContants';
+import { DELETE_ERROR, DELETE_SUCCESS, PRODUCT,NOTIFY } from 'src/components/component/MessageContants';
 import login401 from 'src/hook/login401';
 import { DashboardLayout } from 'src/components/dashboard-layout';
 import { ProductListResults } from 'src/components/product/ProductListResults';
@@ -16,7 +16,7 @@ import toastifyAlert from 'src/components/component/toastify-message/toastify';
 
 const Products = () => {
   const [open, setOpen] = useState(false)
-  const [query, setQuery] = useState({ keySearch: '', limit: 10, page: 0,skip:0 })
+  const [query, setQuery] = useState({ keySearch: '',type:"", limit: 10, page: 0,skip:0 })
   const [openModal, setOpenModal] = useState(false)
   const [dataDelete, setDataDelete] = useState({})
   const [dataEdit, setDataEdit] = useState({})
@@ -39,7 +39,7 @@ const Products = () => {
 
 
   const handleSearch = (query) => {
-    axiosInstance.get(PRODUCT.GET_ALL  + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}`)
+    axiosInstance.get(PRODUCT.GET_ALL  + `?keySearch=${query.keySearch}&type=${query.type}&page=${query.page}&size=${query.limit}`)
       .then(response => {
         const result = {
           data: null,
@@ -67,8 +67,14 @@ const Products = () => {
     setOpenModal(false)
     axiosInstance.post(PRODUCT.DELETE + "?id=" + dataDelete.id)
       .then(response => {
-        toastifyAlert.success(DELETE_SUCCESS)
-        handleSearch(query);
+        console.log(response);
+        if(response.messageCode == NOTIFY.MESSAGE_CODE_OK){
+          toastifyAlert.success(DELETE_SUCCESS)
+          handleSearch(query);
+        }else{
+          toastifyAlert.error(response.message ? response.message: DELETE_ERROR)
+        }
+       
       })
       .catch(err => {
         console.log(err);
@@ -96,6 +102,8 @@ const Products = () => {
           query={query}
           setQuery={setQuery}
           title = "Sản phẩm"
+          dataType={dataType}
+          isComboxProType={true}
         />
         <Box sx={{ pt: 3 }}>
         <ProductListResults
@@ -118,6 +126,7 @@ const Products = () => {
       handleSearch={handleSearch}
       dataUnit={dataUnit}
       dataType={dataType}
+      query={query}
     />
     <AlertDialog open={openModal}
       setOpen={setOpenModal}

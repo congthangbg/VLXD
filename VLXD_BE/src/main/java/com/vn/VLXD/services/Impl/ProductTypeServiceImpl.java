@@ -2,6 +2,7 @@ package com.vn.VLXD.services.Impl;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import com.vn.VLXD.common.ResponseBodyDto;
 import com.vn.VLXD.contants.MessageConstant;
 import com.vn.VLXD.dto.request.ProductTypeRequest;
 import com.vn.VLXD.entities.ProductType;
+import com.vn.VLXD.repositories.ProductRepository;
 import com.vn.VLXD.repositories.ProductTypeRepository;
 import com.vn.VLXD.services.ProductTypeService;
 import com.vn.VLXD.services.UserLogonService;
@@ -26,6 +28,9 @@ public class ProductTypeServiceImpl implements ProductTypeService{
 	@Autowired
 	ProductTypeRepository repository;
 
+	@Autowired
+	ProductRepository productRepository;
+
 	@Override
 	public ResponseBodyDto<Object> save(ProductTypeRequest request) {
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
@@ -35,6 +40,7 @@ public class ProductTypeServiceImpl implements ProductTypeService{
 			u.setCreateDate(new Timestamp(System.currentTimeMillis()));
 			u.setUpdateBy(UserLogonService.getUsername());
 			u.setModifyDate(new Timestamp(System.currentTimeMillis()));
+			u.setStatus(1);
 			ProductType u2=  repository.save(u);
 			dto.setData(u2);
 			dto.setMessage(MessageConstant.MSG_OK);
@@ -92,9 +98,17 @@ public class ProductTypeServiceImpl implements ProductTypeService{
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
 		Optional<ProductType> optional = repository.findById(id);
 		if(optional.isPresent()) {
-			repository.deleteById(id);
-			dto.setMessage(MessageConstant.MSG_OK);
-			dto.setMessageCode(MessageConstant.MSG_OK_CODE);
+			List<Long> lstProTypeInProduct = productRepository.lstIdProductType(optional.get());
+			if(lstProTypeInProduct.contains(optional.get().getId())) {
+				dto.setMessage(MessageConstant.MSG_14);
+				dto.setMessageCode(MessageConstant.MSG_14_CODE);
+			}else {
+				optional.get().setStatus(0);
+				repository.save(optional.get());
+				dto.setMessage(MessageConstant.MSG_OK);
+				dto.setMessageCode(MessageConstant.MSG_OK_CODE);
+			}
+			
 		}else {
 			dto.setMessage(MessageConstant.MSG_10);
 			dto.setMessageCode(MessageConstant.MSG_10_CODE);

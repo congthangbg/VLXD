@@ -3,7 +3,7 @@ import { Box, Container, Grid, Pagination } from '@mui/material';
 import { products } from '../__mocks__/products';
 import { useEffect, useState } from 'react';
 import axiosInstance from './../components/config/axiosConfig';
-import { DELETE_CUSTOMER, DELETE_ERROR, DELETE_SUCCESS, GETALL_AND_SREACH_CUSTOMER, PRODUCT_TYPE, SAVE_ERROR, SAVE_SUCCESS } from './../components/component/MessageContants';
+import { DELETE_CUSTOMER, DELETE_ERROR, DELETE_SUCCESS, GETALL_AND_SREACH_CUSTOMER, NOTIFY, PRODUCT_TYPE, SAVE_ERROR, SAVE_SUCCESS } from './../components/component/MessageContants';
 import { Search as SearchIcon } from '../icons/search';
 
 import { DashboardLayout } from '../components/dashboard-layout';
@@ -23,10 +23,10 @@ const ProductType = () => {
  const [data,setData] = useState([])
 
  useEffect(()=>{
- handleSearch();
+ handleSearch(query);
  },[query.page,query.limit])
  useEffect(()=>{
-  handleSearch();
+  handleSearch(query);
   },[])
  
 
@@ -36,8 +36,9 @@ const ProductType = () => {
       keySearch:e ? e :""
     })
   }
-  const handleSearch = () => {
-    axiosInstance.get(PRODUCT_TYPE.GET_ALL  + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}`)
+  const handleSearch = (query) => {
+    if(query){
+      axiosInstance.get(PRODUCT_TYPE.GET_ALL  + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}`)
       .then(response => {
         const result = {
           data: null,
@@ -54,6 +55,8 @@ const ProductType = () => {
         console.log(err);
         login401(err && err.response && err.response.status)
       })
+    }
+   
   }
   const handleDelete = (e) => {
     setDataDelete(e)
@@ -65,8 +68,13 @@ const ProductType = () => {
     setOpenModal(false)
     axiosInstance.post(PRODUCT_TYPE.DELETE + "?id=" + dataDelete.id)
       .then(response => {
-        toastifyAlert.success(DELETE_SUCCESS)
-        handleSearch();
+        if (response.messageCode == NOTIFY.MESSAGE_CODE_OK) {
+          toastifyAlert.success(DELETE_SUCCESS)
+        handleSearch(query);
+        } else {
+          toastifyAlert.error(response.message ? response.message : SAVE_ERROR)
+        }
+        
       })
       .catch(err => {
         console.log(err);
@@ -128,6 +136,7 @@ const ProductType = () => {
       open={open}
       setOpen={setOpen}
         handleSearch={  handleSearch}
+        query={query}
     />
     <AlertDialog open={openModal}
       setOpen={setOpenModal}

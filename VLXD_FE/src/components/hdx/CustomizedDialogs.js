@@ -282,6 +282,8 @@ export default function CustomizedDialogs(props) {
     setOpenModalTon(false)
   }
 
+  console.log("dataCustomer",dataCustomer);
+
   ////customer
   const onSave = (val) => {
     axiosInstance.post(SAVE_UPDATE_CUSTOMER, val)

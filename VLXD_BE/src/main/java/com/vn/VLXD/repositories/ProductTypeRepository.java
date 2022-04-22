@@ -13,6 +13,6 @@ import com.vn.VLXD.entities.Village;
 @Repository
 public interface ProductTypeRepository extends JpaRepository<ProductType, Long> {
 	
-	@Query(value = "select s from ProductType s where :keySearch is null or s.typeName like %:keySearch%")
+	@Query(value = "select s from ProductType s where s.status != 0 and ( :keySearch is null or s.typeName like %:keySearch%)")
 	Page<ProductType> findAllSearch(String keySearch,Pageable pageable);
 }
