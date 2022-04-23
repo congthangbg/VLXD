@@ -14,6 +14,6 @@ import com.vn.VLXD.entities.Village;
 @Repository
 public interface HdnRepository extends JpaRepository<Hdn, Long> {
 	
-//	@Query(value = "select s from Hdn s where :keySearch is null or s.id like %:keySearch%")
-//	Page<Hdn> findAllSearch(String keySearch,Pageable pageable);
+	@Query(value = "select s from Hdn s where :keySearch is null or s.supplier.name like %:keySearch%")
+	Page<Hdn> findAllSearch(String keySearch,Pageable pageable);
 }

@@ -42,8 +42,8 @@ public class SupplierController {
     		@RequestParam(value = "page",required = false) Optional<Integer> page,
     		@RequestParam(value = "size",required = false) Optional<Integer> size ) {
     	int currentPage = page.orElse(0);
-    	int limit = size.orElse(100);
-    	Pageable pageable = PageRequest.of(currentPage, limit, Sort.by("createDate").ascending());
+    	int limit = size.orElse(10000);
+    	Pageable pageable = PageRequest.of(currentPage, limit, Sort.by("createDate").descending());
     	ResponseBodyDto<Object> dto = supplierService.findAllSearch(keyString, pageable);
     	
         return dto;
@@ -64,7 +64,7 @@ public class SupplierController {
     @PostMapping("/delete")
     public ResponseBodyDto<Object> delete(
     		@RequestParam(value = "id",required =  true)Long id )throws Exception {
-    	ResponseBodyDto<Object> dto = supplierService.deleteById(id);
+        ResponseBodyDto<Object> dto = supplierService.deleteById(id);
         return dto;
     }
 }

@@ -59,6 +59,11 @@ const items = [
     title: 'Nhà cung cấp'
   },
   {
+    href: '/hdn',
+    icon: (<ShoppingBagIcon fontSize="small" />),
+    title: 'Hóa đơn nhập'
+  },
+  {
     href: '/account',
     icon: (<UserIcon fontSize="small" />),
     title: 'Tài khoản'

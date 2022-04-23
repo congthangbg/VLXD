@@ -42,7 +42,7 @@ export const HdxListResults = ({
 
   useEffect(() => {
     setPage(query && query.page || 0)
-  },[query.page]);
+  }, [query.page]);
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -67,8 +67,8 @@ export const HdxListResults = ({
     handleDelete(e)
   }
   const handleUpdate = (e) => {
-      setOpen(true)
-      handleEdit(e)
+    setOpen(true)
+    handleEdit(e)
   }
   const handlePrint = (e) => {
     print(e)

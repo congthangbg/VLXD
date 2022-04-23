@@ -124,11 +124,11 @@ export default function AddTonDialog(props) {
     if (formik.values.product == null) {
       formik.setFieldValue("price", '')
     } else {
-      formik.setFieldValue("price", dataEdit ? dataEdit.price: formik.values.product.price)
+      formik.setFieldValue("price", dataEdit &&dataEdit.price ? dataEdit.price: formik.values.product.price)
     }
     if( formik.values.product && formik.values.product.unit){
       formik.values.product.unit.unitName == "Md"? formik.setFieldValue("height",'1') :  formik.setFieldValue("height",'1.080') 
-      formik.setFieldValue("price", dataEdit ? dataEdit.price: formik.values.product.price)
+      formik.setFieldValue("price", dataEdit &&dataEdit.price ? dataEdit.price: formik.values.product.price)
     }
   }, [formik.values.product])
 

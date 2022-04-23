@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import { Autocomplete, Grid, TextField } from '@mui/material';
 import { Field, useFormik } from 'formik';
 import * as Yup from 'yup';
-import { GETALL_AND_SEARCH_VILLAGE, LOGIN, LOGIN_FAILED, NOTIFY, PRODUCT, PRODUCT_TYPE, SAVE_ERROR, SAVE_SUCCESS, SAVE_UPDATE_CUSTOMER, STATUS_401, STAUTS_401, TB_SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER_ERR } from '../component/MessageContants';
+import { GETALL_AND_SEARCH_VILLAGE, LOGIN, LOGIN_FAILED, NOTIFY, phoneRegExp, PRODUCT, PRODUCT_TYPE, SAVE_ERROR, SAVE_SUCCESS, SAVE_UPDATE_CUSTOMER, STATUS_401, STAUTS_401, TB_SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER_ERR } from '../component/MessageContants';
 import axiosInstance from '../config/axiosConfig';
 import toastifyAlert from '../component/toastify-message/toastify';
 import { ToastContainer } from 'react-toastify';
@@ -60,43 +60,61 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-export default function AddProductDialog(props) {
+export default function AddTonDialog(props) {
   const router = useRouter();
   const [openAddSp, setOpenAddSp] = React.useState(false)
   const { open, setOpen, dataEdit,
     setDataEdit, dataProductType, dataProduct
-    , handAddProduct, setOpenCus, dataUnit, getProduct,setDataProduct } = props;
+    , handAddTon, dataUnit, getProduct, setDataProduct } = props;
   const handleClose = () => {
     setOpen(false);
     formik.resetForm();
     setDataEdit({})
-    setOpenCus(false)
+    // setOpenCus(false)
   };
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       id: dataEdit ? dataEdit.id : '',
-      productType: dataEdit ? dataEdit.productType : '',
+      productType: dataEdit && dataEdit.productType ? dataEdit.productType : (dataProductType && dataProductType.data ? dataProductType.data[2]:""),
       product: dataEdit ? dataEdit.product : '',
       price: dataEdit ? dataEdit.price : '',
       quantity: dataEdit ? dataEdit.quantity : '',
+      width: dataEdit ? dataEdit.width : '',
+      height: dataEdit && dataEdit.height ? dataEdit.height :'1.080',
+      createBy:dataEdit && dataEdit.createBy ? dataEdit.createBy :'',
+      createDate:dataEdit && dataEdit.createDate ? dataEdit.createDate :'',
+      modifyDate:dataEdit && dataEdit.modifyDate ? dataEdit.modifyDate :'',
+      updateBy:dataEdit && dataEdit.updateBy ? dataEdit.updateBy :'',
     },
     validationSchema: Yup.object({
       product: Yup
         .object().nullable()
         .required(NOTIFY.PRODUCT),
       quantity: Yup
-        .string()
-        .trim()
+        .number().nullable()
+        .typeError(NOTIFY.NUMBER)
+        // .trim()
+        .required(NOTIFY.NOT_BLANK),
+      width: Yup
+        .number().nullable()
+        .typeError(NOTIFY.NUMBER)
+        // .trim()
+        .required(NOTIFY.NOT_BLANK),
+      height: Yup
+        .number().nullable()
+        .typeError(NOTIFY.NUMBER)
+        // .trim()
         .required(NOTIFY.NOT_BLANK),
       price: Yup
-        .string()
-        .trim()
+        .number().nullable()
+        .typeError(NOTIFY.NUMBER)
+        // .trim()
         .required(NOTIFY.NOT_BLANK),
     }),
     onSubmit: (values, { resetForm }) => {
-      handAddProduct(values)
+      handAddTon(values)
       handleClose();
       resetForm();
 
@@ -106,44 +124,44 @@ export default function AddProductDialog(props) {
     if (formik.values.product == null) {
       formik.setFieldValue("price", '')
     } else {
-      formik.setFieldValue("price",dataEdit && dataEdit.price ? dataEdit.price: formik.values.product.price)
+      formik.setFieldValue("price", dataEdit && dataEdit.price ? dataEdit.price: formik.values.product.price)
+    }
+    if( formik.values.product && formik.values.product.unit){
+      formik.values.product.unit.unitName == "Md"? formik.setFieldValue("height",'1') :  formik.setFieldValue("height",'1.080') 
+      formik.setFieldValue("price", dataEdit&& dataEdit.price ? dataEdit.price: formik.values.product.price)
     }
   }, [formik.values.product])
-  
+
   React.useEffect(() => {
-   
     if (formik.values.productType !== undefined) {
       const typeId = formik.values.productType ? formik.values.productType.id : null
-      if(typeId !== null){
-      
-        axiosInstance.get(PRODUCT.GET_PRODUCT_BY_TYPE_ID+'?typeId='+typeId)
-        .then(response => {
-          setDataProduct(response)
-        })
-        .catch(err => {
-          console.log(err);
-          login401(err && err.response && err.response.status)
-        })
-      }else{
+      if (typeId !== null) {
+        axiosInstance.get(PRODUCT.GET_PRODUCT_BY_TYPE_ID + '?typeId=' + typeId)
+          .then(response => {
+            if(response.messageCode == NOTIFY.MESSAGE_CODE_OK){
+              setDataProduct(response)
+            }
+            
+          })
+          .catch(err => {
+            console.log(err);
+            login401(err && err.response && err.response.status)
+          })
+      } else {
         axiosInstance.get(PRODUCT.GET_ALL)
-        .then(response => {
-          setDataProduct(response)
-        })
-        .catch(err => {
-          console.log(err);
-          login401(err && err.response&&err.response.status)
-        })
+          .then(response => {
+            if(response.messageCode == NOTIFY.MESSAGE_CODE_OK){
+              setDataProduct(response)
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            login401(err && err.response && err.response.status)
+          })
       }
-     
+
     }
-  }, [formik.values.productType])
-  const [dataP,setDataP] = React.useState([])
-React.useEffect(() => {
-  if(dataProduct){
-    const result = dataProduct &&dataProduct.data && dataProduct.data.filter(e => e.productType.id !== 5);//5 loại bỏ loại sp tôn
-    setDataP(result)
-  }
-},[dataProduct])
+  }, [formik.values.productType,open])
   return (
     <div>
       <BootstrapDialog
@@ -155,7 +173,7 @@ React.useEffect(() => {
       >
         <form onSubmit={formik.handleSubmit}>
           <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-            Thêm sản phẩm vào giỏ
+            Thêm tôn vào giỏ
           </BootstrapDialogTitle>
           <DialogContent dividers>
             <Grid container spacing={2}>
@@ -166,6 +184,7 @@ React.useEffect(() => {
                   name="productType"
                   options={dataProductType && dataProductType.data ? dataProductType.data : []}
                   getOptionLabel={option => option.typeName}
+                  defaultValue={dataProductType && dataProductType.data ? dataProductType.data[2] : []}
                   onChange={(event, value) => formik.setFieldValue("productType", value)}
                   value={formik.values && formik.values.productType ? formik.values.productType : undefined}
                   renderInput={params => (
@@ -184,14 +203,14 @@ React.useEffect(() => {
                   size="small"
                   id="product"
                   name="product"
-                  options={dataP ? dataP : []}
+                  options={dataProduct && dataProduct.data ? dataProduct.data : []}
                   getOptionLabel={option => option.name}
                   onChange={(event, value) => formik.setFieldValue("product", value)}
-                  value={formik.values.product ? formik.values.product : undefined}
+                  value={formik.values && formik.values.product ? formik.values.product : undefined}
                   renderInput={params => (
                     <TextField
                       {...params}
-                      // onChange={formik.handleChange}
+                      onChange={formik.handleChange}
                       margin="normal"
                       label="Sản phẩm"
                       fullWidth
@@ -216,6 +235,39 @@ React.useEffect(() => {
                   id="outlined-size-small"
                   size="small"
                   fullWidth
+                  label="Chiều rộng"
+                  margin="normal"
+                  name="height"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.height ? formik.values.height :'1.080'}
+                  variant="outlined"
+                  error={Boolean(formik.touched.height && formik.errors.height)}
+                  helperText={formik.touched.height && formik.errors.height}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  id="outlined-size-small"
+                  size="small"
+                  fullWidth
+                  label="Chiều dài"
+                  margin="normal"
+                  name="width"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.width}
+                  variant="outlined"
+                  error={Boolean(formik.touched.width && formik.errors.width)}
+                  helperText={formik.touched.width && formik.errors.width}
+                />
+              </Grid>
+              
+              <Grid item xs={4}>
+                <TextField
+                  id="outlined-size-small"
+                  size="small"
+                  fullWidth
                   label="Số lượng"
                   margin="normal"
                   name="quantity"
@@ -230,7 +282,7 @@ React.useEffect(() => {
               <Grid item xs={6}>
                 Giá :  <CurrencyFormat
                   style={{
-                    marginTop: 16, width: 300, height: 38,
+                    marginTop: 16, width: 230, height: 38,
                     borderRadius: 5, borderWidth: 1, variant: 'outlined',
                     paddingLeft: 10, fontSize: 15,
                   }}
@@ -269,7 +321,7 @@ React.useEffect(() => {
       </BootstrapDialog>
       <AddProduct
         // dataEdit={dataEdit}
-        setDataEdit={()=>console.log("sss")}
+        setDataEdit={() => console.log("sss")}
         open={openAddSp}
         setOpen={setOpenAddSp}
         handleSearch={getProduct}

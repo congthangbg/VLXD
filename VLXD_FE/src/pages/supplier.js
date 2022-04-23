@@ -3,7 +3,7 @@ import { Box, Container, Grid, Pagination } from '@mui/material';
 import { products } from '../__mocks__/products';
 import { useEffect, useState } from 'react';
 import axiosInstance from '../components/config/axiosConfig';
-import { DELETE_CUSTOMER, DELETE_ERROR, DELETE_SUCCESS, GETALL_AND_SREACH_CUSTOMER, PRODUCT_TYPE, SAVE_ERROR, SAVE_SUCCESS, SUPPLIER_API } from '../components/component/MessageContants';
+import { DELETE_CUSTOMER, DELETE_ERROR, DELETE_SUCCESS, GETALL_AND_SREACH_CUSTOMER, NOTIFY, PRODUCT_TYPE, SAVE_ERROR, SAVE_SUCCESS, SUPPLIER_API } from '../components/component/MessageContants';
 import { Search as SearchIcon } from '../icons/search';
 
 import { DashboardLayout } from '../components/dashboard-layout';
@@ -22,24 +22,7 @@ const Supplier = () => {
   const [query, setQuery] = useState({ keySearch: '', limit: 10, page: 0,skip:0 })
 
  useEffect(()=>{
-  axiosInstance.get(SUPPLIER_API.GET_ALL + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}`)
-  .then(response => {
-    const result ={
-      data:null,
-      totalRecords :null
-    }
-    result.data= response && response.data.map((item, index) => ({
-      ...item,
-      order: query.skip + index + 1,
-    }))
-    result.totalRecords = response.totalRecords;
-    setData(result)
-    setQuery({...query,skip:0})
-  })
-  .catch(err => {
-    console.log(err);
-    login401(err && err.response && err.response.status)
-  })
+  handleSearch(query)
  },[query.page,query.limit])
 
 
@@ -49,7 +32,7 @@ const Supplier = () => {
       keySearch:e ? e :""
     })
   }
-  const handleSearch = () => {
+  const handleSearch = (query) => {
     axiosInstance.get(SUPPLIER_API.GET_ALL  + `?keySearch=${query.keySearch}&page=${query.page}&size=${query.limit}`)
       .then(response => {
         const result = {
@@ -78,8 +61,13 @@ const Supplier = () => {
     setOpenModal(false)
     axiosInstance.post(SUPPLIER_API.DELETE + "?id=" + dataDelete.id)
       .then(response => {
-        toastifyAlert.success(DELETE_SUCCESS)
-        handleSearch();
+        if(response.messageCode == NOTIFY.MESSAGE_CODE_OK){
+          toastifyAlert.success(DELETE_SUCCESS)
+          handleSearch(query);
+        }else{
+          toastifyAlert.error(response.message ? response.message :DELETE_ERROR)
+        }
+       
       })
       .catch(err => {
         console.log(err);
@@ -136,6 +124,7 @@ const Supplier = () => {
       open={open}
       setOpen={setOpen}
       handleSearch={handleSearch}
+      query={query}
     />
     <AlertDialog open={openModal}
       setOpen={setOpenModal}

@@ -96,6 +96,7 @@ export default function AddProductDialog(props) {
         .required(NOTIFY.NOT_BLANK),
     }),
     onSubmit: (values, { resetForm }) => {
+   
       handAddProduct(values)
       handleClose();
       resetForm();
@@ -106,7 +107,7 @@ export default function AddProductDialog(props) {
     if (formik.values.product == null) {
       formik.setFieldValue("price", '')
     } else {
-      formik.setFieldValue("price",dataEdit && dataEdit.price ? dataEdit.price: formik.values.product.price)
+      formik.setFieldValue("price", dataEdit && dataEdit.price ? dataEdit.price: formik.values.product.price)
     }
   }, [formik.values.product])
   

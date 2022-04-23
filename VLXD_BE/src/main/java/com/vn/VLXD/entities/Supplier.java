@@ -18,11 +18,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-@Entity()
-@Table(name="SUPPLIER")
+@Entity
+@Table(name = "SUPPLIER")
 public class Supplier implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="ID", unique=true, nullable=false, precision=19)
     private long id;
@@ -38,7 +42,7 @@ public class Supplier implements Serializable {
     private String createBy;
     @Column(name="MODIFY_DATE")
     private Timestamp modifyDate;
-    @Column(name="UPDATE_BY", nullable=false, length=100)
+    @Column(name="UPDATE_BY", nullable=true, length=100)
     private String updateBy;
     @Column(name="STATUS",nullable = true)
     private long status =1 ;

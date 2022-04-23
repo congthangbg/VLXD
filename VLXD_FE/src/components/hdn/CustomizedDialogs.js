@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import { Autocomplete, Checkbox, FormControlLabel, FormGroup, Grid, TextField } from '@mui/material';
 import { Field, useFormik } from 'formik';
 import * as Yup from 'yup';
-import { CHO_THANH_TOAN, currencyFormat, currencyFormat3, DA_THANH_TOAN, GETALL_AND_SEARCH_VILLAGE, HDX_API, LOGIN, LOGIN_FAILED, NOTIFY, PRODUCT_TYPE, SAVE_ERROR, SAVE_SUCCESS, SAVE_UPDATE_CUSTOMER, STATUS_401, STAUTS_401, TB_SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER_ERR, UNIT_API, VILLAGE_API } from '../component/MessageContants';
+import { CHO_THANH_TOAN, currencyFormat, currencyFormat3, DA_THANH_TOAN, GETALL_AND_SEARCH_VILLAGE, HDN_API, HDX_API, LOGIN, LOGIN_FAILED, NOTIFY, PRODUCT_TYPE, SAVE_ERROR, SAVE_SUCCESS, SAVE_UPDATE_CUSTOMER, STATUS_401, STAUTS_401, SUPPLIER_API, TB_SAVE_UPDATE_CUSTOMER, TB_SAVE_UPDATE_CUSTOMER_ERR, UNIT_API, VILLAGE_API } from '../component/MessageContants';
 import axiosInstance from '../config/axiosConfig';
 import toastifyAlert from '../component/toastify-message/toastify';
 import { ToastContainer } from 'react-toastify';
@@ -20,12 +20,12 @@ import { useRouter } from 'next/router';
 import login401 from 'src/hook/login401';
 import { PTable } from './PTable';
 import { Box } from '@mui/system';
-import Customer from 'src/components/customer/CustomizedDialogs';
+import Supplier from 'src/components/supplier/CustomizedDialogs';
 import AddProductDialog from './AddProductDialog';
 import AlertDialog from '../component/AlertDialog';
+import CurrencyFormat from 'react-currency-format';
 import { TonTable } from './TonTable';
 import AddTonDialog from './AddTonDialog';
-import CurrencyFormat from 'react-currency-format';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -67,7 +67,6 @@ BootstrapDialogTitle.propTypes = {
 
 export default function CustomizedDialogs(props) {
 
-
   const router = useRouter();
   const [openCus, setOpenCus] = useState(false)
   const [openAddP, setOpenAddP] = useState(false)
@@ -81,6 +80,7 @@ export default function CustomizedDialogs(props) {
   const [pay, setPay] = useState({ owe: 0, pay: 0 })
   const [totalOwe, setTotalOwe] = useState(0);
   const [customerChange, setCustomerChange] = useState(null);
+  const [supplierChange, setSupplierChange] = useState(null);
   const { open, setOpen, dataEdit, setDataEdit, handleSearch,
     dataCustomer, getInitCustomer, dataProductType, dataProduct, dataUnit, getProduct, query,
     setDataProduct } = props;
@@ -98,12 +98,12 @@ export default function CustomizedDialogs(props) {
     enableReinitialize: true,
     initialValues: {
       id: dataEdit && dataEdit.id ? dataEdit.id : '',
-      customer: dataEdit && dataEdit.customer ? dataEdit.customer : (customerChange != null ? customerChange : ''),
+      supplier: dataEdit && dataEdit.supplier ? dataEdit.supplier : (supplierChange != null ? supplierChange : ''),
       isPaySuccess: dataEdit && dataEdit.isPaySuccess ? dataEdit.isPaySuccess : false,
       owe: dataEdit && dataEdit.owe ? dataEdit.owe : totalOwe
     },
     validationSchema: Yup.object({
-      customer: Yup
+      supplier: Yup
         .object().nullable()
         .required(NOTIFY.NOT_BLANK),
     }),
@@ -116,25 +116,30 @@ export default function CustomizedDialogs(props) {
       else {
         const newData = {
           ...values,
-          customerId: values.customer.id,
+          supplierId: values.supplier.id,
           owe: pay.owe,
           pay: pay.pay,
-          hdxCtTonRequest: dataTon,
-          hdxCtRequest: dataPTable,
+          hdnCtTonRequest: dataTon,
+          hdnCt: dataPTable,
           status: values.isPaySuccess === true ? DA_THANH_TOAN : CHO_THANH_TOAN,
-          releaseDate: new Date().getTime(),
+          dateAdded: new Date().getTime(),
           total: total(),
           totalBill: currencyFormat(totalBill())
 
         }
-        axiosInstance.post(HDX_API.SAVE_UPDATE, newData)
+        axiosInstance.post(HDN_API.SAVE_UPDATE, newData)
           .then(response => {
-            handleSearch(query);
-            toastifyAlert.success(SAVE_SUCCESS)
+            if(response.messageCode == NOTIFY.MESSAGE_CODE_OK){
+              handleSearch(query);
+              toastifyAlert.success(SAVE_SUCCESS)
+            }else{
+              toastifyAlert.error(response.message ? response.message :SAVE_ERROR)
+            }
+           
           })
           .catch(err => {
             console.log("ee", err);
-            toastifyAlert.error(SAVE_ERROR)
+            toastifyAlert.error()
           })
         handleClose();
         resetForm();
@@ -149,16 +154,16 @@ export default function CustomizedDialogs(props) {
     setDataPTable([])
     setDataTon([])
     setTotalOwe(0)
-    setCustomerChange(null)
+    setSupplierChange(null)
   };
   useEffect(() => {
     if (dataEdit && dataEdit !== null) {
       setPay({ pay: dataEdit && dataEdit.pay ? dataEdit.pay : 0, owe: dataEdit && dataEdit.owe || totalOwe })
       formik.setFieldValue("pay", dataEdit && dataEdit.pay && dataEdit.pay || '')
       formik.setFieldValue("owe", dataEdit && dataEdit.owe || totalOwe)
-      setDataPTable(dataEdit.hdxCt)
-      setDataTon(dataEdit.hdxCtTon)
-      setCustomerChange(dataEdit && dataEdit.customer || null)
+      setDataPTable(dataEdit.hdnCt)
+      setDataTon(dataEdit.hdnCtTon)
+      setSupplierChange(dataEdit && dataEdit.supplier || null)
     }
   }, [dataEdit])
   useEffect(() => {
@@ -171,7 +176,7 @@ export default function CustomizedDialogs(props) {
     getInitCustomer();
   }, [openCus])
   useEffect(() => {
-    getProduct();
+    // getProduct();
   }, [openAddP])
 
   const handAddProduct = (p) => {
@@ -283,16 +288,20 @@ export default function CustomizedDialogs(props) {
   }
 
 
-  ////customer
+  ////supplier
   const onSave = (val) => {
-    axiosInstance.post(SAVE_UPDATE_CUSTOMER, val)
+    axiosInstance.post(SUPPLIER_API.SAVE_UPDATE, val)
       .then(response => {
-        toastifyAlert.success(TB_SAVE_UPDATE_CUSTOMER)
-        getInitCustomer();
+        if(response.messageCode == NOTIFY.MESSAGE_CODE_OK){
+          toastifyAlert.success(SAVE_SUCCESS)
+          getInitCustomer();
+        }else{
+          toastifyAlert.error(response.message ? response.message :SAVE_ERROR)
+        }
       })
       .catch(err => {
         console.log("ee", err);
-        toastifyAlert.error(TB_SAVE_UPDATE_CUSTOMER_ERR)
+        toastifyAlert.error(SAVE_ERROR)
       })
   }
 
@@ -305,7 +314,7 @@ export default function CustomizedDialogs(props) {
   const handleChangeCustomer = (name, value) => {
     if (value && value.id) {
       getTotalOwe(value.id)
-      setCustomerChange(value)
+      setSupplierChange(value)
       // setDataEdit({...dataEdit,customer:value})
     }
   }
@@ -356,33 +365,33 @@ export default function CustomizedDialogs(props) {
               <Grid item xs={3}>
                 <Autocomplete
                   size="small"
-                  id="customer"
-                  name="customer"
+                  id="supplier"
+                  name="name"
                   options={dataCustomer && dataCustomer.data ? dataCustomer.data : []}
                   // groupBy={ option => option.state }
                   disabled={dataEdit && dataEdit != null ? true : false}
                   getOptionLabel={option => option.name}
                   onChange={(event, value) => {
-                    formik.setFieldValue("customer", value),
-                      handleChangeCustomer("customer", value)
+                    formik.setFieldValue("supplier", value),
+                      handleChangeCustomer("supplier", value)
                   }}
-                  value={formik.values && formik.values.customer ? formik.values.customer : undefined}
+                  value={formik.values && formik.values.supplier ? formik.values.supplier : undefined}
                   // style={{ width: 300 }}
                   renderInput={params => (
                     <TextField
                       {...params}
                       onChange={formik.handleChange}
                       margin="normal"
-                      label="Khách hàng"
+                      label="Nhà cung cấp"
                       fullWidth
-                      error={Boolean(formik.touched.customer && formik.errors.customer)}
-                      helperText={formik.touched.customer && formik.errors.customer}
+                      error={Boolean(formik.touched.supplier && formik.errors.supplier)}
+                      helperText={formik.touched.supplier && formik.errors.supplier}
                     />
                   )}
                 />
               </Grid>
               <Grid item xs={3}>
-                {formik && formik.values && formik.values.customer ?
+                {formik && formik.values && formik.values.supplier ?
                   <TextField
                     id="outlined-size-small"
                     size="small"
@@ -392,8 +401,8 @@ export default function CustomizedDialogs(props) {
                     margin="normal"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    value={'SĐT: ' + (formik.values && formik.values.customer &&formik.values.customer.phone || '') 
-                    + '- Địa chỉ: ' + (formik.values&&formik.values.customer&&formik.values.customer.village&&formik.values.customer.village.villageName || '')}
+                    value={'SĐT: ' + (formik.values && formik.values.supplier &&formik.values.supplier.phone || '') 
+                    + '- Địa chỉ: ' + (formik.values&&formik.values.supplier&&formik.values.supplier.address || '')}
                     variant="outlined"
                     disabled
 
@@ -401,7 +410,7 @@ export default function CustomizedDialogs(props) {
                   :
                   <Button type="button" onClick={() => setOpenCus(true)} style={{ marginTop: 17 }}
                     color="error" size="small" variant="contained" autoFocus  >
-                    Thêm khách hàng
+                    Thêm nhà cung cấp
                   </Button>}
               </Grid>
               <Grid item xs={3}>
@@ -565,11 +574,12 @@ export default function CustomizedDialogs(props) {
           {/* </DialogActions> */}
         </form>
       </BootstrapDialog>
-      <Customer
+      <Supplier
         open={openCus}
         setOpen={setOpenCus}
-        setDataEdit={() => console.log("sss")}
+        setDataEdit={() => console.log("")}
         onSave={onSave}
+        handleSearch={getInitCustomer}
       />
       <AddProductDialog
         open={openAddP}

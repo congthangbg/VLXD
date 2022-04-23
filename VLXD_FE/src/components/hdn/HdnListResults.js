@@ -1,0 +1,217 @@
+import { useEffect, useState } from 'react';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import PropTypes from 'prop-types';
+import { format } from 'date-fns';
+import { spacing } from '@mui/system';
+import moment from 'moment'
+import {
+ Avatar,
+ Box,
+ Card,
+ Checkbox,
+ Table,
+ TableBody,
+ TableCell,
+ TableHead,
+ TablePagination,
+ TableRow,
+ Typography,
+ Button,
+ CardContent,
+} from '@mui/material';
+import { getInitials } from '../../utils/get-initials';
+import useMagicColor from '../../hook/useMagicColor';
+import { AccessAlarm, ThreeDRotation, Edit, Delete, Visibility } from '@mui/icons-material';
+import { SeverityPill } from '../severity-pill';
+import { currencyFormat } from '../component/MessageContants';
+
+
+export const HdnListResults = ({
+ customers,
+ setOpenModal,
+ handleDelete,
+ handleEdit,
+ setOpen,
+ setQuery,
+ setOpenView,
+ query, ...rest }) => {
+ const [limit, setLimit] = useState(10);
+ const [page, setPage] = useState(0);
+
+ useEffect(() => {
+  setPage(query && query.page || 0)
+ }, [query.page]);
+
+ const handleLimitChange = (event) => {
+  setLimit(event.target.value);
+  setQuery({
+   ...query,
+   page: 0,
+   limit: event.target.value
+  })
+  setPage(0)
+ };
+
+ const handlePageChange = (event, newPage) => {
+  setPage(newPage);
+  setQuery({
+   ...query,
+   page: newPage,
+   skip: newPage * query.limit
+  })
+ };
+ const handleDelete1 = (e) => {
+  setOpenModal(true)
+  handleDelete(e)
+ }
+ const handleUpdate = (e) => {
+  setOpen(true)
+  handleEdit(e)
+ }
+ return (
+  <Card {...rest} >
+   <PerfectScrollbar>
+    <Box sx={{ minWidth: 1050 }}>
+     <Table>
+      <TableHead>
+       <TableRow>
+        <TableCell>
+         STT
+        </TableCell>
+        <TableCell>
+         MHD
+        </TableCell>
+        <TableCell>
+         Tên nhà cung cấp
+        </TableCell>
+        <TableCell>
+         Địa chỉ
+        </TableCell>
+        <TableCell>
+         Tổng tiền HĐ
+        </TableCell>
+        <TableCell>
+         Nợ cũ
+        </TableCell>
+        <TableCell>
+         Đã thanh toán
+        </TableCell>
+        <TableCell>
+         Còn lại
+        </TableCell>
+        <TableCell>
+         Người tạo
+        </TableCell>
+        <TableCell>
+         Ngày nhập
+        </TableCell>
+        <TableCell style={{ width: '250px' }}>
+         Hành động
+        </TableCell>
+       </TableRow>
+      </TableHead>
+      <TableBody>
+       {customers && customers.data && customers.data.slice(0, limit).map((customer) => (
+        <TableRow
+         hover
+         key={customer.id}
+        >
+         <TableCell >
+          {customer.order}
+         </TableCell>
+         <TableCell>
+          {"HD" + customer.id}
+         </TableCell>
+         <TableCell>
+          <Box
+           sx={{
+            alignItems: 'center',
+            display: 'flex'
+           }}
+          >
+           <Typography
+            color="textPrimary"
+            variant="body1"
+           >
+            {customer.supplier && customer.supplier.name || ""}
+           </Typography>
+          </Box>
+         </TableCell>
+         <TableCell >
+          {customer.supplier && customer.supplier.address || ""}
+         </TableCell>
+         <TableCell>
+          {customer && customer.totalBill || 0}
+         </TableCell>
+         <TableCell>
+          {customer && customer.owe && currencyFormat(customer.owe) || 0}
+         </TableCell>
+         <TableCell>
+          {customer && customer.pay && currencyFormat(customer.pay) || 0}
+         </TableCell>
+         <TableCell>
+          <SeverityPill color={"secondary"}>
+           {customer && customer.totalMoney && currencyFormat(customer.totalMoney) || 0}
+          </SeverityPill>
+         </TableCell>
+         <TableCell>
+          {customer.createBy}
+         </TableCell>
+         <TableCell>
+          {/* {customer.modifyDate} */}
+          {customer.dateAdded && format(new Date(customer.dateAdded), 'dd/MM/yyyy') || ""}
+         </TableCell>
+         <TableCell>
+          <Box
+           sx={{
+            alignItems: 'center',
+            display: 'flex'
+           }}
+          >
+
+           <Typography
+            color="textPrimary"
+            variant="body1"
+           >
+            <Button size="small" onClick={() => {
+             setOpenView(true)
+             handleEdit(customer)
+            }} style={{ marginRight: 4 }} color="success" variant="contained">
+             <Visibility />
+            </Button>
+            <Button onClick={() => handleUpdate(customer)} style={{ marginRight: 4 }} color="warning" variant="contained">
+             <Edit />
+            </Button>
+            <Button onClick={() => handleDelete1(customer)} color="error" variant="contained">
+             <Delete />
+            </Button>
+
+           </Typography>
+
+          </Box>
+         </TableCell>
+         {/* <TableCell>
+                  {format(customer.createdAt, 'dd/MM/yyyy')}
+                </TableCell> */}
+        </TableRow>
+       ))}
+      </TableBody>
+     </Table>
+    </Box>
+   </PerfectScrollbar>
+   <TablePagination
+    component="div"
+    count={customers && customers.totalRecords || 0}
+    onPageChange={handlePageChange}
+    onRowsPerPageChange={handleLimitChange}
+    page={page}
+    rowsPerPage={limit}
+    rowsPerPageOptions={[5, 10, 25]}
+   />
+  </Card>
+ );
+};
+
+// HdnListResults.propTypes = {
+//   customers: PropTypes.array.isRequired
+// };

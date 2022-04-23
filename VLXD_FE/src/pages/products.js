@@ -67,7 +67,6 @@ const Products = () => {
     setOpenModal(false)
     axiosInstance.post(PRODUCT.DELETE + "?id=" + dataDelete.id)
       .then(response => {
-        console.log(response);
         if(response.messageCode == NOTIFY.MESSAGE_CODE_OK){
           toastifyAlert.success(DELETE_SUCCESS)
           handleSearch(query);

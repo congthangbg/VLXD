@@ -101,7 +101,7 @@ public class SupplierServiceImpl implements SupplierService{
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
 		Optional<Supplier> optional = supplierRepository.findById(id);
 		if(optional.isPresent()) {
-			supplierRepository.deleteById(id);
+			supplierRepository.delete(optional.get());
 			dto.setMessage(MessageConstant.MSG_OK);
 			dto.setMessageCode(MessageConstant.MSG_OK_CODE);
 		}else {

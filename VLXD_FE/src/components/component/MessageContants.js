@@ -55,6 +55,12 @@ export const HDX_API={
    DELETE:"/hdx/delete",
    FIND_TOTAL_OWN:"/hdx/findTotalOwn",
 }
+//list Hóa đơn nhập
+export const HDN_API={
+   GET_ALL : '/hdn',
+   SAVE_UPDATE:"/hdn/saveOrUpdate",
+   DELETE:"/hdn/delete",
+}
 //nahf cung ccaps
 export const SUPPLIER_API={
    GET_ALL : '/supplier',
