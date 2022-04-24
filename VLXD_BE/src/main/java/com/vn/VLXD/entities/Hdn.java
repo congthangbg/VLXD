@@ -64,7 +64,7 @@ public class Hdn implements Serializable {
     @JoinColumn(name="ACCOUNT_ID")
 //    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private Account account;
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name="SUPPLIER_ID")
     @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private Supplier supplier;

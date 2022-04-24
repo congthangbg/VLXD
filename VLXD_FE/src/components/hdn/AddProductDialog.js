@@ -72,7 +72,6 @@ export default function AddProductDialog(props) {
     setDataEdit({})
     setOpenCus(false)
   };
-
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -104,15 +103,9 @@ export default function AddProductDialog(props) {
     }
   });
   React.useEffect(() => {
-    if (formik.values.product == null) {
-      formik.setFieldValue("price", '')
-    } else {
-      formik.setFieldValue("price", dataEdit && dataEdit.price ? dataEdit.price: formik.values.product.price)
-    }
-  }, [formik.values.product])
-  
+    getProduct();
+  },[open]);
   React.useEffect(() => {
-   
     if (formik.values.productType !== undefined) {
       const typeId = formik.values.productType ? formik.values.productType.id : null
       if(typeId !== null){
@@ -126,18 +119,22 @@ export default function AddProductDialog(props) {
           login401(err && err.response && err.response.status)
         })
       }else{
-        axiosInstance.get(PRODUCT.GET_ALL)
-        .then(response => {
-          setDataProduct(response)
-        })
-        .catch(err => {
-          console.log(err);
-          login401(err && err.response&&err.response.status)
-        })
+        getProduct();
       }
      
     }
   }, [formik.values.productType])
+
+  
+  React.useEffect(() => {
+    if (formik.values.product == null) {
+      formik.setFieldValue("price", '')
+    } else {
+      formik.setFieldValue("price", dataEdit && dataEdit.price ? dataEdit.price: formik.values.product.price)
+    }
+  }, [formik.values.product])
+  
+
   const [dataP,setDataP] = React.useState([])
 React.useEffect(() => {
   if(dataProduct){

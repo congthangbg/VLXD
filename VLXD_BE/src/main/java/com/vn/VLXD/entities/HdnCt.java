@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -46,13 +47,13 @@ public class HdnCt implements Serializable {
     private String updateBy;
     @Column(name="STATUS", precision=19)
     private long status;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name="HDN_ID")
     private Hdn hdn;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name="PRODUCT_ID")
 //    @JsonIgnore
-    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
+//    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private Product product;
 
     /** Default constructor. */

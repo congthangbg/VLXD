@@ -96,7 +96,7 @@ public class HdnServiceImpl implements HdnService{
 			if(!request.getHdnCt().isEmpty()) {
 				for (HdnCtRequest e : request.getHdnCt()) {
 					HdnCt hdnCt = MapperUtils.map(e, HdnCt.class);
-					Optional<Product> optional = productRepository.findById(e.getProductId());
+					Optional<Product> optional = productRepository.findById(hdnCt.getProduct().getId());
 					if(optional.isPresent()) {
 						//Cập nhật số lượng vào product
 						optional.get().setQuantity(optional.get().getQuantity() + e.getQuantity());
@@ -163,7 +163,7 @@ public class HdnServiceImpl implements HdnService{
 				if(!request.getHdnCt().isEmpty()) {
 					for (HdnCtRequest e : request.getHdnCt()) {
 						HdnCt hdnCt = MapperUtils.map(e, HdnCt.class);
-						Optional<Product> optional1 = productRepository.findById(e.getProductId());
+						Optional<Product> optional1 = productRepository.findById(e.getProduct().getId());
 						if(optional1.isPresent()) {
 							hdnCt.setProduct(optional1.get());
 							//Cộng số lượng của product
@@ -270,6 +270,7 @@ public class HdnServiceImpl implements HdnService{
 	}
 
 	@Override
+	@Transactional
 	public ResponseBodyDto<Object> deleteById(Long id) {
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
 		Optional<Hdn> optional = hdnRepository.findById(id);
@@ -277,6 +278,10 @@ public class HdnServiceImpl implements HdnService{
 			List<HdnCt> optional1 = hdnCtRepository.findByHdn(optional.get());
 			if(!optional1.isEmpty()) {
 				hdnCtRepository.deleteAll(optional1);
+			}
+			List<HdnCtTon> optional2 = hdnCtTonRepository.findByHdn(optional.get());
+			if(!optional2.isEmpty()) {
+				hdnCtTonRepository.deleteAll(optional2);
 			}
 			hdnRepository.deleteById(id);
 			dto.setMessage(MessageConstant.MSG_OK);

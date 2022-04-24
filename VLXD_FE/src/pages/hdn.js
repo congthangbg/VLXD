@@ -116,10 +116,11 @@ const getListUnit = () => {
     })
 }
 useEffect(()=>{
+  getProduct();
   getInitSupplier()
   getProductType();
-  getProduct();
   getListUnit();
+  handleSearch(query)
  },[])
  useEffect(()=>{
   handleSearch(query)
@@ -159,7 +160,7 @@ useEffect(()=>{
   }
   const onDetele = () => {
     setOpenModal(false)
-    axiosInstance.post(VILLAGE_API.DELETE + "?id=" + dataDelete.id)
+    axiosInstance.post(HDN_API.DELETE + "?id=" + dataDelete.id)
       .then(response => {
         if(response.messageCode == NOTIFY.MESSAGE_CODE_OK){
           toastifyAlert.success(DELETE_SUCCESS)

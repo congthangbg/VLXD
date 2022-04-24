@@ -110,16 +110,15 @@ const Hdx = () => {
       })
   }
   useEffect(() => {
-    handleSearch(query);
-    getInitCustomer();
-    getProductType();
     getProduct();
     getListUnit();
+    getInitCustomer();
+    getProductType();
+    handleSearch(query);
   }, [])
   useEffect(() => {
     handleSearch(query);
   }, [query.page, query.limit])
-
 
   const handleTextSearch = (e) => {
     setQuery({

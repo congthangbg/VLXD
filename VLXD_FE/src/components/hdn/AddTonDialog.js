@@ -162,6 +162,12 @@ export default function AddTonDialog(props) {
 
     }
   }, [formik.values.productType,open])
+  // React.useEffect(() => {
+  //   if(open == true){
+  //     const dataNew = dataProduct && dataProduct.data && dataProduct.data.filter(x=> x.productType.id == 5) || []
+  //     setDataProduct({data:dataNew})
+  //   }
+  // },[open])
   return (
     <div>
       <BootstrapDialog
