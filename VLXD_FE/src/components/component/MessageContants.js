@@ -47,6 +47,13 @@ export const UNIT_API={
    SAVE_UPDATE:"/unit/saveOrUpdate",
    DELETE:"/unit/delete",
 }
+//tài khoản
+export const ACCOUNT_API={
+   GET_ALL : '/auth/listAccount',
+   GET_ALL_ROLE : '/auth/listRolse',
+   SAVE_UPDATE:"/auth/signup",
+   DELETE:"/unit/delete",
+}
 //Hóa đơn xuất
 export const HDX_API={
    GET_ALL : '/hdx',

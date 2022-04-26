@@ -1,6 +1,10 @@
 package com.vn.VLXD.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.vn.VLXD.common.ERole;
 import com.vn.VLXD.common.JwtUtils;
+import com.vn.VLXD.common.ResponseBodyDto;
 import com.vn.VLXD.dto.JwtResponse;
 import com.vn.VLXD.dto.LoginRequest;
 import com.vn.VLXD.dto.MessageResponse;
@@ -22,10 +27,14 @@ import com.vn.VLXD.entities.Authorities;
 import com.vn.VLXD.repositories.AuthoritiesRepository;
 import com.vn.VLXD.repositories.RoleRepository;
 import com.vn.VLXD.repositories.AccountRepository;
+import com.vn.VLXD.services.AccountService;
 import com.vn.VLXD.services.UserDetailsImpl;
+
+import io.swagger.annotations.ApiOperation;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,6 +54,9 @@ public class AuthController {
     private JwtUtils jwtUtils;
     @Autowired
     private AuthoritiesRepository authoritiesRepository;
+    @Autowired
+    private AccountService accountService;
+    
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Validated @RequestBody LoginRequest loginRequest){
@@ -78,12 +90,12 @@ public class AuthController {
         }else {
             strRoles.forEach(role -> {
                 switch (role){
-                    case "admin":
+                    case "ROLE_ADMIN":
                         Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminRole);
                         break;
-                    case "staff":
+                    case "ROLE_STAFF":
                         Role modRole = roleRepository.findByName(ERole.ROLE_STAFF)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(modRole);
@@ -106,4 +118,31 @@ public class AuthController {
 		}
         return ResponseEntity.ok(new MessageResponse("User registered Successfully! "));
     }
+    
+    @GetMapping("listAccount")
+    @ApiOperation(value = "Danh sách All")
+    public ResponseBodyDto<Object> findAllSearch(
+    		@RequestParam(value = "page",required = false) Optional<Integer> page,
+    		@RequestParam(value = "size",required = false) Optional<Integer> size ) {
+    	int currentPage = page.orElse(0);
+    	int limit = size.orElse(100);
+    	Pageable pageable = PageRequest.of(currentPage, limit, Sort.by("id").descending());
+    	ResponseBodyDto<Object> dto = accountService.findAllSearch(pageable);
+    	
+        return dto;
+    }
+    @GetMapping("listRolse")
+    @ApiOperation(value = "Danh sách role")
+    public ResponseBodyDto<Object> findAllRole(@RequestParam(value = "page",required = false) Optional<Integer> page,
+    		@RequestParam(value = "size",required = false) Optional<Integer> size) {
+    	int currentPage = page.orElse(0);
+    	int limit = size.orElse(100);
+    	Pageable pageable = PageRequest.of(currentPage, limit, Sort.by("id").descending());
+    	ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
+    	Page<Role> roles = roleRepository.findAll(pageable);
+    	dto.setData(roles.getContent());
+    	
+        return dto;
+    }
+    
 }
