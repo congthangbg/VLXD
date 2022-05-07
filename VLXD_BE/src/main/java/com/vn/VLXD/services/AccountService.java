@@ -6,7 +6,7 @@ import com.vn.VLXD.common.ResponseBodyDto;
 
 public interface AccountService {
 
-	ResponseBodyDto<Object> findAllSearch(Pageable pageable);
+	ResponseBodyDto<Object> findAllSearch(String keySearch,Pageable pageable);
 
 
 }

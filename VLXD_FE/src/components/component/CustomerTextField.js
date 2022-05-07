@@ -84,7 +84,13 @@ function CustomerTextField(props) {
     }
   }
   const search = () => {
-    onSearch(query)
+    const newData = {
+      ...query,
+      keySearch: data ? data :'',
+       page: 0, skip: 0
+    }
+    setQuery(newData)
+    onSearch(newData)
   }
   return (
     <div>

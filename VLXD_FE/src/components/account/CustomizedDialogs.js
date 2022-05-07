@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
@@ -61,22 +61,11 @@ BootstrapDialogTitle.propTypes = {
 };
 
 export default function CustomizedDialogs(props) {
-  const router = useRouter();
-  const { open, setOpen, dataEdit,
-    setDataEdit, handleSearch, query, roles } = props;
-  const handleClose = () => {
-    setOpen(false);
-    formik.resetForm();
-    setDataEdit({})
-  };
-
-
-
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       // email: '',
-      // firstName: '',
+      id: '',
       accountName: '',
       password: '',
       role: ""
@@ -124,7 +113,6 @@ export default function CustomizedDialogs(props) {
         ...values,
         role: a
       }
-      console.log("a", a);
       axiosInstance.post(ACCOUNT_API.SAVE_UPDATE, newData)
         .then(response => {
           if (response.messageCode == NOTIFY.MESSAGE_CODE_OK) {
@@ -144,6 +132,21 @@ export default function CustomizedDialogs(props) {
 
     }
   });
+  const router = useRouter();
+  const { open, setOpen, dataEdit,
+    setDataEdit, handleSearch, query, roles } = props;
+  const handleClose = () => {
+    setOpen(false);
+    formik.resetForm();
+    setDataEdit(null)
+  };
+  useEffect(() => {
+    if (dataEdit) {
+      formik.setFieldValue("accountName", dataEdit && dataEdit.accountName || "");
+      formik.setFieldValue("role", dataEdit && dataEdit.roles || "")
+      formik.setFieldValue("id", dataEdit && dataEdit.id || "")
+    }
+  }, [dataEdit])
   return (
     <div>
       <BootstrapDialog
@@ -170,6 +173,7 @@ export default function CustomizedDialogs(props) {
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.accountName}
+                disabled={dataEdit != null && dataEdit !== undefined ? true:false}
                 variant="outlined"
               />
               <TextField
@@ -186,20 +190,21 @@ export default function CustomizedDialogs(props) {
                 variant="outlined"
               />
               <Autocomplete
-                multiple={true}
+                multiple= {true}
                 id="role"
                 name="role"
                 options={roles && roles.data ? roles.data : []}
                 // groupBy={ option => option.state }
-                getOptionLabel={option => option.name}
+                getOptionLabel={option => option && option.name || []}
                 onChange={(event, value) => formik.setFieldValue("role", value)}
                 // onSelect={(event, value) => console.log(event.target.value)}
-                value={formik.values && formik.values.role ? formik.values.role : undefined}
+                value={formik.values && formik.values.role ? formik.values.role : []}
                 style={{ width: 500 }}
                 renderInput={params => (
                   <TextField
                     {...params}
                     onChange={formik.handleChange}
+                    variant="standard"
                     margin="normal"
                     label="Quyền"
                     fullWidth

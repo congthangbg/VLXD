@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignupRequest {
+	 private Long id;
     private String accountName;
     private String password;
     private Set<String> role;

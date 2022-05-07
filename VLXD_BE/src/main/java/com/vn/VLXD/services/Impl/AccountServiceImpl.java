@@ -1,8 +1,10 @@
 package com.vn.VLXD.services.Impl;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -46,9 +48,10 @@ public class AccountServiceImpl implements AccountService{
 
 
 	@Override
-	public ResponseBodyDto<Object> findAllSearch(Pageable pageable) {
+	public ResponseBodyDto<Object> findAllSearch(String keySearch,Pageable pageable) {
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
-		Page<Account> page = repository.findAll(pageable);
+		Page<Account> page = repository.findAlBySearch(keySearch,pageable);
+//		List<Account> accounts = page.getContent().stream().filter(e->e.getStatus() == 1).collect(Collectors.toList());
 		dto.setData(page.getContent());
 		dto.setTotalRecords(page.getTotalElements());
 		dto.setMessage(MessageConstant.MSG_OK);

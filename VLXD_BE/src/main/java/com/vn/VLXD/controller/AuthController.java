@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import com.vn.VLXD.common.ERole;
 import com.vn.VLXD.common.JwtUtils;
 import com.vn.VLXD.common.ResponseBodyDto;
+import com.vn.VLXD.contants.MessageConstant;
 import com.vn.VLXD.dto.JwtResponse;
 import com.vn.VLXD.dto.LoginRequest;
 import com.vn.VLXD.dto.MessageResponse;
@@ -73,61 +74,105 @@ public class AuthController {
         return  ResponseEntity.ok(new JwtResponse(jwt, userDetails.getAccount().getId(), userDetails.getAccount().getAccountName(), roles));
     }
     @PostMapping("/signup")
+//    @Transactional
     public ResponseEntity<?> registerUser(@Validated @RequestBody SignupRequest signUpRequest){
         if (accountRepository.existsByAccountName(signUpRequest.getAccountName())){
+        	
             return ResponseEntity.badRequest()
-                    .body(new MessageResponse("Error: Username is already taken!"));
+                    .body(new MessageResponse("Error: Username is already taken!","10"));
         }
-   
-        Account account = new Account(signUpRequest.getAccountName(),encoder.encode(signUpRequest.getPassword()));
-        Set<String> strRoles = signUpRequest.getRole();
-        Set<Role> roles = new HashSet<>();
+        if(signUpRequest.getId() != null) {
+        	Optional<Account> acOptional = accountRepository.findById(signUpRequest.getId());
+        	if(acOptional.isPresent()) {
+        		acOptional.get().setAccountName(signUpRequest.getAccountName());
+        		acOptional.get().setPassword(encoder.encode(signUpRequest.getPassword()));
+        		 Set<String> strRoles = signUpRequest.getRole();
+                 Set<Role> roles = new HashSet<>();
 
-        if (strRoles == null){
-            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
+                 if (strRoles == null){
+                     Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                             .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                     roles.add(userRole);
+                 }else {
+                     strRoles.forEach(role -> {
+                         switch (role){
+                             case "ROLE_ADMIN":
+                                 Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                                         .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                                 roles.add(adminRole);
+                                 break;
+                             case "ROLE_STAFF":
+                                 Role modRole = roleRepository.findByName(ERole.ROLE_STAFF)
+                                         .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                                 roles.add(modRole);
+                                 break;
+                             default:
+                                 Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                                         .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                                 roles.add(userRole);
+                         }
+                     });
+                 }
+                 acOptional.get().setRoles(roles);
+                 accountRepository.save( acOptional.get());
+                 return ResponseEntity.ok(new ResponseBodyDto<>());
+        	}
         }else {
-            strRoles.forEach(role -> {
-                switch (role){
-                    case "ROLE_ADMIN":
-                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(adminRole);
-                        break;
-                    case "ROLE_STAFF":
-                        Role modRole = roleRepository.findByName(ERole.ROLE_STAFF)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(modRole);
-                        break;
-                    default:
-                        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(userRole);
-                }
-            });
+
+            Account account = new Account(signUpRequest.getAccountName(),encoder.encode(signUpRequest.getPassword()));
+            Set<String> strRoles = signUpRequest.getRole();
+            Set<Role> roles = new HashSet<>();
+
+            if (strRoles == null){
+                Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                roles.add(userRole);
+            }else {
+                strRoles.forEach(role -> {
+                    switch (role){
+                        case "ROLE_ADMIN":
+                            Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                            roles.add(adminRole);
+                            break;
+                        case "ROLE_STAFF":
+                            Role modRole = roleRepository.findByName(ERole.ROLE_STAFF)
+                                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                            roles.add(modRole);
+                            break;
+                        default:
+                            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                            roles.add(userRole);
+                    }
+                });
+            }
+            account.setRoles(roles);
+            accountRepository.save(account);
+        	for (Role role2 : roles) {
+    			Authorities authorities = new Authorities();
+    			authorities.setAccountId(account.getId());
+    			authorities.setRoleId(role2.getId());
+    			
+    			authoritiesRepository.save(authorities);
+    		}
+//        	 return ResponseEntity.ok(new MessageResponse("User registered Successfully! "));
+            return ResponseEntity.ok(new ResponseBodyDto<>());
         }
-        account.setRoles(roles);
-        accountRepository.save(account);
-    	for (Role role2 : roles) {
-			Authorities authorities = new Authorities();
-			authorities.setAccountId(account.getId());
-			authorities.setRoleId(role2.getId());
-			
-			authoritiesRepository.save(authorities);
-		}
-        return ResponseEntity.ok(new MessageResponse("User registered Successfully! "));
+		return null;
+   
     }
     
     @GetMapping("listAccount")
     @ApiOperation(value = "Danh sách All")
     public ResponseBodyDto<Object> findAllSearch(
+    		@RequestParam(value = "keySearch",required = false) String keySearch,
     		@RequestParam(value = "page",required = false) Optional<Integer> page,
     		@RequestParam(value = "size",required = false) Optional<Integer> size ) {
     	int currentPage = page.orElse(0);
     	int limit = size.orElse(100);
     	Pageable pageable = PageRequest.of(currentPage, limit, Sort.by("id").descending());
-    	ResponseBodyDto<Object> dto = accountService.findAllSearch(pageable);
+    	ResponseBodyDto<Object> dto = accountService.findAllSearch(keySearch,pageable);
     	
         return dto;
     }
@@ -144,5 +189,20 @@ public class AuthController {
     	
         return dto;
     }
-    
+
+    @GetMapping("delete/{id}")
+    public 	ResponseBodyDto<Object>  deleteAccount(@PathVariable Long id) {
+    	ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
+    	Optional<Account> account = accountRepository.findById(id);
+    	if(account.isPresent()) {
+    		account.get().setStatus(0L);
+    		accountRepository.save(account.get());
+    		return dto;
+    		
+    	}else {
+    		dto.setMessage(MessageConstant.MSG_10);
+    		dto.setMessageCode(MessageConstant.MSG_10_CODE);
+    		return dto;
+    	}
+    }
 }

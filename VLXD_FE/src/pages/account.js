@@ -62,7 +62,7 @@ const getRoles = () => {
     })
 }
   const handleSearch = (query) => {
-    axiosInstance.get(ACCOUNT_API.GET_ALL  + `?page=${query.page}&size=${query.limit}`)
+    axiosInstance.get(ACCOUNT_API.GET_ALL  + `?page=${query.page}&size=${query.limit}&keySearch=${query.keySearch}`)
       .then(response => {
         const result = {
           data: null,
@@ -89,7 +89,7 @@ const getRoles = () => {
   }
   const onDetele = () => {
     setOpenModal(false)
-    axiosInstance.post(UNIT_API.DELETE + "?id=" + dataDelete.id)
+    axiosInstance.get(ACCOUNT_API.DELETE + `/${dataDelete.id}`)
       .then(response => {
         if(response.messageCode == NOTIFY.MESSAGE_CODE_OK){
           toastifyAlert.success(DELETE_SUCCESS)

@@ -31,6 +31,8 @@ public class Account {
     private String accountName;
     @Column(name = "PASSWORD")
     private String password;
+    @Column(name = "STATUS")
+    private Long status = 1L;
 
     @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
     @JoinTable(name = "AUTHORITIES", joinColumns = @JoinColumn(name = "ACCOUNT_ID"), inverseJoinColumns = @JoinColumn(name = "role_id"))

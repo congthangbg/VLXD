@@ -52,7 +52,7 @@ export const ACCOUNT_API={
    GET_ALL : '/auth/listAccount',
    GET_ALL_ROLE : '/auth/listRolse',
    SAVE_UPDATE:"/auth/signup",
-   DELETE:"/unit/delete",
+   DELETE:"/auth/delete",
 }
 //Hóa đơn xuất
 export const HDX_API={

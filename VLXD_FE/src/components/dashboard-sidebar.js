@@ -13,9 +13,16 @@ import { User as UserIcon } from '../icons/user';
 import { UserAdd as UserAddIcon } from '../icons/user-add';
 import { Users as UsersIcon } from '../icons/users';
 import { XCircle as XCircleIcon } from '../icons/x-circle';
+import ArticleIcon from '@mui/icons-material/Article';
+import ComputerIcon from '@mui/icons-material/Computer';
+import CameraIcon from '@mui/icons-material/Camera';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
 import useMagicColor from './../hook/useMagicColor';
+import HolidayVillageIcon from '@mui/icons-material/HolidayVillage';
+import AcUnitIcon from '@mui/icons-material/AcUnit';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import CardMembershipIcon from '@mui/icons-material/CardMembership';
 
 const items = [
   {
@@ -25,8 +32,13 @@ const items = [
   },
   {
     href: '/hdx',
-    icon: (<UsersIcon fontSize="small" />),
+    icon: (<ArticleIcon fontSize="small" />),
     title: 'Hóa đơn xuất'
+  },
+  {
+    href: '/hdn',
+    icon: (<CardMembershipIcon fontSize="small" />),
+    title: 'Hóa đơn nhập'
   },
   {
     href: '/customers',
@@ -35,59 +47,55 @@ const items = [
   },
   {
     href: '/products',
-    icon: (<ShoppingBagIcon fontSize="small" />),
+    icon: (<ComputerIcon fontSize="small" />),
     title: 'Sản phẩm'
   },
   {
     href: '/productType',
-    icon: (<ShoppingBagIcon fontSize="small" />),
+    icon: (<CameraIcon fontSize="small" />),
     title: 'Loại sản phẩm'
   },
   {
     href: '/village',
-    icon: (<ShoppingBagIcon fontSize="small" />),
+    icon: (<HolidayVillageIcon fontSize="small" />),
     title: 'Danh sách thôn'
   }, 
   {
     href: '/units',
-    icon: (<ShoppingBagIcon fontSize="small" />),
+    icon: (<AcUnitIcon fontSize="small" />),
     title: 'Danh mục đơn vị tính'
   },
   {
     href: '/supplier',
-    icon: (<ShoppingBagIcon fontSize="small" />),
+    icon: (<SupportAgentIcon fontSize="small" />),
     title: 'Nhà cung cấp'
   },
-  {
-    href: '/hdn',
-    icon: (<ShoppingBagIcon fontSize="small" />),
-    title: 'Hóa đơn nhập'
-  },
+
   {
     href: '/account',
     icon: (<UserIcon fontSize="small" />),
     title: 'Tài khoản'
   },
-  {
-    href: '/settings',
-    icon: (<CogIcon fontSize="small" />),
-    title: 'Cài đặt'
-  },
+  // {
+  //   href: '/settings',
+  //   icon: (<CogIcon fontSize="small" />),
+  //   title: 'Cài đặt'
+  // },
   {
     href: '/login',
     icon: (<LockIcon fontSize="small" />),
     title: 'Đăng nhập'
   },
-  {
-    href: '/register',
-    icon: (<UserAddIcon fontSize="small" />),
-    title: 'Đăng kí'
-  },
-  {
-    href: '/404',
-    icon: (<XCircleIcon fontSize="small" />),
-    title: 'Error'
-  }
+  // {
+  //   href: '/register',
+  //   icon: (<UserAddIcon fontSize="small" />),
+  //   title: 'Đăng kí'
+  // },
+  // {
+  //   href: '/404',
+  //   icon: (<XCircleIcon fontSize="small" />),
+  //   title: 'Error'
+  // }
 ];
 
 export const DashboardSidebar = (props) => {
