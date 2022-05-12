@@ -10,6 +10,7 @@ import com.vn.VLXD.entities.Hdn;
 import com.vn.VLXD.entities.HdnCtTon;
 import com.vn.VLXD.entities.Hdx;
 import com.vn.VLXD.entities.HdxCtTon;
+import com.vn.VLXD.entities.Product;
 
 @Repository
 public interface HdnCtTonRepository extends JpaRepository<HdnCtTon, Long> {
@@ -20,4 +21,7 @@ public interface HdnCtTonRepository extends JpaRepository<HdnCtTon, Long> {
 	
 	@Query(value = "select * from HDN_CT_TON s where s.hdn_id = :idHdn",nativeQuery = true)
 	List<HdnCtTon> findByIdHdn(Long idHdn);
+	
+	@Query(value = "select distinct h.product.id from HdnCtTon h where h.product = :product")
+	List<Long> lstIdProduct(Product product);
 }

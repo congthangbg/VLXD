@@ -45,7 +45,7 @@ public class VillageController {
     		@RequestParam(value = "size",required = false) Optional<Integer> size ) {
     	int currentPage = page.orElse(0);
     	int limit = size.orElse(100);
-    	Pageable pageable = PageRequest.of(currentPage, limit, Sort.by("id").ascending());
+    	Pageable pageable = PageRequest.of(currentPage, limit, Sort.by("id").descending());
     	ResponseBodyDto<Object> dto = villageService.findAllSearch(keyString, pageable);
     	
         return dto;

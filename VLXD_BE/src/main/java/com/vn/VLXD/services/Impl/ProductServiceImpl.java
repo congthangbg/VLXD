@@ -24,6 +24,8 @@ import com.vn.VLXD.entities.ProductType;
 import com.vn.VLXD.entities.Unit;
 import com.vn.VLXD.entities.Village;
 import com.vn.VLXD.repositories.CustomerRepository;
+import com.vn.VLXD.repositories.HdnCtRepository;
+import com.vn.VLXD.repositories.HdnCtTonRepository;
 import com.vn.VLXD.repositories.HdxCtRepository;
 import com.vn.VLXD.repositories.HdxCtTonRepository;
 import com.vn.VLXD.repositories.ProductRepository;
@@ -55,6 +57,12 @@ public class ProductServiceImpl implements ProductService{
 	@Autowired
 	HdxCtTonRepository hdxCtTonRepository;
 
+	@Autowired
+	HdnCtTonRepository hdnCtTonRepository;
+	
+	@Autowired
+	HdnCtRepository hdnCtRepository;
+	
 	@Override
 	@Transactional(rollbackFor = {SQLException.class})
 	public ResponseBodyDto<Object> save(ProductRequest request) {
@@ -169,7 +177,20 @@ public class ProductServiceImpl implements ProductService{
 		Optional<Product> optional = productRepository.findById(id);
 		if(optional.isPresent()) {
 			List<Long> hdxCts = hdxCtRepository.lstIdProduct(optional.get());
+			List<Long> hdxCtTon = hdxCtTonRepository.lstIdProduct(optional.get());
+			List<Long> hdnCtTon = hdnCtTonRepository.lstIdProduct(optional.get());
+			List<Long> hdnCt = hdnCtRepository.lstIdProduct(optional.get());
+			
 			if(hdxCts.contains(optional.get().getId())) {
+				dto.setMessage(MessageConstant.MSG_13);
+				dto.setMessageCode(MessageConstant.MSG_13_CODE);
+			}else if(hdxCtTon.contains(optional.get().getId())) {
+				dto.setMessage(MessageConstant.MSG_13);
+				dto.setMessageCode(MessageConstant.MSG_13_CODE);
+			}else if(hdnCtTon.contains(optional.get().getId())) {
+				dto.setMessage(MessageConstant.MSG_13);
+				dto.setMessageCode(MessageConstant.MSG_13_CODE);
+			}else if(hdnCt.contains(optional.get().getId())) {
 				dto.setMessage(MessageConstant.MSG_13);
 				dto.setMessageCode(MessageConstant.MSG_13_CODE);
 			}else {

@@ -2,6 +2,7 @@ package com.vn.VLXD.controller.Report;
 
 
 import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -58,11 +60,12 @@ public class ReportHoaDonBhController {
 		parameters.put("hdxCt", itemsJRBean);
 		parameters.put("hdxCtTon", itemsJRBean2);
 
-//		JasperReport compileReport = JasperCompileManager
-//				.compileReport(new FileInputStream("/reports/Hoadonbanhang.jrxml"));
+
 		try {
-			InputStream employeeReportStream
-			  = getClass().getResourceAsStream("/Hoadonbanhang.jrxml");
+			ClassPathResource resource = new ClassPathResource("/reports/Hoadonbanhang.jrxml");
+//			InputStream employeeReportStream = getClass().getResourceAsStream("/Hoadonbanhang.jrxml");
+			InputStream employeeReportStream=  resource.getInputStream();
+//					new ClassPathResource("/Hoadonbanhang.jrxml").getInputStream();
 			JasperReport compileReport
 			  = JasperCompileManager.compileReport(employeeReportStream);
 			JasperPrint jasperPrint = JasperFillManager.fillReport(compileReport, parameters, beanCollectionDataSource);

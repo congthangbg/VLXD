@@ -27,6 +27,6 @@ public interface HdnCtRepository extends JpaRepository<HdnCt, Long> {
 	@Query(value = "select * from HDN_CT s where s.hdn_id = :idHdn",nativeQuery = true)
 	List<HdnCt> findByIdHdn(Long idHdn);
 	
-//	@Query(value = "select distinct h.product.id from HdxCt h where h.product = :product")
-//	List<Long> lstIdProduct(Product product);
+	@Query(value = "select distinct h.product.id from HdnCt h where h.product = :product")
+	List<Long> lstIdProduct(Product product);
 }

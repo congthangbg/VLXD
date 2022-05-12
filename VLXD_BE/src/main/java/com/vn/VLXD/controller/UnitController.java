@@ -47,7 +47,7 @@ public class UnitController {
     		@RequestParam(value = "size",required = false) Optional<Integer> size ) {
     	int currentPage = page.orElse(0);
     	int limit = size.orElse(100);
-    	Pageable pageable = PageRequest.of(currentPage, limit, Sort.by("id").ascending());
+    	Pageable pageable = PageRequest.of(currentPage, limit, Sort.by("id").descending());
     	ResponseBodyDto<Object> dto = service.findAllSearch(keyString, pageable);
     	
         return dto;

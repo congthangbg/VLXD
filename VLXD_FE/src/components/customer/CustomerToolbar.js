@@ -17,7 +17,6 @@ import { styled } from '@mui/material/styles';
 import useCallVillage from 'src/hook/useCallVillage';
 function CustomerToolbar(props) {
   const {data}=useCallVillage();
-  console.log("Data1",data);
   const { setOpen, handleSearch, onSearch ,query,setQuery,isComboxVillage} = props;
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',

@@ -1,14 +1,11 @@
 package com.vn.VLXD.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,19 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vn.VLXD.common.ResponseBodyDto;
 import com.vn.VLXD.dto.request.CustomerRequest;
-import com.vn.VLXD.dto.request.SupplierRequest;
-import com.vn.VLXD.dto.request.VillageRequest;
-import com.vn.VLXD.entities.Customer;
-import com.vn.VLXD.entities.Supplier;
 import com.vn.VLXD.services.CustomerService;
-import com.vn.VLXD.services.SupplierService;
-import com.vn.VLXD.services.UserDetailsImpl;
-import com.vn.VLXD.services.UserLogonService;
-import com.vn.VLXD.services.VillageService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.annotations.Operation;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -42,6 +30,16 @@ import io.swagger.v3.oas.annotations.Operation;
 public class CustomerController {
 	@Autowired
 	CustomerService service;
+	
+//	@Autowired
+//	optionRepo optionRepo;
+//	
+//	@GetMapping("/option")
+//	public List<optionBoySport> getAll() {
+//		List<optionBoySport> list = optionRepo.findAll();
+//		return list;
+//	}
+	
 	
     @GetMapping("")
     @ApiOperation(value = "Danh sách All")
@@ -89,4 +87,6 @@ public class CustomerController {
     	ResponseBodyDto<Object> dto = service.deleteById(id);
         return dto;
     }
+    
+  
 }

@@ -164,12 +164,15 @@ React.useEffect(() => {
                   name="productType"
                   options={dataProductType && dataProductType.data ? dataProductType.data : []}
                   getOptionLabel={option => option.typeName}
-                  onChange={(event, value) => formik.setFieldValue("productType", value)}
+                  onChange={(event, value) =>{
+                    formik.setFieldValue("productType", value);
+                    formik.setFieldValue("product", null);
+                  }}
                   value={formik.values && formik.values.productType ? formik.values.productType : undefined}
                   renderInput={params => (
                     <TextField
                       {...params}
-                      onChange={formik.handleChange}
+                      // onChange={formik.handleChange}
                       margin="normal"
                       label="Loại sản phẩm"
                       fullWidth
@@ -185,7 +188,7 @@ React.useEffect(() => {
                   options={dataP ? dataP : []}
                   getOptionLabel={option => option.name}
                   onChange={(event, value) => formik.setFieldValue("product", value)}
-                  value={formik.values.product ? formik.values.product : undefined}
+                  value={formik.values.product ? formik.values.product : null}
                   renderInput={params => (
                     <TextField
                       {...params}

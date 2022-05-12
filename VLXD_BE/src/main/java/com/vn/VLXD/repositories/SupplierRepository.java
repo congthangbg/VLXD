@@ -1,5 +1,7 @@
 package com.vn.VLXD.repositories;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +13,7 @@ import com.vn.VLXD.entities.Supplier;
 @Repository
 public interface SupplierRepository extends JpaRepository<Supplier, Long> {
 	
-	@Query(value = "select s from Supplier s where :keySearch is null or s.name like %:keySearch%")
+	@Query(value = "select s from Supplier s where :keySearch is null or s.name like %:keySearch% and s.status =1")
 	Page<Supplier> findAllSearch(String keySearch,Pageable pageable);
+	
 }

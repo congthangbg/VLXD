@@ -23,7 +23,7 @@ public class HdxResponse implements Serializable {
 	 */
 	private static final long serialVersionUID = -2709443514216953149L;
 	private long id;
-    private String code;
+    private String code = "";
     private double totalMoney;
     private String totalBill;
     private LocalDateTime releaseDate;

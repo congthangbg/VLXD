@@ -57,4 +57,7 @@ public class MessageConstant {
 	public static final String MSG_16 = "Đơn vị đã được gán với sản phẩm,không thể xóa!";
 	public static final String MSG_16_CODE = "MSG_16";
 	
+	public static final String MSG_17 = "Nhà cung cấp đã được gán với hóa đơn nhập,không thể xóa!";
+	public static final String MSG_17_CODE = "MSG_17";
+	
 }

@@ -16,7 +16,9 @@ import com.vn.VLXD.common.ResponseBase;
 import com.vn.VLXD.common.ResponseBodyDto;
 import com.vn.VLXD.contants.MessageConstant;
 import com.vn.VLXD.dto.request.SupplierRequest;
+import com.vn.VLXD.entities.Hdn;
 import com.vn.VLXD.entities.Supplier;
+import com.vn.VLXD.repositories.HdnRepository;
 import com.vn.VLXD.repositories.SupplierRepository;
 import com.vn.VLXD.services.SupplierService;
 import com.vn.VLXD.services.UserLogonService;
@@ -28,6 +30,9 @@ public class SupplierServiceImpl implements SupplierService{
 
 	@Autowired
 	SupplierRepository supplierRepository;
+	
+	@Autowired
+	HdnRepository hdnRepository; 
 
 	@Override
 	public ResponseBodyDto<Object> save(SupplierRequest request) {
@@ -101,9 +106,17 @@ public class SupplierServiceImpl implements SupplierService{
 		ResponseBodyDto<Object> dto = new ResponseBodyDto<>();
 		Optional<Supplier> optional = supplierRepository.findById(id);
 		if(optional.isPresent()) {
-			supplierRepository.delete(optional.get());
-			dto.setMessage(MessageConstant.MSG_OK);
-			dto.setMessageCode(MessageConstant.MSG_OK_CODE);
+			List<Hdn> hdns = hdnRepository.findBySupplier(optional.get());
+			if(!hdns.isEmpty()) {
+				dto.setMessage(MessageConstant.MSG_17);
+				dto.setMessageCode(MessageConstant.MSG_17_CODE);
+			}else {
+				optional.get().setStatus(0);
+				supplierRepository.save(optional.get());
+				dto.setMessage(MessageConstant.MSG_OK);
+				dto.setMessageCode(MessageConstant.MSG_OK_CODE);
+			}
+			
 		}else {
 			dto.setMessage(MessageConstant.MSG_10);
 			dto.setMessageCode(MessageConstant.MSG_10_CODE);
