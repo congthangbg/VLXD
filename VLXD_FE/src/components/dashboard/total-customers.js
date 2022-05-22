@@ -1,6 +1,7 @@
 import { Avatar, Box, Card, CardContent, Grid, Typography } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import PeopleIcon from '@mui/icons-material/PeopleOutlined';
+import { currencyFormat, currencyFormat3 } from '../component/MessageContants';
 
 export const TotalCustomers = (props) => (
   <Card {...props}>
@@ -16,13 +17,13 @@ export const TotalCustomers = (props) => (
             gutterBottom
             variant="overline"
           >
-            TOTAL CUSTOMERS
+            Tổng tiền chưa thanh toán
           </Typography>
           <Typography
             color="textPrimary"
             variant="h4"
           >
-            1,6k
+            {currencyFormat(props.moneyNotPay)}
           </Typography>
         </Grid>
         <Grid item>

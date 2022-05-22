@@ -317,7 +317,7 @@
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Times New Roman" size="13"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[Double.toString( $F{quantity} )]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -502,7 +502,7 @@
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Times New Roman" size="13"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[Double.toString($F{quantity} )]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

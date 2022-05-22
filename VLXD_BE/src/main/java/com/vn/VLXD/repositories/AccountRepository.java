@@ -19,4 +19,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     
     @Query(value = "select a from Account a where :keySearch is null or  a.accountName like %:keySearch% and a.status = 1")
     Page<Account> findAlBySearch(String keySearch,Pageable pageable);
+    
+    
 }

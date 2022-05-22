@@ -30,7 +30,10 @@ public class test {
 		 String[] d = StringUtils.commaDelimitedListToStringArray(g);
 		 System.out.println(d[1]);
 		 
-		 
+			List<String> asa = new ArrayList<>();
+			asa.add("2,198,160");
+			asa.add("2,200,160");
+			
 	}
 
 }

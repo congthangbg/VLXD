@@ -22,6 +22,14 @@ export const GETALL_AND_SEARCH_VILLAGE = "/village"
 export const GETALL_AND_SREACH_CUSTOMER = "/customer/callCustomer"
 export const DELETE_CUSTOMER = "/customer/delete"
 export const SAVE_UPDATE_CUSTOMER = "/customer/saveOrUpdate"
+
+//Loại sản phẩm
+export const DASHBOARD={
+   GET_BILL_NOT_PAY : '/dashboard/billNotPay',
+   GET_MONEY_NOT_PAY : '/dashboard/moneyNotPay',
+   GET_MONEY_PAY : '/dashboard/moneyPay',
+}
+
 //Loại sản phẩm
 export const PRODUCT_TYPE={
    GET_ALL : '/productType',

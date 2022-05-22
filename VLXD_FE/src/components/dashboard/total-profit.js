@@ -1,5 +1,6 @@
 import { Avatar, Card, CardContent, Grid, Typography } from '@mui/material';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import { currencyFormat } from '../component/MessageContants';
 
 export const TotalProfit = (props) => (
   <Card {...props}>
@@ -15,13 +16,13 @@ export const TotalProfit = (props) => (
             gutterBottom
             variant="overline"
           >
-            TOTAL PROFIT
+            Số tiền đã thanh toán 
           </Typography>
           <Typography
             color="textPrimary"
             variant="h4"
           >
-            $23k
+           {currencyFormat(props.moneyPay)}
           </Typography>
         </Grid>
         <Grid item>

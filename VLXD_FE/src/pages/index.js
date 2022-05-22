@@ -9,9 +9,53 @@ import { TotalCustomers } from '../components/dashboard/total-customers';
 import { TotalProfit } from '../components/dashboard/total-profit';
 import { TrafficByDevice } from '../components/dashboard/traffic-by-device';
 import { DashboardLayout } from '../components/dashboard-layout';
+import axiosInstance from 'src/components/config/axiosConfig';
+import { DASHBOARD } from 'src/components/component/MessageContants';
+import { useEffect, useState } from 'react';
+import login401 from 'src/hook/login401';
 
-const Dashboard = () => (
-  <>
+const Dashboard = () => {
+
+  const [dataBillNotPay, setDataBillNotPay] = useState(0)
+  const [moneyNotPay, setMoneyNotPay] = useState(0)
+  const [moneyPay, setMoneyPay] = useState(0)
+
+ const getBillNotPay = () => {
+    axiosInstance.get(DASHBOARD.GET_BILL_NOT_PAY)
+      .then(response => {
+        setDataBillNotPay(response.data)
+      })
+      .catch(err => {
+        console.log(err);
+        login401(err && err.response && err.response.status)
+      })
+  }
+  const getMoneyNotPay = () => {
+    axiosInstance.get(DASHBOARD.GET_MONEY_NOT_PAY)
+      .then(response => {
+        setMoneyNotPay(response.data)
+      })
+      .catch(err => {
+        console.log(err);
+        login401(err && err.response && err.response.status)
+      })
+  }
+  const getMoneyPay = () => {
+    axiosInstance.get(DASHBOARD.GET_MONEY_PAY)
+      .then(response => {
+        setMoneyPay(response.data)
+      })
+      .catch(err => {
+        console.log(err);
+        login401(err && err.response && err.response.status)
+      })
+  }
+  useEffect(() => {
+    getBillNotPay();
+    getMoneyNotPay();
+    getMoneyPay();
+  }, [])
+ return <>
     <Head>
       <title>
         Dashboard
@@ -36,7 +80,7 @@ const Dashboard = () => (
             xl={3}
             xs={12}
           >
-            <Budget />
+            <Budget dataBillNotPay={dataBillNotPay} />
           </Grid>
           <Grid
             item
@@ -45,7 +89,7 @@ const Dashboard = () => (
             sm={6}
             xs={12}
           >
-            <TotalCustomers />
+            <TotalCustomers moneyNotPay={moneyNotPay} />
           </Grid>
           <Grid
             item
@@ -63,7 +107,7 @@ const Dashboard = () => (
             sm={6}
             xs={12}
           >
-            <TotalProfit sx={{ height: '100%' }} />
+            <TotalProfit moneyPay={moneyPay} sx={{ height: '100%' }} />
           </Grid>
           <Grid
             item
@@ -83,7 +127,7 @@ const Dashboard = () => (
           >
             <TrafficByDevice sx={{ height: '100%' }} />
           </Grid>
-          <Grid
+          {/* <Grid
             item
             lg={4}
             md={6}
@@ -100,12 +144,12 @@ const Dashboard = () => (
             xs={12}
           >
             <LatestOrders />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </Box>
   </>
-);
+};
 
 Dashboard.getLayout = (page) => (
   <DashboardLayout>
