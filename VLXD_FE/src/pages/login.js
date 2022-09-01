@@ -12,7 +12,7 @@ import { useState } from 'react';
 import toastifyAlert from './../components/component/toastify-message/toastify';
 import { injectStyle } from "react-toastify/dist/inject-style";
 import { toast, ToastContainer } from 'react-toastify';
-import { logOut,logIn,errorLogIn } from './../components/component/MessageContants';
+import { logOut, logIn, errorLogIn } from './../components/component/MessageContants';
 
 
 const Login = () => {
@@ -136,16 +136,19 @@ const Login = () => {
                 xs={12}
                 md={6}
               >
+                  <NextLink href="/oauth2/authorization/google">
+                    
                 <Button
                   fullWidth
                   color="error"
                   startIcon={<GoogleIcon />}
-                  onClick={formik.handleSubmit}
+                  // onClick={formik.handleSubmit}
                   size="large"
                   variant="contained"
                 >
-                  Login with Google
+                  <a>Login with Google</a>
                 </Button>
+                </NextLink>
               </Grid>
             </Grid>
             <Box

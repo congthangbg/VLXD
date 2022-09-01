@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.vn.VLXD.config.Auth.CustomOAuth2AccountService;
 import com.vn.VLXD.services.UserDetailsServiceImpl;
 
 @Configuration
@@ -26,6 +27,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
     private AuthEntryPointJwt unauthoiedHandler;
+    @Autowired
+    private CustomOAuth2AccountService customOAuth2AccountService;
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter(){
@@ -53,7 +56,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("api/auth/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/v2/api-docs","/swagger*/**","/configuration/**","/webjars/**").permitAll()
                 .antMatchers("/api/test/**").permitAll()
-                .anyRequest().authenticated();
+                .antMatchers("/login/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .oauth2Login()
+                .loginPage("/login")
+                .userInfoEndpoint().userService(customOAuth2AccountService)
+                ;
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
@@ -71,5 +80,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //    		"/v2/api-docs",
 //    		"/webjars/**"
     };
+ 
 
 }

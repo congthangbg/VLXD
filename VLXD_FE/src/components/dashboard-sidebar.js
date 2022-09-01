@@ -165,7 +165,7 @@ export const DashboardSidebar = (props) => {
                   fontFamily="Times New Roman"
                   boxShadow="0 0 10"
                 >
-                  VLXD THẮNG OANH
+                  VLXD HUYỀN TOÀN
                 </Typography>
                
               </div>

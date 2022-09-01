@@ -90,7 +90,7 @@ export function currencyFormat3(num) {
     if(String(num).includes(",")){
        return num;
     }else{
-      return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+      return num && num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') || 0
     }
 }
 export const STATUS_401 = 401

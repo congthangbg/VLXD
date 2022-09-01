@@ -1,0 +1,82 @@
+docker run -e "ACCEPT_EULA=Y" ^
+ -e "SA_PASSWORD=Sa123456" ^
+ -p 1444:1433 --name demoSql ^
+ --hostname demoSql ^
+ -v dataVolumeVlxd:/var/opt/mssql ^
+ -d mcr.microsoft.com/mssql/server:2019-latest
+
+--các container đang chạy
+docker ps -a
+---
+docker images
+--
+docker build -t demoreact:dev .
+document:
+For React Image Creation: 
+docker build -t containername:tag
+For Running Container: 
+docker run -it -p 3000:3000 demoreact:dev
+
+----
+docker run -it -p 8080:8080 demospring:dev
+
+---login
+docker login -u="congthang1" -p="congthang1"
+docker login --username=congthang1
+
+---xóa
+docker rm name
+
+docker run --name demospring --volumes-from volume-dados-banco-demospring -p 8080:8080 demospring
+
+docker run --p 8080:8080 demospring
+
+FROM openjdk:8-jdk-alpine
+RUN mkdir demospring
+ADD *.jar VLXD-0.0.1-SNAPSHOT.jar
+WORKDIR demospring
+RUN "pwd"
+RUN "ls"
+EXPOSE 8080
+ENTRYPOINT [ "java","-jar","VLXD-0.0.1-SNAPSHOT.jar" ]
+CMD ["-start"]
+
+docker logs mysqldb
+
+docker rm name
+
+docker volume ls
+
+docker volume inspect dataVolumeVlxd
+
+Đường dẫn Volume :\\wsl$\docker-desktop-data\version-pack-data\community\docker\volumes
+
+FROM openjdk:oraclelinux8
+#working directory
+WORKDIR /app
+#copy from your Host(PC, laptop) to container
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+#Run this inside the image
+RUN ./mvnw dependency:go-offline
+COPY src ./src
+#run inside container
+CMD ["./mvnw", "spring-boot:run"]
+
+
+./mvnw spring-boot:run
+mvn spring-boot:run windown
+
+mvn wrapper:wrapper
+
+
+-----------
+oauth2:
+standalone.bat -Djboss.socket.binding.port-offset=100
+
+
+"token_endpoint":"http://localhost:8180/auth/realms/javaOauth2Client/protocol/openid-connect/token"
+
+
+docker pull mcr.microsoft.com/mssql/server:2022-latest
+

@@ -1,8 +1,11 @@
-FROM openjdk:8-jdk-alpine
-RUN mkdir demospring
-ADD *.jar VLXD-0.0.1-SNAPSHOT.jar
-WORKDIR demospring
-RUN "pwd"
-RUN "ls"
-EXPOSE 8080
-ENTRYPOINT [ "java","-jar","VLXD-0.0.1-SNAPSHOT.jar" ]
+FROM openjdk:oraclelinux8
+#working directory
+WORKDIR /app
+#copy from your Host(PC, laptop) to container
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+#Run this inside the image
+RUN ./mvnw dependency:go-offline
+COPY src ./src
+#run inside container
+CMD ["./mvnw", "spring-boot:run"]
